@@ -1,5 +1,17 @@
 package schema
 
+// Project represents a LangFlow project/folder.
+type Project struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Icon        string `json:"icon"`
+	Gradient    string `json:"gradient"`
+	IconBgColor string `json:"icon_bg_color"`
+	CreatedAt   string `json:"created_at"`
+	UpdatedAt   string `json:"updated_at"`
+}
+
 // Viewport represents the React Flow viewport state.
 type Viewport struct {
 	X    float64 `json:"x"`
