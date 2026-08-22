@@ -13,6 +13,7 @@ import (
 
 func registerNodeTools(server *mcp.Server, c *client.LangflowClient, _ *config.Config) {
 	registerNodeCRUDTools(server, c)
+	registerLayoutTools(server, c)
 }
 
 func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
