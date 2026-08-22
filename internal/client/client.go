@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"strings"
 	"time"
@@ -19,6 +20,7 @@ type LangflowClient struct {
 	apiKey        string
 	httpClient    *http.Client
 	customHeaders map[string]string
+	logger        *slog.Logger
 }
 
 // NewClient creates a LangflowClient from the given config.
@@ -32,6 +34,14 @@ func NewClient(cfg *config.Config) *LangflowClient {
 		apiKey:        cfg.APIKey,
 		httpClient:    &http.Client{Timeout: timeout},
 		customHeaders: cfg.CustomHeaders,
+		logger:        slog.Default(),
+	}
+}
+
+// SetLogger overrides the logger used for request/response debug logging.
+func (c *LangflowClient) SetLogger(l *slog.Logger) {
+	if l != nil {
+		c.logger = l
 	}
 }
 
@@ -59,8 +69,20 @@ func (c *LangflowClient) doRequest(ctx context.Context, method, path string, bod
 
 	c.applyHeaders(req)
 
+	c.logger.Debug("langflow http request",
+		"method", method,
+		"url", url,
+		"has_body", body != nil,
+		"has_api_key", c.apiKey != "",
+	)
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
+		c.logger.Error("langflow http request failed",
+			"method", method,
+			"url", url,
+			"error", err.Error(),
+		)
 		return nil, fmt.Errorf("execute request: %w", err)
 	}
 	defer resp.Body.Close()
@@ -69,6 +91,13 @@ func (c *LangflowClient) doRequest(ctx context.Context, method, path string, bod
 	if err != nil {
 		return nil, fmt.Errorf("read response body: %w", err)
 	}
+
+	c.logger.Debug("langflow http response",
+		"method", method,
+		"url", url,
+		"status", resp.StatusCode,
+		"bytes", len(data),
+	)
 
 	if resp.StatusCode >= 400 {
 		return nil, &HTTPError{
@@ -123,8 +152,11 @@ func (c *LangflowClient) doGetStream(ctx context.Context, path string) (io.ReadC
 
 	c.applyHeaders(req)
 
+	c.logger.Debug("langflow http request", "method", http.MethodGet, "url", url, "stream", true)
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
+		c.logger.Error("langflow http request failed", "method", http.MethodGet, "url", url, "error", err.Error())
 		return nil, fmt.Errorf("execute request: %w", err)
 	}
 
@@ -166,8 +198,11 @@ func (c *LangflowClient) doPostStream(ctx context.Context, path string, body any
 
 	c.applyHeaders(req)
 
+	c.logger.Debug("langflow http request", "method", http.MethodPost, "url", url, "has_body", body != nil, "stream", true)
+
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
+		c.logger.Error("langflow http request failed", "method", http.MethodPost, "url", url, "error", err.Error())
 		return nil, fmt.Errorf("execute request: %w", err)
 	}
 

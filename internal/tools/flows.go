@@ -10,7 +10,7 @@ import (
 )
 
 func registerFlowTools(server *mcp.Server, c *client.LangflowClient) {
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "list_flows",
 		Description: "List flows with optional pagination, excluding MCP backup flows.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.ListFlowsInput) (*mcp.CallToolResult, any, error) {
@@ -42,7 +42,7 @@ func registerFlowTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "list_all_flows",
 		Description: "List ALL flows including MCP backup flows. Only use when you specifically need to see backup flows.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.ListAllFlowsInput) (*mcp.CallToolResult, any, error) {
@@ -60,7 +60,7 @@ func registerFlowTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "get_flow",
 		Description: "Get complete flow structure including all nodes and edges.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.GetFlowInput) (*mcp.CallToolResult, any, error) {
@@ -78,7 +78,7 @@ func registerFlowTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "create_flow",
 		Description: "Create a new empty flow with the given name and description.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.CreateFlowInput) (*mcp.CallToolResult, any, error) {
@@ -96,7 +96,7 @@ func registerFlowTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "delete_flow",
 		Description: "Delete a flow permanently. WARNING: This cannot be undone.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.DeleteFlowInput) (*mcp.CallToolResult, any, error) {
@@ -113,7 +113,7 @@ func registerFlowTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "duplicate_flow",
 		Description: "Duplicate an existing flow with an optional new name.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.DuplicateFlowInput) (*mcp.CallToolResult, any, error) {

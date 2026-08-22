@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"flag"
 	"log"
+	"log/slog"
 	"net/http"
 
 	"github.com/ag/ai-agent-builder/internal/client"
 	"github.com/ag/ai-agent-builder/internal/config"
+	"github.com/ag/ai-agent-builder/internal/logging"
 	"github.com/ag/ai-agent-builder/internal/tools"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
@@ -18,7 +20,10 @@ func main() {
 
 	cfg := config.Load()
 
+	logger := logging.NewLogger(cfg.LogLevel)
+	slog.SetDefault(logger)
 	langflowClient := client.NewClient(cfg)
+	langflowClient.SetLogger(logger)
 
 	server := mcp.NewServer(
 		&mcp.Implementation{
@@ -48,10 +53,11 @@ func main() {
 
 		handler := withCORS(mux)
 
-		log.Printf("LangFlow MCP Server listening on %s", httpAddr)
+		slog.Info("langflow mcp server listening", "addr", httpAddr)
 		log.Fatal(http.ListenAndServe(httpAddr, handler))
 	} else {
 		if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {
+			slog.Error("server stopped with error", "error", err.Error())
 			log.Fatal(err)
 		}
 	}

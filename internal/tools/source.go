@@ -21,7 +21,7 @@ const LangflowRepoURL = "https://github.com/langflow-ai/langflow.git"
 
 // registerSourceTools registers the 5 source exploration MCP tools.
 func registerSourceTools(server *mcp.Server, _ *client.LangflowClient, cfg *config.Config) {
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "setup_langflow_source",
 		Description: "Clone/update the Langflow source code repository for exploration. PREREQUISITE: run this before explore_langflow, read_langflow_file, or list_langflow_directory.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, _ schema.SetupLangflowSourceInput) (*mcp.CallToolResult, any, error) {
@@ -29,7 +29,7 @@ func registerSourceTools(server *mcp.Server, _ *client.LangflowClient, cfg *conf
 		return result, nil, err
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "explore_langflow",
 		Description: "Search the Langflow source code using git grep. Returns matching files with line numbers and content snippets.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.ExploreLangflowInput) (*mcp.CallToolResult, any, error) {
@@ -37,7 +37,7 @@ func registerSourceTools(server *mcp.Server, _ *client.LangflowClient, cfg *conf
 		return result, nil, err
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "read_langflow_file",
 		Description: "Read a specific file from the Langflow source code repository with optional line range. File must exist within the cloned repo.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.ReadLangflowFileInput) (*mcp.CallToolResult, any, error) {
@@ -45,7 +45,7 @@ func registerSourceTools(server *mcp.Server, _ *client.LangflowClient, cfg *conf
 		return result, nil, err
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "list_langflow_directory",
 		Description: "List files and subdirectories in a directory of the Langflow source code repository.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.ListLangflowDirectoryInput) (*mcp.CallToolResult, any, error) {
@@ -53,7 +53,7 @@ func registerSourceTools(server *mcp.Server, _ *client.LangflowClient, cfg *conf
 		return result, nil, err
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "langflow_concepts",
 		Description: "Quick reference documentation about Langflow concepts. Topics: custom_components, tool_mode, building, component_structure, outputs, inputs, connections, common_mistakes, layout. Empty topic returns the overview.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.LangflowConceptsInput) (*mcp.CallToolResult, any, error) {

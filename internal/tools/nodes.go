@@ -18,7 +18,7 @@ func registerNodeTools(server *mcp.Server, c *client.LangflowClient, _ *config.C
 }
 
 func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "add_node",
 		Description: "Add a built-in component node to a flow. Fetches the component template from /api/v1/all, creates the node, adds it to the flow, and saves.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.AddNodeInput) (*mcp.CallToolResult, any, error) {
@@ -99,7 +99,7 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "add_custom_component",
 		Description: "Add an inline Python custom component to a flow. The code is sent to LangFlow for validation, and the resulting schema is used to create the node. No server restart needed.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.AddCustomComponentInput) (*mcp.CallToolResult, any, error) {
@@ -168,7 +168,7 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "update_node",
 		Description: "Update template field values on an existing node. Gets the flow, finds the node, applies the config values to its template fields, and saves.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.UpdateNodeInput) (*mcp.CallToolResult, any, error) {
@@ -210,7 +210,7 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "set_tool_mode",
 		Description: "Enable or disable tool_mode on a component node for Agent integration. Calls the LangFlow server-side transformation to update outputs.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.SetToolModeInput) (*mcp.CallToolResult, any, error) {
@@ -261,7 +261,7 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "remove_node",
 		Description: "Remove a node and all its connections from a flow. Finds and removes the node from data.nodes and any edges referencing it from data.edges.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.RemoveNodeInput) (*mcp.CallToolResult, any, error) {
@@ -306,7 +306,7 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "get_node_details",
 		Description: "Get detailed information about a specific node including its template configuration, outputs, and base classes.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.GetNodeDetailsInput) (*mcp.CallToolResult, any, error) {
@@ -327,7 +327,7 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 		return errorResult(fmt.Errorf("node %q not found in flow", input.NodeID)), nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "list_nodes",
 		Description: "List all nodes in a flow with their IDs, types, and positions.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.ListNodesInput) (*mcp.CallToolResult, any, error) {
@@ -361,7 +361,7 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 }
 
 func registerNoteTools(server *mcp.Server, c *client.LangflowClient) {
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "add_note",
 		Description: "Add a sticky note annotation to a flow. Returns the created note node.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.AddNoteInput) (*mcp.CallToolResult, any, error) {
@@ -414,7 +414,7 @@ func registerNoteTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "update_note",
 		Description: "Update a note's content and/or background color.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.UpdateNoteInput) (*mcp.CallToolResult, any, error) {

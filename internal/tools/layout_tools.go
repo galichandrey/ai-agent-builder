@@ -20,7 +20,7 @@ func registerLayoutTools(server *mcp.Server, c *client.LangflowClient) {
 }
 
 func registerMoveNodeTool(server *mcp.Server, c *client.LangflowClient) {
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "move_node",
 		Description: "Move a node to a new position on the canvas.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.MoveNodeInput) (*mcp.CallToolResult, any, error) {
@@ -56,7 +56,7 @@ func registerMoveNodeTool(server *mcp.Server, c *client.LangflowClient) {
 }
 
 func registerMoveNodesBatchTool(server *mcp.Server, c *client.LangflowClient) {
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "move_nodes_batch",
 		Description: "Move multiple nodes at once with a list of position updates.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.MoveNodesBatchInput) (*mcp.CallToolResult, any, error) {
@@ -91,7 +91,7 @@ func registerMoveNodesBatchTool(server *mcp.Server, c *client.LangflowClient) {
 }
 
 func registerAutoArrangeTool(server *mcp.Server, c *client.LangflowClient) {
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "auto_arrange_flow",
 		Description: "Automatically arrange nodes in layers using topological sort. Supports horizontal (left-to-right) or vertical (top-to-bottom) direction.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.AutoArrangeFlowInput) (*mcp.CallToolResult, any, error) {
@@ -178,7 +178,7 @@ func registerAutoArrangeTool(server *mcp.Server, c *client.LangflowClient) {
 }
 
 func registerAnalyzeLayoutTool(server *mcp.Server, c *client.LangflowClient) {
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "analyze_flow_layout",
 		Description: "Analyze a flow's structure to understand node layout, depth levels, categories, main path, and detect collisions. Returns detailed layout analysis.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.AnalyzeFlowLayoutInput) (*mcp.CallToolResult, any, error) {
@@ -206,7 +206,7 @@ func registerAnalyzeLayoutTool(server *mcp.Server, c *client.LangflowClient) {
 }
 
 func registerLayoutSuggestionsTool(server *mcp.Server, c *client.LangflowClient) {
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "get_layout_suggestions",
 		Description: "Analyze a flow's layout and return improvement suggestions based on scoring, collision detection, and structural analysis.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.GetLayoutSuggestionsInput) (*mcp.CallToolResult, any, error) {

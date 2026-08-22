@@ -11,7 +11,7 @@ import (
 )
 
 func registerConnectionTools(server *mcp.Server, c *client.LangflowClient) {
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "connect_nodes",
 		Description: "Create an edge connecting two nodes. Validates type compatibility before creating the connection.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.ConnectNodesInput) (*mcp.CallToolResult, any, error) {
@@ -96,7 +96,7 @@ func registerConnectionTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "disconnect_nodes",
 		Description: "Remove edges between nodes. If target_input is specified, only removes edges to that input; otherwise removes all edges between the nodes.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.DisconnectNodesInput) (*mcp.CallToolResult, any, error) {
@@ -139,7 +139,7 @@ func registerConnectionTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "list_connections",
 		Description: "List all connections in a flow. Optionally filter by node ID to show only connections involving that node.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.ListConnectionsInput) (*mcp.CallToolResult, any, error) {
@@ -165,7 +165,7 @@ func registerConnectionTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "validate_connection",
 		Description: "Check if a connection would be valid based on type compatibility. Returns validation result with common types.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.ValidateConnectionInput) (*mcp.CallToolResult, any, error) {
@@ -213,7 +213,7 @@ func registerConnectionTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "find_compatible_connections",
 		Description: "Find all valid connections for a node. Direction can be 'inputs' (what can connect TO this node) or 'outputs' (what this node can connect TO).",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.FindCompatibleConnectionsInput) (*mcp.CallToolResult, any, error) {

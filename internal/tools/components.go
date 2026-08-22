@@ -11,7 +11,7 @@ import (
 )
 
 func registerComponentTools(server *mcp.Server, c *client.LangflowClient) {
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "list_component_categories",
 		Description: "List all available component categories (e.g. agents, models, vectorstores).",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, _ struct{}) (*mcp.CallToolResult, any, error) {
@@ -27,7 +27,7 @@ func registerComponentTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "list_components",
 		Description: "List components in a specific category.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.ListComponentsInput) (*mcp.CallToolResult, any, error) {
@@ -43,7 +43,7 @@ func registerComponentTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "get_component_schema",
 		Description: "Get full schema for a component type including all inputs and outputs.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.GetComponentSchemaInput) (*mcp.CallToolResult, any, error) {
@@ -66,7 +66,7 @@ func registerComponentTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "search_components",
 		Description: "Search components by name or description.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.SearchComponentsInput) (*mcp.CallToolResult, any, error) {

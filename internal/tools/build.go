@@ -12,7 +12,7 @@ import (
 )
 
 func registerBuildTools(server *mcp.Server, c *client.LangflowClient) {
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "build_flow",
 		Description: "Build and execute a flow. Streams NDJSON events as they arrive when WaitForCompletion is false, or waits and returns the final result when true.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.BuildFlowInput) (*mcp.CallToolResult, any, error) {
@@ -33,7 +33,7 @@ func registerBuildTools(server *mcp.Server, c *client.LangflowClient) {
 		return streamEvents(ctx, eventCh)
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "build_node",
 		Description: "Build a single vertex (component node) in a flow. Returns the resulting BuildEvent.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.BuildNodeInput) (*mcp.CallToolResult, any, error) {
@@ -48,7 +48,7 @@ func registerBuildTools(server *mcp.Server, c *client.LangflowClient) {
 		}, nil, nil
 	})
 
-	mcp.AddTool(server, &mcp.Tool{
+	addTool(server, &mcp.Tool{
 		Name:        "get_build_status",
 		Description: "Poll an async build job to retrieve all build events generated so far.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.GetBuildStatusInput) (*mcp.CallToolResult, any, error) {
