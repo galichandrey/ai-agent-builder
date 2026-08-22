@@ -26,3 +26,6 @@ go.work
 # OS
 .DS_Store
 Thumbs.db
+
+# SDD scratch (task briefs, reports, progress ledger)
+.superpowers/
