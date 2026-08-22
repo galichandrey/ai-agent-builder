@@ -141,6 +141,49 @@ func (c *LangflowClient) doGetStream(ctx context.Context, path string) (io.ReadC
 	return resp.Body, nil
 }
 
+// doPostStream performs a POST request with a JSON body and returns a streaming
+// reader for NDJSON responses (used by the build endpoint).
+func (c *LangflowClient) doPostStream(ctx context.Context, path string, body any) (io.ReadCloser, error) {
+	url := c.baseURL + "/api/v1" + path
+
+	var bodyReader io.Reader
+	if body != nil {
+		data, err := json.Marshal(body)
+		if err != nil {
+			return nil, fmt.Errorf("marshal request body: %w", err)
+		}
+		bodyReader = bytes.NewReader(data)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bodyReader)
+	if err != nil {
+		return nil, fmt.Errorf("create request: %w", err)
+	}
+
+	if body != nil {
+		req.Header.Set("Content-Type", "application/json")
+	}
+
+	c.applyHeaders(req)
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("execute request: %w", err)
+	}
+
+	if resp.StatusCode >= 400 {
+		defer resp.Body.Close()
+		data, _ := io.ReadAll(resp.Body)
+		return nil, &HTTPError{
+			StatusCode: resp.StatusCode,
+			Body:       string(data),
+			Message:    http.StatusText(resp.StatusCode),
+		}
+	}
+
+	return resp.Body, nil
+}
+
 // HTTPError represents a non-2xx HTTP response.
 type HTTPError struct {
 	StatusCode int
