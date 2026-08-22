@@ -26,6 +26,3 @@ func RegisterAll(server *mcp.Server, langflowClient *client.LangflowClient, cfg 
 	// Source Exploration (5 tools) — will be added in Task 18
 	registerSourceTools(server, langflowClient, cfg)
 }
-
-// Placeholder function — implementation will be added in later tasks.
-func registerSourceTools(server *mcp.Server, client *client.LangflowClient, cfg *config.Config) {}
