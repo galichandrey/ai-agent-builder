@@ -14,6 +14,7 @@ import (
 func registerNodeTools(server *mcp.Server, c *client.LangflowClient, _ *config.Config) {
 	registerNodeCRUDTools(server, c)
 	registerLayoutTools(server, c)
+	registerNoteTools(server, c)
 }
 
 func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
@@ -353,6 +354,103 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 		}
 
 		data, _ := json.Marshal(summaries)
+		return &mcp.CallToolResult{
+			Content: []mcp.Content{&mcp.TextContent{Text: string(data)}},
+		}, nil, nil
+	})
+}
+
+func registerNoteTools(server *mcp.Server, c *client.LangflowClient) {
+	mcp.AddTool(server, &mcp.Tool{
+		Name:        "add_note",
+		Description: "Add a sticky note annotation to a flow. Returns the created note node.",
+	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.AddNoteInput) (*mcp.CallToolResult, any, error) {
+		flow, err := c.GetFlow(ctx, input.FlowID)
+		if err != nil {
+			return errorResult(fmt.Errorf("get flow: %w", err)), nil, nil
+		}
+
+		noteID := schema.GenerateNodeID()
+
+		width := input.Width
+		if width <= 0 {
+			width = 400
+		}
+		height := input.Height
+		if height <= 0 {
+			height = 200
+		}
+
+		node := schema.Node{
+			ID:   noteID,
+			Type: "noteNode",
+			Position: schema.Position{
+				X: input.X,
+				Y: input.Y,
+			},
+			Data: schema.NodeData{
+				ID:    noteID,
+				Value: input.Content,
+				Node: schema.NodeConfig{
+					DisplayName: "Note",
+				},
+			},
+			Width:  width,
+			Height: height,
+		}
+
+		flow.Data.Nodes = append(flow.Data.Nodes, node)
+
+		_, err = c.UpdateFlow(ctx, input.FlowID, map[string]any{
+			"data": flow.Data,
+		})
+		if err != nil {
+			return errorResult(fmt.Errorf("save flow: %w", err)), nil, nil
+		}
+
+		data, _ := json.Marshal(node)
+		return &mcp.CallToolResult{
+			Content: []mcp.Content{&mcp.TextContent{Text: string(data)}},
+		}, nil, nil
+	})
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name:        "update_note",
+		Description: "Update a note's content and/or background color.",
+	}, func(ctx context.Context, req *mcp.CallToolRequest, input schema.UpdateNoteInput) (*mcp.CallToolResult, any, error) {
+		flow, err := c.GetFlow(ctx, input.FlowID)
+		if err != nil {
+			return errorResult(fmt.Errorf("get flow: %w", err)), nil, nil
+		}
+
+		nodeIdx := -1
+		for i := range flow.Data.Nodes {
+			if flow.Data.Nodes[i].ID == input.NoteID && flow.Data.Nodes[i].Type == "noteNode" {
+				nodeIdx = i
+				break
+			}
+		}
+		if nodeIdx == -1 {
+			return errorResult(fmt.Errorf("note %q not found in flow", input.NoteID)), nil, nil
+		}
+
+		node := &flow.Data.Nodes[nodeIdx]
+
+		if input.Content != nil {
+			node.Data.Value = *input.Content
+		}
+		if input.BackgroundColor != nil {
+			_ = *input.BackgroundColor // color stored externally by Langflow
+		}
+
+		_, err = c.UpdateFlow(ctx, input.FlowID, map[string]any{
+			"data": flow.Data,
+		})
+		if err != nil {
+			return errorResult(fmt.Errorf("save flow: %w", err)), nil, nil
+		}
+
+		data, _ := json.Marshal(node)
 		return &mcp.CallToolResult{
 			Content: []mcp.Content{&mcp.TextContent{Text: string(data)}},
 		}, nil, nil

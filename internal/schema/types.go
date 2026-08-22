@@ -127,6 +127,8 @@ type Node struct {
 	Type     string   `json:"type"`
 	Position Position `json:"position"`
 	Data     NodeData `json:"data"`
+	Width    int      `json:"width,omitempty"`
+	Height   int      `json:"height,omitempty"`
 }
 
 // EdgeData holds optional edge metadata.
