@@ -9,7 +9,6 @@ import (
 	"log/slog"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/ag/ai-agent-builder/internal/config"
 )
@@ -24,15 +23,16 @@ type LangflowClient struct {
 }
 
 // NewClient creates a LangflowClient from the given config.
+//
+// Note: the http.Client has no Timeout set. Request-level cancellation is
+// handled via context (ctx), which is the correct approach for streaming
+// responses (e.g. NDJSON build output) that may exceed any fixed timeout.
+// Non-streaming calls should always pass a context with a deadline.
 func NewClient(cfg *config.Config) *LangflowClient {
-	timeout := time.Duration(cfg.RequestTimeout) * time.Second
-	if timeout <= 0 {
-		timeout = 30 * time.Second
-	}
 	return &LangflowClient{
 		baseURL:       strings.TrimRight(cfg.LangflowURL, "/"),
 		apiKey:        cfg.APIKey,
-		httpClient:    &http.Client{Timeout: timeout},
+		httpClient:    &http.Client{Timeout: 0}, // no client-level timeout; use ctx for cancellation
 		customHeaders: cfg.CustomHeaders,
 		logger:        slog.Default(),
 	}

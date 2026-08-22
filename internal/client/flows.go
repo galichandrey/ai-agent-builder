@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/ag/ai-agent-builder/internal/schema"
 )
@@ -17,7 +18,8 @@ type ListFlowsResponse struct {
 	Pages int           `json:"pages"`
 }
 
-// ListFlows returns a paginated list of flows.
+// ListFlows returns a paginated list of flows, excluding MCP backup flows
+// (flows whose name indicates a backup snapshot).
 func (c *LangflowClient) ListFlows(ctx context.Context, page, size int, folderID string) ([]schema.Flow, int, error) {
 	path := fmt.Sprintf("/flows/?page=%d&size=%d", page, size)
 	if folderID != "" {
@@ -34,7 +36,20 @@ func (c *LangflowClient) ListFlows(ctx context.Context, page, size int, folderID
 		return nil, 0, fmt.Errorf("decode list flows response: %w", err)
 	}
 
-	return resp.Flows, resp.Total, nil
+	// Exclude backup flows (name contains "backup" case-insensitively).
+	filtered := resp.Flows[:0]
+	for _, f := range resp.Flows {
+		if !isBackupFlow(f) {
+			filtered = append(filtered, f)
+		}
+	}
+
+	return filtered, resp.Total, nil
+}
+
+// isBackupFlow reports whether a flow is an MCP-generated backup snapshot.
+func isBackupFlow(f schema.Flow) bool {
+	return strings.Contains(strings.ToLower(f.Name), "backup")
 }
 
 // ListAllFlows returns all flows without backup filtering.
@@ -87,6 +102,27 @@ func (c *LangflowClient) CreateFlow(ctx context.Context, name, description strin
 	return &flow, nil
 }
 
+// CreateFlowWithData creates a new flow with the full flow data (nodes, edges, viewport).
+func (c *LangflowClient) CreateFlowWithData(ctx context.Context, name, description string, data schema.FlowData) (*schema.Flow, error) {
+	body := map[string]any{
+		"name":        name,
+		"description": description,
+		"data":        data,
+	}
+
+	resp, err := c.doPost(ctx, "/flows/", body)
+	if err != nil {
+		return nil, fmt.Errorf("create flow with data: %w", err)
+	}
+
+	var flow schema.Flow
+	if err := json.Unmarshal(resp, &flow); err != nil {
+		return nil, fmt.Errorf("decode create flow response: %w", err)
+	}
+
+	return &flow, nil
+}
+
 // UpdateFlow patches a flow with partial data.
 func (c *LangflowClient) UpdateFlow(ctx context.Context, flowID string, updateData map[string]any) (*schema.Flow, error) {
 	data, err := c.doPatch(ctx, "/flows/"+flowID, updateData)
@@ -122,7 +158,7 @@ func (c *LangflowClient) DuplicateFlow(ctx context.Context, flowID, newName stri
 		name = newName
 	}
 
-	created, err := c.CreateFlow(ctx, name, original.Description)
+	created, err := c.CreateFlowWithData(ctx, name, original.Description, original.Data)
 	if err != nil {
 		return nil, fmt.Errorf("duplicate flow: %w", err)
 	}

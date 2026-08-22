@@ -288,18 +288,20 @@ func TestHTTPError_Message(t *testing.T) {
 }
 
 func TestNewClient_TimeoutHandling(t *testing.T) {
-	// Zero timeout should default to 30s
+	// The http.Client has no client-level timeout: cancellation is handled
+	// via context (ctx) to avoid silently truncating long streaming responses
+	// such as NDJSON build output.
 	cfg := &config.Config{LangflowURL: "http://localhost:9999", RequestTimeout: 0}
 	c := NewClient(cfg)
-	if c.httpClient.Timeout != 30*time.Second {
-		t.Errorf("expected default 30s timeout, got %v", c.httpClient.Timeout)
+	if c.httpClient.Timeout != 0 {
+		t.Errorf("expected 0 client timeout (ctx-driven), got %v", c.httpClient.Timeout)
 	}
 
-	// Explicit timeout
+	// Explicit RequestTimeout must still be ignored in favor of ctx (Timeout stays 0)
 	cfg2 := &config.Config{LangflowURL: "http://localhost:9999", RequestTimeout: 60}
 	c2 := NewClient(cfg2)
-	if c2.httpClient.Timeout != 60*time.Second {
-		t.Errorf("expected 60s timeout, got %v", c2.httpClient.Timeout)
+	if c2.httpClient.Timeout != 0 {
+		t.Errorf("expected 0 client timeout, got %v", c2.httpClient.Timeout)
 	}
 }
 
