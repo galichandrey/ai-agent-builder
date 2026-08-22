@@ -28,8 +28,6 @@ func RegisterAll(server *mcp.Server, langflowClient *client.LangflowClient, cfg 
 }
 
 // Placeholder functions — implementations will be added in later tasks.
-func registerComponentTools(server *mcp.Server, client *client.LangflowClient) {}
-
 func registerBuildTools(server *mcp.Server, client *client.LangflowClient) {}
 
 func registerNodeTools(server *mcp.Server, client *client.LangflowClient, cfg *config.Config) {}
