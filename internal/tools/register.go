@@ -27,7 +27,5 @@ func RegisterAll(server *mcp.Server, langflowClient *client.LangflowClient, cfg 
 	registerSourceTools(server, langflowClient, cfg)
 }
 
-// Placeholder functions — implementations will be added in later tasks.
-func registerConnectionTools(server *mcp.Server, client *client.LangflowClient) {}
-
+// Placeholder function — implementation will be added in later tasks.
 func registerSourceTools(server *mcp.Server, client *client.LangflowClient, cfg *config.Config) {}
