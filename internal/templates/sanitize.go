@@ -6,7 +6,10 @@ import (
 	"regexp"
 )
 
-var secretNameRe = regexp.MustCompile(`(?i)api_key|apikey|token|secret|password`)
+// Matches secret-bearing field names only ("api_key", "openai_api_key",
+// "auth_token", "password") — not benign fields that merely CONTAIN a word,
+// e.g. "max_tokens" must NOT be treated as a secret.
+var secretNameRe = regexp.MustCompile(`(?i)(^|_)(api_?key|token|secret|password)$`)
 
 // SanitizeForTemplate blanks values of secret-bearing fields (password==true
 // or name matching api_key/token/secret/password) and reports each blanking as

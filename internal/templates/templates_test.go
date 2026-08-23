@@ -200,6 +200,40 @@ func TestSanitizeBlanksPasswordFields(t *testing.T) {
 	}
 }
 
+func TestSanitizeDoesNotFlagBenignTokenFields(t *testing.T) {
+	raw := []byte(`{"nodes":[{"id":"a","data":{"type":"Agent","node":{"template":{
+		"max_tokens":{"value":100},
+		"openai_api_key":{"value":"sk-x"},
+		"auth_token":{"value":"tok"},
+		"max_iterations":{"value":15}
+	}}}}],"edges":[]}`)
+	out, warnings := SanitizeForTemplate(raw)
+	var doc struct {
+		Nodes []struct {
+			Data struct {
+				Node struct {
+					Template map[string]struct {
+						Value any `json:"value"`
+					} `json:"template"`
+				} `json:"node"`
+			} `json:"data"`
+		} `json:"nodes"`
+	}
+	if err := json.Unmarshal(out, &doc); err != nil {
+		t.Fatal(err)
+	}
+	tpl := doc.Nodes[0].Data.Node.Template
+	if tpl["max_tokens"].Value != float64(100) || tpl["max_iterations"].Value != float64(15) {
+		t.Errorf("benign numeric fields must survive: %v %v", tpl["max_tokens"], tpl["max_iterations"])
+	}
+	if tpl["openai_api_key"].Value != "" || tpl["auth_token"].Value != "" {
+		t.Errorf("real secrets must be blanked")
+	}
+	if len(warnings) != 2 {
+		t.Errorf("want 2 warnings, got %v", warnings)
+	}
+}
+
 func TestBuildEnvelopeShape(t *testing.T) {
 	f := mustParse(t, fixturePath(t), "native")
 	dataRaw, err := f.DataRaw()
