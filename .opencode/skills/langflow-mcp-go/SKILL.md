@@ -50,6 +50,12 @@ This self-learning loop grows the library and shrinks future error surface.
 
 ## Agent Wiring Cookbook (spike-verified 2026-08-23, LangFlow 1.11)
 
+**AW-детерминизм. LLM не принимает порядковые решения в конвейере.** Порядок стадий, условия переходов, «что дальше» — считает код (отдельный state-инструмент типа `next_stage` поверх манифеста). Промпт агента описывает ТОЛЬКО механику: «вызови X → передай Y → заверши строкой Z». Симптом для переноса логики в код: агент повторяет/пропускает шаги недетерминированно.
+
+**AW0. СНАЧАЛА живой пример, потом свой конфиг.** Перед настройкой любой ноды: `GET /api/v1/flows/` (gzip!), grep по JSON на паттерн ("OpenAI Compatible", "tool_mode", имя компонента) и копируйте рабочую форму. 90% ошибок конфигурации = выдуманный формат вместо скопированного. Массовое создание однотипных флоу — скриптом-клоном проверенного скелета (пример: scripts/build_stubs.py в content-factory).
+
+**AW0b. Сеть контейнера может быть pasta, а не docker0.** Проверяйте `docker inspect langflow --format '{{.HostConfig.NetworkMode}}'`: при `pasta` хост из контейнера = `http://host.containers.internal:<port>`; 172.17.0.1 не работает.
+
 **AW1. Конфиг модели у `Agent` — только эта форма работает:**
 `model = [{"name":"hy3-free","provider":"OpenAI Compatible"}]` (список словарей!), `api_key` = литеральный ключ с `load_from_db=false`. Строки `"Provider/model"` и `{VAR}`-плейсхолдеры НЕ резолвятся (уходят буквально → OpenAI 401). base_url провайдер берёт из global vars `OPENAI_COMPATIBLE_*` по соглашению имён.
 
