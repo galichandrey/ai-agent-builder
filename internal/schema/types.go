@@ -269,6 +269,7 @@ func applyValueIntoField(field map[string]any, v any) {
 		}
 	}
 }
+
 // into the node's existing data.node payload. The endpoint returns a partial
 // payload (no template._type, no display metadata), so a wholesale replace
 // would corrupt the node; deep-merge keeps original keys and applies updates.
