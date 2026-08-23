@@ -123,6 +123,47 @@ func (c *LangflowClient) CreateFlowWithData(ctx context.Context, name, descripti
 	return &flow, nil
 }
 
+// CreateFlowFromRaw creates a flow posting the data payload verbatim —
+// no typed re-marshal, so native fields survive byte-for-byte.
+func (c *LangflowClient) CreateFlowFromRaw(ctx context.Context, name, description string, dataRaw json.RawMessage) (*schema.Flow, error) {
+	body := map[string]any{
+		"name":        name,
+		"description": description,
+		"data":        dataRaw,
+	}
+
+	resp, err := c.doPost(ctx, "/flows/", body)
+	if err != nil {
+		return nil, fmt.Errorf("create flow from raw: %w", err)
+	}
+
+	var flow schema.Flow
+	if err := json.Unmarshal(resp, &flow); err != nil {
+		return nil, fmt.Errorf("decode create flow response: %w", err)
+	}
+
+	return &flow, nil
+}
+
+// GetFlowRaw returns the flow's .data payload exactly as served, without
+// decoding into typed structs.
+func (c *LangflowClient) GetFlowRaw(ctx context.Context, flowID string) (json.RawMessage, error) {
+	raw, err := c.doGet(ctx, "/flows/"+flowID)
+	if err != nil {
+		return nil, fmt.Errorf("get raw flow %s: %w", flowID, err)
+	}
+	var head struct {
+		Data json.RawMessage `json:"data"`
+	}
+	if err := json.Unmarshal(raw, &head); err != nil {
+		return nil, fmt.Errorf("decode raw flow %s: %w", flowID, err)
+	}
+	if len(head.Data) == 0 {
+		return nil, fmt.Errorf("flow %s has no data payload", flowID)
+	}
+	return head.Data, nil
+}
+
 // UpdateFlow patches a flow with partial data.
 func (c *LangflowClient) UpdateFlow(ctx context.Context, flowID string, updateData map[string]any) (*schema.Flow, error) {
 	data, err := c.doPatch(ctx, "/flows/"+flowID, updateData)

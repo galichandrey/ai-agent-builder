@@ -23,6 +23,7 @@ type Config struct {
 	LogLevel        string
 	LangflowVersion string
 	SourceCacheDir  string
+	TemplatesDir    string
 }
 
 // CLI flag variables registered at package level so they're available
@@ -40,6 +41,7 @@ var (
 	flagLogLevel        string
 	flagLangflowVersion string
 	flagSourceCacheDir  string
+	flagTemplatesDir    string
 	flagStdio           bool
 	flagHTTPAddr        string
 )
@@ -57,6 +59,7 @@ func init() {
 	flag.StringVar(&flagLogLevel, "log-level", "info", "Log level")
 	flag.StringVar(&flagLangflowVersion, "langflow-version", "", "Override LangFlow version")
 	flag.StringVar(&flagSourceCacheDir, "source-cache-dir", "~/.cache/langflow-mcp", "Source cache directory")
+	flag.StringVar(&flagTemplatesDir, "templates-dir", "./templates", "Template library directory (native/ + custom/)")
 	flag.BoolVar(&flagStdio, "stdio", false, "Use stdio transport (default)")
 	flag.StringVar(&flagHTTPAddr, "http", "", "Use streamable HTTP transport (e.g., :8080)")
 }
@@ -76,6 +79,7 @@ func defaultConfig() *Config {
 		LogLevel:        "info",
 		LangflowVersion: "",
 		SourceCacheDir:  "~/.cache/langflow-mcp",
+		TemplatesDir:    "./templates",
 	}
 }
 
@@ -125,6 +129,7 @@ func Load() *Config {
 		LogLevel:        flagLogLevel,
 		LangflowVersion: flagLangflowVersion,
 		SourceCacheDir:  flagSourceCacheDir,
+		TemplatesDir:    flagTemplatesDir,
 	}
 
 	// Apply ENV overrides only if the CLI flag was NOT explicitly set
@@ -139,6 +144,7 @@ func Load() *Config {
 	applyEnvOverride("log-level", "LANGFLOW_MCP_LOG_LEVEL", func(v string) { cfg.LogLevel = v })
 	applyEnvOverride("langflow-version", "LANGFLOW_MCP_LANGFLOW_VERSION", func(v string) { cfg.LangflowVersion = v })
 	applyEnvOverride("source-cache-dir", "LANGFLOW_MCP_SOURCE_CACHE_DIR", func(v string) { cfg.SourceCacheDir = v })
+	applyEnvOverride("templates-dir", "LANGFLOW_MCP_TEMPLATES_DIR", func(v string) { cfg.TemplatesDir = v })
 
 	// Handle custom headers: CLI flag or ENV
 	customHeadersRaw := flagCustomHeaders
