@@ -481,3 +481,59 @@ func TestConnectionSchemaHelpers(t *testing.T) {
 		}
 	})
 }
+
+func TestConnectNodes_SingleOutputFallback(t *testing.T) {
+	// Нода в tool_mode имеет единственный выход component_as_tool:
+	// connect_nodes должен подставить его автоматически.
+	mux := http.NewServeMux()
+	flowJSON := `{"id":"flow-1","name":"t","data":{"nodes":[
+		{"id":"tool-node","data":{"type":"CustomComponent","node":{"outputs":[{"name":"component_as_tool","types":["Tool"]}]}}},
+		{"id":"agent-node","data":{"type":"Agent","node":{"template":{"tools":{"type":"other","input_types":["Tool"],"show":true}}}}}
+	],"edges":[]}}`
+	mux.HandleFunc("/api/v1/flows/flow-1", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(flowJSON))
+	})
+	ts := httptest.NewServer(mux)
+	defer ts.Close()
+
+	cfg := &config.Config{LangflowURL: ts.URL, APIKey: "k"}
+	c := client.NewClient(cfg)
+
+	server := mcp.NewServer(&mcp.Implementation{Name: "test"}, nil)
+	registerConnectionTools(server, c)
+
+	st, ct := mcp.NewInMemoryTransports()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	go func() { _, _ = server.Connect(ctx, st, nil) }()
+	mc := mcp.NewClient(&mcp.Implementation{Name: "tc"}, nil)
+	session, err := mc.Connect(context.Background(), ct, nil)
+	if err != nil {
+		t.Fatalf("connect: %v", err)
+	}
+	defer session.Close()
+
+	res, err := session.CallTool(ctx, &mcp.CallToolParams{
+		Name: "connect_nodes",
+		Arguments: map[string]any{
+			"flow_id":        "flow-1",
+			"source_node_id": "tool-node",
+			"source_output":  "result", // именованного выхода уже нет
+			"target_node_id": "agent-node",
+			"target_input":   "tools",
+		},
+	})
+	if err != nil {
+		t.Fatalf("CallTool: %v", err)
+	}
+	if res.IsError {
+		msg := ""
+		for _, item := range res.Content {
+			if txt, ok := item.(*mcp.TextContent); ok {
+				msg = txt.Text
+			}
+		}
+		t.Fatalf("fallback failed: %s", msg)
+	}
+}

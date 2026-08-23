@@ -44,8 +44,22 @@ func registerConnectionTools(server *mcp.Server, c *client.LangflowClient) {
 				break
 			}
 		}
+		resolved := input.SourceOutput
 		if sourceTypes == nil {
-			return errorResult(fmt.Errorf("source output %q not found on node %s", input.SourceOutput, input.SourceNodeID)), nil, nil
+			// Fallback: tool_mode-ноды (CustomComponent/RunFlow) теряют именованные
+			// выходы — остаётся единственный component_as_tool. Подставляем его сами.
+			outputs := sourceNode.Data.Node.Outputs
+			if len(outputs) == 1 {
+				resolved = outputs[0].Name
+				sourceTypes = outputs[0].Types
+			}
+		}
+		if sourceTypes == nil {
+			names := make([]string, 0, len(sourceNode.Data.Node.Outputs))
+			for _, o := range sourceNode.Data.Node.Outputs {
+				names = append(names, o.Name)
+			}
+			return errorResult(fmt.Errorf("source output %q not found on node %s (available: %v)", input.SourceOutput, input.SourceNodeID, names)), nil, nil
 		}
 
 		targetField, ok := targetNode.Data.Node.Template[input.TargetInput]
@@ -73,7 +87,7 @@ func registerConnectionTools(server *mcp.Server, c *client.LangflowClient) {
 
 		edge := schema.BuildNativeEdge(
 			input.SourceNodeID, sourceNode.Data.Type,
-			schema.OutputField{Types: sourceTypes, Name: input.SourceOutput},
+			schema.OutputField{Types: sourceTypes, Name: resolved},
 			input.TargetNodeID,
 			schema.EdgeTargetInput{FieldName: input.TargetInput, Field: targetField},
 		)
