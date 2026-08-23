@@ -1,13 +1,13 @@
 ---
 name: langflow-mcp-go
-description: Use when driving the Go-based langflow-mcp server to manage LangFlow — create flows, add nodes (built-in or inline Python), wire Agent + model flows, run them via build_flow or REST /run, toggle tool_mode for agent tools, arrange layouts, or explore LangFlow source. Trigger when an E-agent needs programmatic LangFlow control, configures free-model providers (opencode zen etc.), or hits errors like "unhashable type", "component not found", "Missing credentials", or 403/404 Invalid API key.
+description: Use when driving the Go-based langflow-mcp server to manage LangFlow — instantiate flows from the native template library in one call, add nodes (built-in or inline Python), wire Agent + model flows, run them via build_flow or REST /run, toggle tool_mode for agent tools, contribute verified flows back as templates, arrange layouts, or explore LangFlow source. Trigger when an E-agent needs programmatic LangFlow control, configures free-model providers (opencode zen etc.), or hits errors like "unhashable type", "component not found", "Missing credentials", "No model selected", or 403/404 Invalid API key.
 metadata:
-  version: 2.0.0
+  version: 2.2.0
 ---
 
 # LangFlow MCP Go Server
 
-You manage LangFlow through the **Go `langflow-mcp` server** (37 tools). Every rule below is backed by a live-verified failure.
+You manage LangFlow through the **Go `langflow-mcp` server** (40 tools). Every rule below is backed by a live-verified failure.
 
 ## Core Rules
 
@@ -19,16 +19,31 @@ You manage LangFlow through the **Go `langflow-mcp` server** (37 tools). Every r
 **R1. Component names are TYPE names, not display names.**
 Call `search_components` first and use the returned `name`: `ChatInput` (display "Chat Input"), model is `ext:openai:OpenAIModelComponent@official`, `Agent`. Extension types carry `ext:<provider>:<Class>@official`.
 
-**R2. Tool wiring depends on component kind.**
+**R2. Prefer the template library over hand-building.**
+- `list_templates()` first — the library ships LangFlow's **29 official native templates** (`templates/native/`) plus contributed ones (`templates/custom/`). Verification levels: `tier_a` = builds clean on live instance (29/29), `tier_b` = full run HTTP 200 with only an LLM credential (15/29, see `templates/verification.json`).
+- `create_flow_from_template(template_name, new_name?, params?)` = ONE call → fully wired flow.
+- `params` are generic: each key is set on every node whose template has that field (`model_name`, `api_key`, `temperature`, `system_prompt`, ...). `load_from_db` auto-clears on touched fields.
+
+**R3. Model selection has TWO shapes — parametrize both blindly.**
+Passing `model_name` handles both automatically:
+- Modern nodes (Agent, LanguageModelComponent) use a `model` **ModelInput** field → value becomes `[{"name": "<model>", "provider": "OpenAI Compatible"}]`.
+- Legacy model nodes have `provider`+`model_name` fields → both set (empty provider filled with "OpenAI Compatible").
+"OpenAI Compatible" provider resolves base URL/key from instance global variables `OPENAI_COMPATIBLE_BASE_URL` / `OPENAI_COMPATIBLE_API_KEY` (create once via `POST /api/v1/variables/`, type Generic/Credential). If you set `model_name` to a provider-specific name without this plumbing you get `No model selected` / `Model name/provider overrides require a built-in model selection`.
+
+**R4. Tool wiring depends on component kind.**
 - Native tool components (`CalculatorTool`, …): they ALREADY expose a Tool output — connect its `api_build_tool` output straight to `Agent.tools`. `set_tool_mode` not needed.
 - Custom components (carry `code`): `set_tool_mode(enabled=true)` runs LangFlow's server-side `/custom_component/update` transform → adds `component_as_tool` (method `to_toolkit`). Connect THAT to `Agent.tools`.
 - Other built-ins: `set_tool_mode` flips the `tool_mode` flag only.
 
-**R3. Config changes don't execute.** After any mutation verify with `build_flow(flow_id, input_value=...)` (or POST `/api/v1/run/{id}`).
+**R5. Config changes don't execute.** After any mutation verify with `build_flow(flow_id, input_value=...)` (or POST `/api/v1/run/{id}`). A run error of kind "Error building Component X: <credentials/file>" still proves the graph structure is sound — configure that component and re-run.
 
-**R4. `update_node` values are literals.** It auto-flips `load_from_db=true → false` on fields you set (e.g. `api_key`) — otherwise LangFlow treats the value as a global-variable name and fails at runtime with "Missing credentials".
+**R6. Literal values win.** `update_node` and template params auto-flip `load_from_db=true → false` on touched fields (e.g. `api_key`) — otherwise LangFlow treats the value as a global-variable name and fails at runtime with "Missing credentials".
 
-**R5. Connections validate types.** On rejection use `validate_connection` / `find_compatible_connections`. Hidden fields (`show=false`) cannot receive edges.
+**R7. Templates are NATIVE LangFlow files — never hand-assemble JSON.**
+The library format is exactly what LangFlow itself ships (`initial_setup/starter_projects/*.json`) and documents for contributions. Never write flow JSON by hand: instantiate from the library, adjust with tools, then give back:
+- After building AND running (HTTP 200) a flow not in the library, OFFER to save it: `save_flow_as_template(flow_id, template_name, description?, tags?)` → lands in `templates/custom/`, secrets sanitized automatically.
+- Then re-instantiate once from the saved template to prove it is self-sufficient.
+This self-learning loop grows the library and shrinks future error surface.
 
 ## Verified Port Map (Agent flow)
 
@@ -39,20 +54,35 @@ Call `search_components` first and use the returned `name`: `ChatInput` (display
 | Agent | `response` | ChatOutput | `input_value` |
 | any tool | `api_build_tool` / `component_as_tool` | Agent | `tools` |
 
-Full recipes: [workflows.md](workflows.md) · All 37 tools: [tools-reference.md](tools-reference.md)
+Full recipes: [workflows.md](workflows.md) · All 40 tools: [tools-reference.md](tools-reference.md)
+
+## Native LangFlow endpoints worth knowing
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/v1/starter-projects/` | lfx starter dumps (5, minimal; names come back null) |
+| `GET /api/v1/models?type=language` | providers + models incl. "OpenAI Compatible" variables |
+| `GET /api/v1/variables/` · `POST /api/v1/variables/` | global variables (provider credentials) |
+| `POST /api/v1/flows/batch/` | push multiple flows WITH native IDs (upsert-ish guard) |
+| `POST /api/v1/flows/upload/` | import template JSON/ZIP file(s), upsert semantics |
+| `GET /api/v1/flows/basic_examples/` | tiny example flows |
+
+The package gallery ("New Flow" modal) regenerates from package files at startup — it CANNOT be extended via API. Our file library + these endpoints cover every practical need.
 
 ## Failure Modes (live-verified)
 
 | Symptom | Cause | Fix |
 |---|---|---|
+| Run 500 "No model selected" (Agent) | modern Agent needs `model` ModelInput value or a wired model node | pass `model_name` param (R3) or connect OpenAIModelComponent `.model_output`→`.model` |
+| Run 500 "Model name/provider overrides require a built-in model selection" | `model_name` set without matching provider plumbing | use R3 params; ensure `OPENAI_COMPATIBLE_*` globals exist |
 | `add_node` "component not found" | display name instead of type name | `search_components` → exact `name` |
 | Run 500 `unhashable type: 'dict'` | flow saved by OLD server version (corrupted `_type`) | rebuild that flow from scratch; current server round-trips scalars safely |
 | Run 500 `'NoneType' object is not iterable` | old broken edge format | recreate edges with current `connect_nodes` |
-| Run "Missing credentials" despite api_key set | fixed automatically since v2: `update_node` clears `load_from_db` | if still failing, check value actually non-empty |
+| Run "Missing credentials" despite api_key set | fixed since v2: literals clear `load_from_db` | check value non-empty; for OpenAI Compatible prefer globals (R3) |
 | 403 "Invalid API key" | stale key after reinstall | create new key in UI Settings |
 | GET flow 404 right after create | Bearer-JWT auth path | switch to `LANGFLOW_MCP_API_KEY` |
 | `explore_langflow` "not found" | source not cloned | `setup_langflow_source` once |
 
 ## Transport & Config
 
-stdio (default) or `--http :8080` (`/mcp`, `/health`). Priority CLI > ENV > default. Key vars: `LANGFLOW_MCP_LANGFLOW_URL`, `LANGFLOW_MCP_API_KEY`, `LANGFLOW_MCP_LOG_LEVEL=debug`.
+stdio (default) or `--http :8080` (`/mcp`, `/health`). Priority CLI > ENV > default. Key vars: `LANGFLOW_MCP_LANGFLOW_URL`, `LANGFLOW_MCP_API_KEY`, `LANGFLOW_MCP_TEMPLATES_DIR` (default `./templates`), `LANGFLOW_MCP_LOG_LEVEL=debug`.

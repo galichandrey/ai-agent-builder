@@ -6,7 +6,8 @@ Feature parity with the Python reference ([sportsrecruits/langflow-builder-mcp](
 
 ## Features
 
-**37 MCP tools across 6 categories:**
+**40 MCP tools across 7 categories** — including a template library seeded with
+LangFlow's 29 official native templates:
 
 | Category | Tools |
 |----------|-------|
@@ -16,6 +17,7 @@ Feature parity with the Python reference ([sportsrecruits/langflow-builder-mcp](
 | **Node Manipulation** (14) | `add_node`, `add_custom_component`, `update_node`, `set_tool_mode`, `remove_node`, `get_node_details`, `list_nodes`, `move_node`, `move_nodes_batch`, `auto_arrange_flow`, `analyze_flow_layout`, `get_layout_suggestions`, `add_note`, `update_note` |
 | **Connection Management** (5) | `connect_nodes`, `disconnect_nodes`, `list_connections`, `validate_connection`, `find_compatible_connections` |
 | **Source Exploration** (5) | `setup_langflow_source`, `explore_langflow`, `read_langflow_file`, `list_langflow_directory`, `langflow_concepts` |
+| **Template Library** (3) | `list_templates`, `create_flow_from_template`, `save_flow_as_template` |
 
 ## Installation
 
@@ -62,6 +64,7 @@ Priority: **CLI flag > ENV > default**
 | `LANGFLOW_MCP_LOG_LEVEL` | `--log-level` | `info` | Log level (debug/info/warn/error) |
 | `LANGFLOW_MCP_LANGFLOW_VERSION` | `--langflow-version` | `""` | Override LangFlow version |
 | `LANGFLOW_MCP_SOURCE_CACHE_DIR` | `--source-cache-dir` | `~/.cache/langflow-mcp` | Source cache directory |
+| `LANGFLOW_MCP_TEMPLATES_DIR` | `--templates-dir` | `./templates` | Template library dir (`native/` + `custom/`) |
 
 > **Auth note:** use `LANGFLOW_MCP_API_KEY` (`x-api-key`). Do not pass
 > `Authorization: Bearer <JWT>` through `LANGFLOW_MCP_CUSTOM_HEADERS` — LangFlow
@@ -99,6 +102,7 @@ MCP Server (cmd/server)
     ├── internal/client/     LangFlow HTTP client + NDJSON parser
     ├── internal/schema/     Types, validators, ID generators
     ├── internal/layout/     Layout analysis engine
+├── internal/templates/  Native-format template library core
     ├── internal/config/     ENV + CLI config
     └── internal/logging/    Structured slog logging
          │
@@ -111,6 +115,29 @@ LangFlow REST API (/api/v1)
 - **Agent Skill (recommended):** [`docs/skills/langflow-mcp-go.md`](docs/skills/langflow-mcp-go.md) — detailed guide on using the `langflow-mcp-go` skill (v2.0.0) so E-Agents can drive the server without hitting verified failure modes (auth path confusion, display-name vs type-name, tool wiring per component kind, `load_from_db` API keys, forgetting to build).
 - Design Spec: [`docs/superpowers/specs/2026-08-22-langflow-mcp-go-design.md`](docs/superpowers/specs/2026-08-22-langflow-mcp-go.md)
 - Implementation Plan: [`docs/superpowers/plans/2026-08-22-langflow-mcp-go.md`](docs/superpowers/plans/2026-08-22-langflow-mcp-go.md)
+
+## Template Library
+
+`templates/native/` contains the **29 official LangFlow starter templates**
+extracted verbatim from the running container — same files that power the UI
+gallery, in the format LangFlow documents for contributions. `templates/custom/`
+grows through the self-learning loop: agents save verified flows back as
+templates via `save_flow_as_template`.
+
+```bash
+# one MCP call -> fully wired flow on the instance
+create_flow_from_template(
+  template_name="Simple Agent",
+  params={"model_name": "nemotron-3-ultra-free", "api_key": "<key>"})
+```
+
+Params are generic: each key is set on every node whose template has that field;
+modern Agent/LanguageModel `model` selectors and legacy `provider+model_name`
+pairs are both handled ("OpenAI Compatible" provider via `OPENAI_COMPATIBLE_*`
+global variables). Live verification (`templates/verification.json`): all 29
+instantiate and build; 15 run end-to-end with only an LLM credential.
+
+See [`templates/README.md`](templates/README.md) for provenance and levels.
 
 ## Using the Agent Skill
 

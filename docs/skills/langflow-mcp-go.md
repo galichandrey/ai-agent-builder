@@ -10,12 +10,12 @@ downloaders get it directly:
 
 ```
 .opencode/skills/langflow-mcp-go/
-├── SKILL.md            # Core rules (R0–R5), failure modes, verified port map
-├── tools-reference.md  # All 37 tools with exact signatures
-└── workflows.md        # E-agent recipes (W1–W7), live-verified
+├── SKILL.md            # Core rules (R0–R7), failure modes, verified port map, native endpoints
+├── tools-reference.md  # All 40 tools with exact signatures
+└── workflows.md        # E-agent recipes (W0–W8), live-verified
 ```
 
-Current version: **2.0.0**.
+Current version: **2.2.0**.
 
 Install it into your agent's skill folder (see the README "Using the Agent Skill"
 section for the exact `cp` commands for OpenCode / Claude Code / Codex).
@@ -81,3 +81,20 @@ No restart needed — skills are discovered on next session start.
 | Source Exploration | 5 | setup_langflow_source, explore_langflow, read_langflow_file, list_langflow_directory, langflow_concepts |
 
 See `tools-reference.md` (in the skill dir) for exact JSON signatures.
+
+## Template Library (v2.2.0)
+
+The server ships a file-based template library in **LangFlow's official native
+format**: `templates/native/` holds all 29 official starter templates extracted
+from the package; `templates/custom/` grows via the self-learning loop
+(`save_flow_as_template` after an HTTP 200 run, then re-instantiate to verify).
+
+MCP tools: `list_templates`, `create_flow_from_template` (generic params — any
+template field set on every node having it; both modern `model` ModelInput and
+legacy `provider+model_name` selectors handled), `save_flow_as_template`.
+
+Live verification on LangFlow 1.11: 29/29 instantiate + build clean (tier A);
+15/29 run end-to-end with only an LLM credential (tier B) — see
+`templates/verification.json`. The UI gallery cannot be extended via API
+(regenerated from package files); push templates into an instance as regular
+flows with `POST /api/v1/flows/batch/` or `/flows/upload/`.

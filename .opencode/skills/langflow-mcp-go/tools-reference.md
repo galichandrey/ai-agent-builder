@@ -1,6 +1,6 @@
 # LangFlow MCP Go — Tool Reference
 
-All 37 tools. Exact names + key args. Categories: Component Discovery (4), Flow Management (6), Build & Execution (3), Node Manipulation (14), Connection Management (5), Source Exploration (5).
+All 40 tools. Exact names + key args. Categories: Component Discovery (4), Flow Management (6), Build & Execution (3), Node Manipulation (14), Connection Management (5), Source Exploration (5), Template Library (3).
 
 ## Component Discovery (4)
 
@@ -75,3 +75,11 @@ All 37 tools. Exact names + key args. Categories: Component Discovery (4), Flow 
 - **Edge ID**: `reactflow__edge-{src}{src_handle}-{tgt}{tgt_handle}`
 - **Output handle**: `{node_id}|{output_name}` (Langflow convention)
 - **Input handle**: `{node_id}|{input_name}`
+
+## Template Library (3)
+
+| Tool | Args | Purpose |
+|---|---|---|
+| `list_templates` | `{"source": "native|custom|"" (all)"}` | Catalog with name, slug, tags, node count, tier_a/tier_b verification |
+| `create_flow_from_template` | `{"template_name", "new_name": "opt", "description": "opt", "params": {"model_name": "...", "api_key": "...", <any template field>: v}}` | ONE call → fully wired flow; params applied to every node having the field; ModelInput/legacy model selectors both handled |
+| `save_flow_as_template` | `{"flow_id", "template_name", "description": "opt", "tags": []}` | Export verified flow → `templates/custom/<slug>.json` in native format; secrets blanked + warnings |

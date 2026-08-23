@@ -2,7 +2,37 @@
 
 Recipes verified end-to-end on LangFlow 1.11 (Docker, `AUTO_LOGIN=false`).
 
-## W1: Agent + Model Flow (VERIFIED with free model)
+## W0: Instantiate from the Template Library (PREFERRED)
+
+The library (`LANGFLOW_MCP_TEMPLATES_DIR`, default `./templates`) ships LangFlow's
+29 official native templates + contributed ones. One call = fully wired flow:
+
+```
+list_templates()                                    # catalog: name, tags, nodes, tier_a/tier_b
+create_flow_from_template(
+    template_name="Simple Agent",                   # name or slug ("simple_agent")
+    new_name="My research agent",
+    params={model_name: "nemotron-3-ultra-free",
+            api_key: "<zen-key>"})                  # generic: set on EVERY node having the field
+POST /api/v1/run/{flow_id}  or build_flow(...)      # VERIFY (R5)
+```
+
+Verified levels (templates/verification.json): **29/29 tier_a** (build clean),
+**15/29 tier_b** (full run with only an LLM credential). Tier-a-only templates need
+per-component credentials/files — instantiate, then `update_node` those fields.
+
+Model params handle BOTH selector shapes automatically (SKILL R3):
+- modern Agent/LanguageModel `model` ModelInput → `[{"name": m, "provider": "OpenAI Compatible"}]`
+- legacy `provider`+`model_name` pairs → both filled.
+
+One-time instance setup for the "OpenAI Compatible" provider:
+
+```
+POST /api/v1/variables/ {"name":"OPENAI_COMPATIBLE_BASE_URL","value":"https://opencode.ai/zen/v1","type":"Generic","default_fields":["openai_compatible_base_url"]}
+POST /api/v1/variables/ {"name":"OPENAI_COMPATIBLE_API_KEY","value":"<key>","type":"Credential","default_fields":["api_key"]}
+```
+
+## W1: Agent + Model Flow (hand-built, VERIFIED with free model)
 
 ChatInput → Agent(model=OpenAIModel) → ChatOutput, model on opencode zen free tier:
 
@@ -92,6 +122,39 @@ langflow_concepts(topic="tool_mode"|"building"|"common_mistakes")
 ```
 duplicate_flow(flow_id, new_name="Variant") → get_flow(new_id) → update_node(...) → build_flow(...)
 ```
+
+## W8: Contribute a Template (self-learning loop)
+
+Gate on SUCCESS first — only flows that built AND ran (HTTP 200) enter the library:
+
+```
+POST /api/v1/run/{flow_id}?stream=false   # must be 200
+save_flow_as_template(
+    flow_id=..., template_name="My RAG variant",
+    description="What it does + when to use",
+    tags=["rag","custom"])                # secrets auto-blanked; warnings returned
+# CLOSE THE LOOP:
+create_flow_from_template(template_name="my_rag_variant")   # re-instantiate check
+build/run it once, then delete the probe flow
+```
+
+The saved file lands in `templates/custom/<slug>.json` in the SAME native format as
+`templates/native/*` (LangFlow's official starter format) — same syntax, same fields,
+notes preserved. Never hand-write this JSON.
+
+## Native endpoints reference
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/v1/starter-projects/` | lfx starter dumps (5 minimal; names null) |
+| `GET /api/v1/models?type=language` | providers/models; shows "OpenAI Compatible" variables |
+| `GET/POST /api/v1/variables/` | global variables (provider credentials live here) |
+| `POST /api/v1/flows/batch/` | push flows preserving native IDs |
+| `POST /api/v1/flows/upload/` | import template JSON/ZIP (upsert) |
+| `GET /api/v1/flows/basic_examples/` | tiny example flows |
+
+The UI "New Flow" gallery regenerates from package files at startup and cannot be
+extended via API — use the file library instead.
 
 ## Running via REST instead of build_flow
 
