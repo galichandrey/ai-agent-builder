@@ -1,0 +1,118 @@
+{
+  "Basic Prompting": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Blog Writer": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Content Aggregator": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Custom Component Generator": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Deep Research Agent": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Document Q&A": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Financial Report Parser": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Hybrid Search RAG": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Image Sentiment Analysis": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "Instagram Copywriter": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "Knowledge Retrieval": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Market Research": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "Meeting Summary": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Memory Chatbot": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "Multi Agent Flow": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "Portfolio Website Code Generator": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Price Deal Finder": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "Research Translation Loop": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "SaaS Pricing": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "SEO Keyword Generator": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "Sequential Tasks Agents": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "Simple Agent": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "Social Media Agent": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "Structured Data Analysis Agent": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Text Sentiment Analysis": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "Travel Planning Agents": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "Twitter Thread Generator": {
+    "tier_a": true,
+    "tier_b": true
+  },
+  "Vector Store RAG": {
+    "tier_a": true,
+    "tier_b": null
+  },
+  "YouTube Analysis": {
+    "tier_a": true,
+    "tier_b": true
+  }
+}

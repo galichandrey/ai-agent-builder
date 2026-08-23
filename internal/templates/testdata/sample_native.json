@@ -6,14 +6,24 @@
   "is_component": false,
   "last_tested_version": "1.11",
   "locked": false,
-  "tags": ["agents", "prototyping"],
+  "tags": [
+    "agents",
+    "prototyping"
+  ],
   "data": {
-    "viewport": {"x": 0, "y": 0, "zoom": 1},
+    "viewport": {
+      "x": 0,
+      "y": 0,
+      "zoom": 1
+    },
     "nodes": [
       {
         "id": "chat-1",
         "type": "genericNode",
-        "position": {"x": 0, "y": 0},
+        "position": {
+          "x": 0,
+          "y": 0
+        },
         "dragging": false,
         "selected": false,
         "width": 384,
@@ -23,7 +33,15 @@
           "id": "chat-1",
           "node": {
             "template": {
-              "input_value": {"_input_type": "MultilineInput", "value": "", "load_from_db": false, "name": "input_value", "type": "str", "required": false, "show": true}
+              "input_value": {
+                "_input_type": "MultilineInput",
+                "value": "",
+                "load_from_db": false,
+                "name": "input_value",
+                "type": "str",
+                "required": false,
+                "show": true
+              }
             }
           }
         }
@@ -31,7 +49,10 @@
       {
         "id": "model-1",
         "type": "genericNode",
-        "position": {"x": 400, "y": 0},
+        "position": {
+          "x": 400,
+          "y": 0
+        },
         "width": 384,
         "height": 300,
         "data": {
@@ -39,8 +60,31 @@
           "id": "model-1",
           "node": {
             "template": {
-              "model_name": {"_input_type": "DropdownInput", "value": "gpt-4o-mini", "load_from_db": false, "name": "model_name", "type": "str", "required": true, "show": true},
-              "api_key": {"_input_type": "SecretStrInput", "value": "", "load_from_db": true, "name": "api_key", "type": "str", "password": true, "required": false, "show": true}
+              "model_name": {
+                "_input_type": "DropdownInput",
+                "value": "gpt-4o-mini",
+                "load_from_db": false,
+                "name": "model_name",
+                "type": "str",
+                "required": true,
+                "show": true
+              },
+              "api_key": {
+                "_input_type": "SecretStrInput",
+                "value": "",
+                "load_from_db": true,
+                "name": "api_key",
+                "type": "str",
+                "password": true,
+                "required": false,
+                "show": true
+              },
+              "model": {
+                "_input_type": "ModelInput",
+                "value": "",
+                "load_from_db": false,
+                "name": "model"
+              }
             }
           }
         }
@@ -48,7 +92,10 @@
       {
         "id": "model-2",
         "type": "genericNode",
-        "position": {"x": 800, "y": 0},
+        "position": {
+          "x": 800,
+          "y": 0
+        },
         "width": 384,
         "height": 300,
         "data": {
@@ -56,8 +103,30 @@
           "id": "model-2",
           "node": {
             "template": {
-              "model_name": {"_input_type": "DropdownInput", "value": "gpt-4o-mini", "load_from_db": false, "name": "model_name", "type": "str", "required": true, "show": true},
-              "temperature": {"_input_type": "FloatInput", "value": 0.1, "load_from_db": false, "name": "temperature", "type": "float", "required": false, "show": true}
+              "model_name": {
+                "_input_type": "DropdownInput",
+                "value": "gpt-4o-mini",
+                "load_from_db": false,
+                "name": "model_name",
+                "type": "str",
+                "required": true,
+                "show": true
+              },
+              "temperature": {
+                "_input_type": "FloatInput",
+                "value": 0.1,
+                "load_from_db": false,
+                "name": "temperature",
+                "type": "float",
+                "required": false,
+                "show": true
+              },
+              "provider": {
+                "_input_type": "DropdownInput",
+                "value": "",
+                "load_from_db": false,
+                "name": "provider"
+              }
             }
           }
         }
@@ -65,8 +134,21 @@
       {
         "id": "note-1",
         "type": "noteNode",
-        "position": {"x": 0, "y": -200},
-        "data": {"type": "note", "id": "note-1", "node": {"template": {"note": {"value": "How to use"}}}}
+        "position": {
+          "x": 0,
+          "y": -200
+        },
+        "data": {
+          "type": "note",
+          "id": "note-1",
+          "node": {
+            "template": {
+              "note": {
+                "value": "How to use"
+              }
+            }
+          }
+        }
       }
     ],
     "edges": [
@@ -74,7 +156,24 @@
         "animated": false,
         "className": "",
         "id": "e1",
-        "data": {"sourceHandle": {"dataType": "ChatInput", "id": "chat-1", "name": "message", "output_types": ["Message"]}, "targetHandle": {"fieldName": "input_value", "id": "model-1", "inputTypes": ["Message"], "type": "Message"}},
+        "data": {
+          "sourceHandle": {
+            "dataType": "ChatInput",
+            "id": "chat-1",
+            "name": "message",
+            "output_types": [
+              "Message"
+            ]
+          },
+          "targetHandle": {
+            "fieldName": "input_value",
+            "id": "model-1",
+            "inputTypes": [
+              "Message"
+            ],
+            "type": "Message"
+          }
+        },
         "selected": false,
         "source": "chat-1",
         "sourceHandle": "ChatInput|message",
@@ -85,7 +184,24 @@
         "animated": false,
         "className": "",
         "id": "e2",
-        "data": {"sourceHandle": {"dataType": "LanguageModelComponent", "id": "model-1", "name": "model_output", "output_types": ["Message"]}, "targetHandle": {"fieldName": "input_value", "id": "out", "inputTypes": ["Message"], "type": "Message"}},
+        "data": {
+          "sourceHandle": {
+            "dataType": "LanguageModelComponent",
+            "id": "model-1",
+            "name": "model_output",
+            "output_types": [
+              "Message"
+            ]
+          },
+          "targetHandle": {
+            "fieldName": "input_value",
+            "id": "out",
+            "inputTypes": [
+              "Message"
+            ],
+            "type": "Message"
+          }
+        },
         "selected": false,
         "source": "model-1",
         "sourceHandle": "LanguageModelComponent|model_output",

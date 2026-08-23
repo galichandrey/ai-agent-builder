@@ -147,11 +147,19 @@ func TestApplyParamsTargetsAllNodesHavingField(t *testing.T) {
 		byType[n.Data.Type] = m
 	}
 	lm := byType["LanguageModelComponent"]
-	if lm["model_name"] != "hy3-free" || lm["api_key"] != "sk-test" {
-		t.Errorf("model-1 params wrong: %v", lm)
+	if lm["api_key"] != "sk-test" {
+		t.Errorf("model-1 api_key wrong: %v", lm)
+	}
+	modelVal, _ := lm["model"].([]any)
+	if len(modelVal) != 1 {
+		t.Fatalf("model-1 ModelInput value = %v", lm["model"])
+	}
+	entry, _ := modelVal[0].(map[string]any)
+	if entry["name"] != "hy3-free" || entry["provider"] != "OpenAI Compatible" {
+		t.Errorf("model-1 selection wrong: %v", entry)
 	}
 	om := byType["ext:openai:OpenAIModelComponent@official"]
-	if om["model_name"] != "hy3-free" || om["temperature"] != 0.7 {
+	if om["model_name"] != "hy3-free" || om["provider"] != "OpenAI Compatible" || om["temperature"] != 0.7 {
 		t.Errorf("model-2 params wrong: %v", om)
 	}
 	ci := byType["ChatInput"]
