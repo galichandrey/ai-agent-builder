@@ -6,7 +6,9 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/ag/ai-agent-builder/internal/schema"
 )
@@ -323,5 +325,81 @@ func TestGetTopologicalOrder_Error(t *testing.T) {
 	_, err := c.GetTopologicalOrder(context.Background(), "flow-1")
 	if err == nil {
 		t.Fatal("expected error, got nil")
+	}
+}
+
+// LangFlow 1.11 serves /build/{job}/events as NDJSON langflow-style events
+// ({"event": "...", "data": {...}}) with vocabulary vertices_sorted/build_start/
+// end_vertex/add_message/error/end — not as a JSON array of BuildEvents.
+func TestGetBuildStatus_ParsesNDJSONLangflowEvents(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/api/v1/build/job-9/events" {
+			t.Errorf("unexpected path %s", r.URL.Path)
+		}
+		w.Header().Set("Content-Type", "application/x-ndjson")
+		w.Write([]byte(
+			`{"event":"vertices_sorted","data":{"ids":["a"]}}` + "\n" +
+				`{"event":"build_start","data":{}}` + "\n" +
+				`{"event":"error","data":{"data":{"text":"Missing credentials\n"}}}` + "\n" +
+				`{"event":"end","data":{}}` + "\n"))
+	}))
+	defer srv.Close()
+
+	c := NewClient(testConfig(srv.URL))
+	events, err := c.GetBuildStatus(context.Background(), "job-9")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(events) != 4 {
+		t.Fatalf("expected 4 events, got %d: %+v", len(events), events)
+	}
+	if events[1].BuildStatus != schema.BuildStatusBuilding {
+		t.Errorf("build_start should map to building, got %s", events[1].BuildStatus)
+	}
+	if events[2].BuildStatus != schema.BuildStatusError {
+		t.Errorf("error event should map to error status, got %s", events[2].BuildStatus)
+	}
+	if !strings.Contains(events[2].Message, "Missing credentials") {
+		t.Errorf("error message not extracted: %q", events[2].Message)
+	}
+	if events[3].BuildStatus != schema.BuildStatusComplete {
+		t.Errorf("end event should map to complete, got %s", events[3].BuildStatus)
+	}
+}
+
+func TestStreamBuildEvents_StopsAtTerminalEvent(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/x-ndjson")
+		// connection intentionally stays open after terminal event
+		w.Write([]byte(
+			`{"event":"build_start","data":{}}` + "\n" +
+				`{"event":"end","data":{}}` + "\n" +
+				`{"event":"never","data":{}}` + "\n"))
+		if f, ok := w.(http.Flusher); ok {
+			f.Flush()
+		}
+		select {
+		case <-time.After(5 * time.Second):
+		case <-r.Context().Done():
+		}
+	}))
+	defer srv.Close()
+
+	c := NewClient(testConfig(srv.URL))
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	ch, err := c.StreamBuildEvents(ctx, "job-1")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	var got []schema.BuildEvent
+	for ev := range ch {
+		got = append(got, ev)
+	}
+	if len(got) != 2 {
+		t.Fatalf("expected stream to stop at terminal 'end', got %d events: %+v", len(got), got)
+	}
+	if got[1].BuildStatus != schema.BuildStatusComplete {
+		t.Errorf("last event status = %s, want complete", got[1].BuildStatus)
 	}
 }

@@ -2,6 +2,7 @@ package templates
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -258,5 +259,201 @@ func TestBuildEnvelopeShape(t *testing.T) {
 	}
 	if m["name"] != "My Flow" || m["last_tested_version"] != "1.11" {
 		t.Errorf("scalar fields wrong: %v/%v", m["name"], m["last_tested_version"])
+	}
+}
+
+func TestLoadDirGalleryRecursiveCategories(t *testing.T) {
+	root := t.TempDir()
+	write := func(rel, name string) {
+		p := filepath.Join(root, rel)
+		os.MkdirAll(filepath.Dir(p), 0o755)
+		raw := fmt.Sprintf(`{"name":%q,"description":"d","tags":["x"],"data":{"nodes":[],"edges":[]}}`, name)
+		if err := os.WriteFile(p, []byte(raw), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	write("native/one.json", "One")
+	write("custom/two.json", "Two")
+	write("gallery/business/sales_marketing/three.json", "Three")
+	write("gallery/data/four.json", "Four")
+
+	// Non-template files must be ignored (ingest manifest, backups).
+	os.WriteFile(filepath.Join(root, "gallery", "manifest.json"),
+		[]byte(`[{"slug":"x"}]`), 0o644)
+	os.WriteFile(filepath.Join(root, "gallery", "business", "notes.txt"),
+		[]byte("not json"), 0o644)
+
+	files, err := LoadDir(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := map[string]*File{}
+	for _, f := range files {
+		got[f.Name] = f
+	}
+	if len(got) != 4 {
+		t.Fatalf("want 4 templates, got %d: %v", len(got), files)
+	}
+	cases := []struct {
+		name, dir, cat, sub string
+	}{
+		{"One", "native", "", ""},
+		{"Two", "custom", "", ""},
+		{"Three", "gallery", "business", "sales_marketing"},
+		{"Four", "gallery", "data", ""},
+	}
+	for _, c := range cases {
+		f := got[c.name]
+		if f == nil {
+			t.Fatalf("%s missing", c.name)
+		}
+		if f.Dir != c.dir || f.Category != c.cat || f.Subcategory != c.sub {
+			t.Errorf("%s: got dir=%q cat=%q sub=%q, want %q/%q/%q",
+				c.name, f.Dir, f.Category, f.Subcategory, c.dir, c.cat, c.sub)
+		}
+	}
+	if _, ok := Lookup(files, "marketing content generator"); ok {
+		t.Error("lookup should not match unrelated fixture names")
+	}
+	if _, ok := Lookup(files, "three"); !ok {
+		t.Error("Lookup by slug must find gallery templates too")
+	}
+}
+
+func TestMatchesQuery(t *testing.T) {
+	f := &File{
+		Name:        "Marketing Content Generator",
+		Description: "Generate targeted marketing content from a keyword.",
+		Tags:        []string{"business", "sales_marketing"},
+	}
+	cases := []struct {
+		query string
+		want  bool
+	}{
+		{"", true},                          // empty query matches all
+		{"marketing", true},                 // name token
+		{"MARKETING", true},                 // case-insensitive
+		{"marketing content", true},         // multi-token, all in name
+		{"content marketing", true},         // order independent
+		{"targeted", true},                  // description token
+		{"sales_marketing", true},           // tag token
+		{"keyword business", true},          // tokens across fields
+		{"nonexistent", false},              // no match anywhere
+		{"rag business", false},             // one missing token fails all
+	}
+	for _, tc := range cases {
+		if got := MatchesQuery(f, tc.query); got != tc.want {
+			t.Errorf("MatchesQuery(%q) = %v, want %v", tc.query, got, tc.want)
+		}
+	}
+}
+
+func TestDetectBlankSecrets(t *testing.T) {
+	data := map[string]any{
+		"nodes": []any{
+			map[string]any{ // blank api_key -> reported; blank benign field -> not
+				"id":   "agent-1",
+				"data": map[string]any{
+					"type": "Agent",
+					"node": map[string]any{"template": map[string]any{
+						"api_key":    map[string]any{"value": "", "password": true},
+						"max_tokens": map[string]any{"value": ""},
+					}},
+				},
+			},
+			map[string]any{ // set secret -> not reported; benign blank name -> not
+				"id":   "llm-1",
+				"data": map[string]any{
+					"type": "LanguageModel",
+					"node": map[string]any{"template": map[string]any{
+						"api_key":        map[string]any{"value": "sk-set", "password": true},
+						"system_message": map[string]any{"value": ""},
+					}},
+				},
+			},
+			map[string]any{ // password:true with whitespace value -> reported despite benign name
+				"id":   "tool-1",
+				"data": map[string]any{
+					"type": "Tool",
+					"node": map[string]any{"template": map[string]any{
+						"credential": map[string]any{"value": "  ", "password": true},
+					}},
+				},
+			},
+		},
+	}
+	raw, err := json.Marshal(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := DetectBlankSecrets(raw)
+	want := []SecretNeed{
+		{NodeID: "agent-1", NodeType: "Agent", Field: "api_key"},
+		{NodeID: "tool-1", NodeType: "Tool", Field: "credential"},
+	}
+	if len(got) != len(want) {
+		t.Fatalf("DetectBlankSecrets = %+v, want %+v", got, want)
+	}
+	for i := range want {
+		if got[i] != want[i] {
+			t.Errorf("needs[%d] = %+v, want %+v", i, got[i], want[i])
+		}
+	}
+
+	if none := DetectBlankSecrets(json.RawMessage(`{"nodes":[],"edges":[]}`)); len(none) != 0 {
+		t.Errorf("empty flow should have no needs, got %+v", none)
+	}
+}
+
+// Real LangFlow template files mix scalar template entries ("model_name":
+// "gpt") with object entries. Detection must survive them instead of failing
+// the whole payload.
+func TestDetectBlankSecretsSurvivesScalarTemplateEntries(t *testing.T) {
+	raw := json.RawMessage(`{
+		"nodes": [
+			{"id": "agent-1", "data": {"type": "Agent", "node": {"template": {
+				"model_name": "gpt-4o",
+				"_type": "Agent",
+				"api_key": {"value": "", "password": true}
+			}}}}
+		]
+	}`)
+	got := DetectBlankSecrets(raw)
+	if len(got) != 1 || got[0].Field != "api_key" || got[0].NodeID != "agent-1" {
+		t.Fatalf("DetectBlankSecrets = %+v, want agent-1/api_key", got)
+	}
+}
+
+func TestDetectModel(t *testing.T) {
+	data := map[string]any{
+		"nodes": []any{
+			map[string]any{"id": "chat-1", "data": map[string]any{
+				"type": "ChatInput",
+				"node": map[string]any{"template": map[string]any{
+					"input_value": map[string]any{"value": "hi"},
+				}},
+			}},
+			map[string]any{"id": "llm-1", "data": map[string]any{
+				"type": "LanguageModel",
+				"node": map[string]any{"template": map[string]any{
+					"model": map[string]any{"value": []any{
+						map[string]any{"name": "hy3-free", "provider": "OpenAI Compatible"},
+					}},
+				}},
+			}},
+		},
+	}
+	raw, err := json.Marshal(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	name, provider := DetectModel(raw)
+	if name != "hy3-free" || provider != "OpenAI Compatible" {
+		t.Fatalf("DetectModel = %q/%q, want hy3-free/OpenAI Compatible", name, provider)
+	}
+
+	none := json.RawMessage(`{"nodes":[],"edges":[]}`)
+	if name, provider = DetectModel(none); name != "" || provider != "" {
+		t.Fatalf("DetectModel without model nodes = %q/%q, want empty", name, provider)
 	}
 }

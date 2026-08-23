@@ -80,6 +80,8 @@ All 40 tools. Exact names + key args. Categories: Component Discovery (4), Flow 
 
 | Tool | Args | Purpose |
 |---|---|---|
-| `list_templates` | `{"source": "native|custom|"" (all)"}` | Catalog with name, slug, tags, node count, tier_a/tier_b verification |
-| `create_flow_from_template` | `{"template_name", "new_name": "opt", "description": "opt", "params": {"model_name": "...", "api_key": "...", <any template field>: v}}` | ONE call → fully wired flow; params applied to every node having the field; ModelInput/legacy model selectors both handled |
+| `list_templates` | `{"source": "native\|custom\|gallery\|"" (all)", "category": "business (gallery)", "query": "all tokens must match name/description/tags"}` | Catalog with name, slug, category, tags, node count, tier_a/tier_b verification |
+| `create_flow_from_template` | `{"template_name", "new_name": "opt", "description": "opt", "params": {"model_name": "...", "api_key": "...", <any template field>: v}, "verify": false}` | ONE call → fully wired flow; params applied to every node having the field; ModelInput/legacy model selectors both handled. `verify:true` adds `build_ok`, `errors[]`, `needs_keys[]` (`{node_id,node_type,field}` blank credentials — advisory when build_ok:true, they may resolve via instance globals), `model_used`+`model_provider`, and an action hint (5-min build cap) |
 | `save_flow_as_template` | `{"flow_id", "template_name", "description": "opt", "tags": []}` | Export verified flow → `templates/custom/<slug>.json` in native format; secrets blanked + warnings |
+
+Gallery sources: `templates/gallery/<category>/<subcategory>/<slug>.json` — 100 templates scraped from langflow.org (business 49, processing 14, automation 11, analytics 11, productivity 10, data 3, documents 2). Secrets are blanked at scrape time; expect non-empty `needs_keys` and fill them via `params` or `update_node`.

@@ -736,6 +736,7 @@ const (
 type BuildEvent struct {
 	BuildStatus BuildStatus `json:"build_status"`
 	BuildID     string      `json:"build_id,omitempty"`
+	JobID       string      `json:"job_id,omitempty"`
 	FlowID      string      `json:"flow_id,omitempty"`
 	VertexID    string      `json:"vertex_id,omitempty"`
 	Message     string      `json:"message,omitempty"`

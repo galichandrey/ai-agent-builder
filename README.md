@@ -7,7 +7,8 @@ Feature parity with the Python reference ([sportsrecruits/langflow-builder-mcp](
 ## Features
 
 **40 MCP tools across 7 categories** — including a template library seeded with
-LangFlow's 29 official native templates:
+LangFlow's 29 official native templates plus **100 gallery templates scraped from
+langflow.org**:
 
 | Category | Tools |
 |----------|-------|
@@ -64,7 +65,7 @@ Priority: **CLI flag > ENV > default**
 | `LANGFLOW_MCP_LOG_LEVEL` | `--log-level` | `info` | Log level (debug/info/warn/error) |
 | `LANGFLOW_MCP_LANGFLOW_VERSION` | `--langflow-version` | `""` | Override LangFlow version |
 | `LANGFLOW_MCP_SOURCE_CACHE_DIR` | `--source-cache-dir` | `~/.cache/langflow-mcp` | Source cache directory |
-| `LANGFLOW_MCP_TEMPLATES_DIR` | `--templates-dir` | `./templates` | Template library dir (`native/` + `custom/`) |
+| `LANGFLOW_MCP_TEMPLATES_DIR` | `--templates-dir` | `./templates` | Template library dir (`native/` + `custom/` + `gallery/`) |
 
 > **Auth note:** use `LANGFLOW_MCP_API_KEY` (`x-api-key`). Do not pass
 > `Authorization: Bearer <JWT>` through `LANGFLOW_MCP_CUSTOM_HEADERS` — LangFlow
@@ -98,7 +99,7 @@ MCP Client (E-Agent)
     │ stdio / streamable HTTP
     ▼
 MCP Server (cmd/server)
-    ├── internal/tools/      37 tool handlers (grouped into 6 files)
+    ├── internal/tools/      40 tool handlers (grouped into 9 files)
     ├── internal/client/     LangFlow HTTP client + NDJSON parser
     ├── internal/schema/     Types, validators, ID generators
     ├── internal/layout/     Layout analysis engine
@@ -112,7 +113,7 @@ LangFlow REST API (/api/v1)
 
 ## Documentation
 
-- **Agent Skill (recommended):** [`docs/skills/langflow-mcp-go.md`](docs/skills/langflow-mcp-go.md) — detailed guide on using the `langflow-mcp-go` skill (v2.0.0) so E-Agents can drive the server without hitting verified failure modes (auth path confusion, display-name vs type-name, tool wiring per component kind, `load_from_db` API keys, forgetting to build).
+- **Agent Skill (recommended):** [`docs/skills/langflow-mcp-go.md`](docs/skills/langflow-mcp-go.md) — detailed guide on using the `langflow-mcp-go` skill (v2.3.0) so E-Agents can drive the server without hitting verified failure modes (auth path confusion, display-name vs type-name, tool wiring per component kind, `load_from_db` API keys, forgetting to build).
 - Design Spec: [`docs/superpowers/specs/2026-08-22-langflow-mcp-go-design.md`](docs/superpowers/specs/2026-08-22-langflow-mcp-go.md)
 - Implementation Plan: [`docs/superpowers/plans/2026-08-22-langflow-mcp-go.md`](docs/superpowers/plans/2026-08-22-langflow-mcp-go.md)
 
@@ -122,20 +123,33 @@ LangFlow REST API (/api/v1)
 extracted verbatim from the running container — same files that power the UI
 gallery, in the format LangFlow documents for contributions. `templates/custom/`
 grows through the self-learning loop: agents save verified flows back as
-templates via `save_flow_as_template`.
+templates via `save_flow_as_template`. `templates/gallery/` holds **100 templates
+scraped from langflow.org/use-cases** organized by category (business 49,
+processing 14, automation 11, analytics 11, productivity 10, data 3, documents 2),
+secrets blanked at scrape time.
 
 ```bash
-# one MCP call -> fully wired flow on the instance
+# discover by intent, then one MCP call -> fully wired + verified flow
+list_templates(source="gallery", query="caption social")
 create_flow_from_template(
-  template_name="Simple Agent",
-  params={"model_name": "nemotron-3-ultra-free", "api_key": "<key>"})
+  template_name="social_media_caption_generator",
+  params={"model_name": "hy3-free"},
+  verify=true)
 ```
 
 Params are generic: each key is set on every node whose template has that field;
 modern Agent/LanguageModel `model` selectors and legacy `provider+model_name`
 pairs are both handled ("OpenAI Compatible" provider via `OPENAI_COMPATIBLE_*`
-global variables). Live verification (`templates/verification.json`): all 29
-instantiate and build; 15 run end-to-end with only an LLM credential.
+global variables). With `verify: true` the tool builds the flow inline and returns
+`build_ok`, `errors[]`, `needs_keys[]` (blank credentials — advisory when the
+build passed; they may resolve via instance globals) and `model_used`.
+
+Live verification (`templates/verification.json`): all 29 native instantiate and
+build; 15 run end-to-end with only an LLM credential.
+
+Maintenance: `scripts/scrape_gallery.py` re-collects from langflow.org;
+`scripts/sync_gallery.py` bulk-imports the gallery into a dashboard
+(idempotent, build-verifies each flow).
 
 See [`templates/README.md`](templates/README.md) for provenance and levels.
 

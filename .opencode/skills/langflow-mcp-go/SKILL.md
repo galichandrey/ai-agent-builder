@@ -2,7 +2,7 @@
 name: langflow-mcp-go
 description: Use when driving the Go-based langflow-mcp server to manage LangFlow — instantiate flows from the native template library in one call, add nodes (built-in or inline Python), wire Agent + model flows, run them via build_flow or REST /run, toggle tool_mode for agent tools, contribute verified flows back as templates, arrange layouts, or explore LangFlow source. Trigger when an E-agent needs programmatic LangFlow control, configures free-model providers (opencode zen etc.), or hits errors like "unhashable type", "component not found", "Missing credentials", "No model selected", or 403/404 Invalid API key.
 metadata:
-  version: 2.2.0
+  version: 2.3.0
 ---
 
 # LangFlow MCP Go Server
@@ -20,9 +20,12 @@ You manage LangFlow through the **Go `langflow-mcp` server** (40 tools). Every r
 Call `search_components` first and use the returned `name`: `ChatInput` (display "Chat Input"), model is `ext:openai:OpenAIModelComponent@official`, `Agent`. Extension types carry `ext:<provider>:<Class>@official`.
 
 **R2. Prefer the template library over hand-building.**
-- `list_templates()` first — the library ships LangFlow's **29 official native templates** (`templates/native/`) plus contributed ones (`templates/custom/`). Verification levels: `tier_a` = builds clean on live instance (29/29), `tier_b` = full run HTTP 200 with only an LLM credential (15/29, see `templates/verification.json`).
-- `create_flow_from_template(template_name, new_name?, params?)` = ONE call → fully wired flow.
+- `list_templates()` first — the library ships LangFlow's **29 official native templates** (`templates/native/`), contributed ones (`templates/custom/`), and **100 gallery templates scraped from langflow.org** (`templates/gallery/`, organized by category: business 49, processing 14, automation 11, analytics 11, productivity 10, data 3, documents 2). Verification levels: `tier_a` = builds clean on live instance (29/29 native), `tier_b` = full run HTTP 200 with only an LLM credential (15/29, see `templates/verification.json`).
+- Search before instantiating: `list_templates(source="gallery", query="caption social")` — every whitespace token must appear in name/description/tags (order-independent). Narrow with `category="business"`.
+- `create_flow_from_template(template_name, new_name?, params?, verify?)` = ONE call → fully wired flow.
+- **Always pass `verify: true` for gallery templates.** The result then includes `build_ok`, `errors[]`, `needs_keys[]` (blank credentials: `{node_id, node_type, field}`), and `model_used`/`model_provider`. Interpretation: `build_ok:false` → inspect `errors[]`, fix, re-verify. `build_ok:true` + non-empty `needs_keys` → advisory only; blank fields likely resolve via instance global variables — supply your own keys via `params`/`update_node` only if the run fails or you need a different credential. Gallery templates ship secrets blanked by design.
 - `params` are generic: each key is set on every node whose template has that field (`model_name`, `api_key`, `temperature`, `system_prompt`, ...). `load_from_db` auto-clears on touched fields.
+- Bulk (re)import of the whole gallery into the dashboard: `scripts/sync_gallery.py --api-key <LF key>` (idempotent; skips already-imported names). Re-collect from langflow.org with `scripts/scrape_gallery.py`.
 
 **R3. Model selection has TWO shapes — parametrize both blindly.**
 Passing `model_name` handles both automatically:
@@ -73,6 +76,8 @@ The package gallery ("New Flow" modal) regenerates from package files at startup
 
 | Symptom | Cause | Fix |
 |---|---|---|
+| Gallery template builds but run 500s | blank credential in `needs_keys` you skipped, or model flap | fill `needs_keys` fields; on model-level 403/500 swap `model_name` to another free model and re-run |
+| `list_templates` returns too much | no query given (129 templates) | pass `query` tokens + `source="gallery"` |
 | Run 500 "No model selected" (Agent) | modern Agent needs `model` ModelInput value or a wired model node | pass `model_name` param (R3) or connect OpenAIModelComponent `.model_output`→`.model` |
 | Run 500 "Model name/provider overrides require a built-in model selection" | `model_name` set without matching provider plumbing | use R3 params; ensure `OPENAI_COMPATIBLE_*` globals exist |
 | `add_node` "component not found" | display name instead of type name | `search_components` → exact `name` |

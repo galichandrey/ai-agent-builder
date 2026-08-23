@@ -1,0 +1,299 @@
+{
+ "a_b_test_results_analyzer": {
+  "build": true
+ },
+ "ai_calendar_task_orchestrator": {
+  "build": true
+ },
+ "ai_contract_risk_scanner": {
+  "build": true
+ },
+ "ai_response_evaluation_system": {
+  "build": true
+ },
+ "ai_support_response_generator": {
+  "build": true
+ },
+ "ai_teaching_plan_generator": {
+  "build": true
+ },
+ "ai_powered_candidate_screening": {
+  "build": true
+ },
+ "ad_copy_variation_generator": {
+  "build": true
+ },
+ "adaptive_onboarding_roadmap_agent": {
+  "build": true
+ },
+ "automating_data_extraction_from_pdfs": {
+  "build": true
+ },
+ "blog_outline_generator": {
+  "build": true
+ },
+ "blog_to_audio_content_automator": {
+  "build": true
+ },
+ "bug_report_deduplicator": {
+  "build": true
+ },
+ "crm_data_entry_automation": {
+  "build": true
+ },
+ "csv_data_analysis_agent": {
+  "build": true
+ },
+ "csv_insights_extraction": {
+  "build": true
+ },
+ "csv_query_assistant": {
+  "build": true
+ },
+ "call_classification_analytics": {
+  "build": true
+ },
+ "chunk_classification": {
+  "build": true
+ },
+ "code_analysis_chatbot": {
+  "build": true
+ },
+ "content_cascade_flow": {
+  "build": true
+ },
+ "conversational_csv_interface": {
+  "build": true
+ },
+ "conversational_calendar_operations_agent": {
+  "build": true
+ },
+ "customer_feedback_insight_generator": {
+  "build": true
+ },
+ "customer_health_scorecard": {
+  "build": true
+ },
+ "customer_segmentation": {
+  "build": true
+ },
+ "daily_work_summary_agent": {
+  "build": true
+ },
+ "data_extraction": {
+  "build": true
+ },
+ "data_quality_validator": {
+  "build": true
+ },
+ "dataframe_analysis_assistant": {
+  "build": true
+ },
+ "deal_onboarding_automator": {
+  "build": true
+ },
+ "debt_collection_automation": {
+  "build": true
+ },
+ "document_classification": {
+  "build": true
+ },
+ "document_data_intelligence": {
+  "build": true
+ },
+ "document_formatter_cleaner": {
+  "build": true
+ },
+ "document_ingestion_from_google_drive": {
+  "build": true
+ },
+ "document_translation_system": {
+  "build": true
+ },
+ "document_based_marketing_content_generator": {
+  "build": true
+ },
+ "email_calendar_integration": {
+  "build": true
+ },
+ "exit_interview_intelligence_report": {
+  "build": true
+ },
+ "feature_prioritization_scorer": {
+  "build": true
+ },
+ "financial_market_analysis_chatbot": {
+  "build": true
+ },
+ "fraud_detection_system": {
+  "build": true
+ },
+ "generate_concise_overviews": {
+  "build": true
+ },
+ "generate_videos_with_google_ai": {
+  "build": true
+ },
+ "github_issues_to_jira_tickets": {
+  "build": true
+ },
+ "gmail_message_analysis_organization": {
+  "build": true
+ },
+ "guest_communication_assistant": {
+  "build": true
+ },
+ "industry_classification_regulatory_impact_monitor": {
+  "build": true
+ },
+ "ingestion_router": {
+  "build": true
+ },
+ "insurance_underwriting_automation": {
+  "build": true
+ },
+ "intelligent_personal_assistant": {
+  "build": true
+ },
+ "interactive_data_dashboards": {
+  "build": true
+ },
+ "inventory_anomaly_detector": {
+  "build": true
+ },
+ "kpi_report_generator": {
+  "build": true
+ },
+ "landing_page_optimization_assistant": {
+  "build": true
+ },
+ "lead_scoring_system": {
+  "build": true
+ },
+ "local_rag_with_ollama_and_chromadb": {
+  "build": true
+ },
+ "marketing_content_generator": {
+  "build": true
+ },
+ "meeting_preparation": {
+  "build": true
+ },
+ "multi_source_retrieval": {
+  "build": true
+ },
+ "multilingual_feedback_translator": {
+  "build": true
+ },
+ "natural_language_sql_query": {
+  "build": true
+ },
+ "newsletter_to_podcast_converter": {
+  "build": true
+ },
+ "objection_handling_generator": {
+  "build": true
+ },
+ "pr_documentation_generator": {
+  "build": true
+ },
+ "prd_draftsman": {
+  "build": true
+ },
+ "personalized_calendly_booking_links": {
+  "build": true
+ },
+ "personalized_outreach_generator": {
+  "build": true
+ },
+ "prompt_generator_agent_for_support_agent": {
+  "build": true
+ },
+ "rag_article_in_web_with_agent": {
+  "build": true
+ },
+ "research_briefing_generator": {
+  "build": true
+ },
+ "resume_screening_hiring_recommendations": {
+  "build": true
+ },
+ "seo_keyword_cluster_generator": {
+  "build": true
+ },
+ "seo_keyword_research_automation": {
+  "build": true
+ },
+ "sales_proposal_assistant": {
+  "build": true
+ },
+ "sales_proposal_generator": {
+  "build": true
+ },
+ "sentiment_urgency_detection": {
+  "build": true
+ },
+ "smart_market_researcher": {
+  "build": true
+ },
+ "smart_priority_analyzer": {
+  "build": true
+ },
+ "smart_ticket_routing": {
+  "build": true
+ },
+ "social_media_caption_generator": {
+  "build": true
+ },
+ "stock_market_analysis": {
+  "build": true
+ },
+ "strategic_ebr_generator": {
+  "build": true
+ },
+ "supply_chain_risk_radar": {
+  "build": true
+ },
+ "support_videos_generator": {
+  "build": true
+ },
+ "sustainability_esg_report_drafter": {
+  "build": true
+ },
+ "talk_to_apis": {
+  "build": true
+ },
+ "taskflow_assistant": {
+  "build": true
+ },
+ "technical_seo_auditor": {
+  "build": true
+ },
+ "terms_of_service_summarizer": {
+  "build": true
+ },
+ "ticket_analysis_classification": {
+  "build": true
+ },
+ "universal_webhook_payload_normalization": {
+  "build": true
+ },
+ "video_to_article_ai_editor": {
+  "build": true
+ },
+ "voice_notes_to_structured_text": {
+  "build": true
+ },
+ "voice_of_customer_report_generator": {
+  "build": true
+ },
+ "weekly_news_to_newsletter_generator": {
+  "build": true
+ },
+ "youtube_comment_sentiment_analysis": {
+  "build": true
+ },
+ "youtube_highlight_intelligence": {
+  "build": true
+ }
+}

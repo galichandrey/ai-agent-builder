@@ -1,0 +1,1165 @@
+[
+ {
+  "slug": "use-langflow-to-analyze-ab-test-results-with-statistical-methods",
+  "title": "A/B Test Results Analyzer",
+  "description": "Statistical A/B test results analyzer built with Langflow that analyzes test results from CSV files using deterministic ...",
+  "category": "Processing",
+  "subcategory": "A/B Test Results Analyzer",
+  "host": "ubuntu-production-da92",
+  "flow_id": "1a98d33f-442f-4821-90d3-00c21d5a03f4",
+  "path": "templates/gallery/processing/a_b_test_results_analyzer/use-langflow-to-analyze-ab-test-results-with-statistical-methods.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-analyze-and-classify-support-tickets",
+  "title": "Ticket Analysis Classification",
+  "description": "Automate support ticket classification with AI-powered analysis that categorizes priority levels, sentiment, and topics ...",
+  "category": "Business",
+  "subcategory": "Customer Support",
+  "host": "ubuntu-production-da92",
+  "flow_id": "525b37c0-7e1f-4217-b999-917ef56e783e",
+  "path": "templates/gallery/business/customer_support/use-langflow-to-analyze-and-classify-support-tickets.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-analyze-and-optimize-landing-pages-for-higher-conversion",
+  "title": "Landing Page Optimization Assistant",
+  "description": "AI-powered landing page optimization system built with Langflow that analyzes landing pages and provides data-driven sug...",
+  "category": "Business",
+  "subcategory": "Content Analysis",
+  "host": "ubuntu-production-da92",
+  "flow_id": "e373fc46-0f73-4b92-a7aa-647123a57885",
+  "path": "templates/gallery/business/content_analysis/use-langflow-to-analyze-and-optimize-landing-pages-for-higher-conversion.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-analyze-and-organize-gmail-messages",
+  "title": "Gmail Message Analysis & Organization",
+  "description": "Automate Gmail email analysis and organization with this Langflow workflow that extracts key details, classifies content...",
+  "category": "Productivity",
+  "subcategory": "Information Management",
+  "host": "ubuntu-production-da92",
+  "flow_id": "925c6492-fb61-43dd-a6fb-401eefdfc69a",
+  "path": "templates/gallery/productivity/information_management/use-langflow-to-analyze-and-organize-gmail-messages.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-analyze-and-prioritize-data-risks-with-structured-ai-outputs",
+  "title": "Smart Priority Analyzer",
+  "description": "Automated priority and risk analysis system built with Langflow that automatically analyzes operational or business data...",
+  "category": "Processing",
+  "subcategory": "Risk Assessment",
+  "host": "ubuntu-production-da92",
+  "flow_id": "2c78505c-9255-4965-b658-d32f4a0e1efc",
+  "path": "templates/gallery/processing/risk_assessment/use-langflow-to-analyze-and-prioritize-data-risks-with-structured-ai-outputs.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-analyze-code-and-answer-questions",
+  "title": "Code Analysis Chatbot",
+  "description": "Developer assistance chatbot that analyzes code repositories and answers questions about structure and implementation. B...",
+  "category": "Productivity",
+  "subcategory": "Developer Productivity",
+  "host": "ubuntu-production-da92",
+  "flow_id": "7e05551b-8a05-49b3-a802-51b23aeab294",
+  "path": "templates/gallery/productivity/developer_productivity/use-langflow-to-analyze-code-and-answer-questions.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-analyze-exit-interviews-and-generate-executive-organizational-health-insights",
+  "title": "Exit Interview Intelligence Report",
+  "description": "Organizational health analytics workflow built with Langflow that transforms exit interview transcripts into executive-r...",
+  "category": "Business",
+  "subcategory": "Organizational Health",
+  "host": "ubuntu-production-da92",
+  "flow_id": "822e8798-ee28-44b9-8346-d87f39e6b8bf",
+  "path": "templates/gallery/business/organizational_health/use-langflow-to-analyze-exit-interviews-and-generate-executive-organizational-health-insights.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-analyze-files-and-extract-insights-automatically",
+  "title": "CSV Query Assistant",
+  "description": "Automated document analysis assistant built with Langflow that processes uploaded files, extracts insights through natur...",
+  "category": "Analytics",
+  "subcategory": "Data",
+  "host": "ubuntu-production-da92",
+  "flow_id": "92dea05e-06d9-416d-acd0-e7dd1be04fb7",
+  "path": "templates/gallery/analytics/data/use-langflow-to-analyze-files-and-extract-insights-automatically.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-analyze-youtube-comment-sentiment-and-trends",
+  "title": "YouTube Comment Sentiment Analysis",
+  "description": "Automated YouTube comment analysis system that extracts sentiment patterns and trending topics from video discussions us...",
+  "category": "Analytics",
+  "subcategory": "Data & Analytics",
+  "host": "ubuntu-production-da92",
+  "flow_id": "5fc1d6aa-6e31-4ffb-b574-65a910dd834a",
+  "path": "templates/gallery/analytics/data_analytics/use-langflow-to-analyze-youtube-comment-sentiment-and-trends.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-audit-technical-seo-with-html-analysis",
+  "title": "Technical SEO Auditor",
+  "description": "Automated technical SEO auditing system built with Langflow that strictly analyzes webpage raw HTML to identify critical...",
+  "category": "Business",
+  "subcategory": "SEO Automation",
+  "host": "ubuntu-production-da92",
+  "flow_id": "5e444351-aa98-4b06-9e44-12cbd44a892d",
+  "path": "templates/gallery/business/seo_automation/use-langflow-to-audit-technical-seo-with-html-analysis.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-automate-and-manage-guest-communication",
+  "title": "Guest Communication Assistant",
+  "description": "Two-stage content creation system for hospitality businesses that streamlines marketing content generation through inter...",
+  "category": "Business",
+  "subcategory": "Guest Communication",
+  "host": "ubuntu-production-da92",
+  "flow_id": "f199055c-bcc0-49d1-afca-6ef8ad74d163",
+  "path": "templates/gallery/business/guest_communication/use-langflow-to-automate-and-manage-guest-communication.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked",
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-automate-client-onboarding-when-deals-are-won-with-slack-and-email",
+  "title": "Deal Onboarding Automator",
+  "description": "Revenue operations workflow built with Langflow that automates client onboarding as soon as a deal is marked won. The fl...",
+  "category": "Productivity",
+  "subcategory": "Sales Operations",
+  "host": "ubuntu-production-da92",
+  "flow_id": "ac449ce3-f12f-461e-b48e-2766e1bded7a",
+  "path": "templates/gallery/productivity/sales_operations/use-langflow-to-automate-client-onboarding-when-deals-are-won-with-slack-and-email.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-automate-crm-data-entry-processes",
+  "title": "CRM Data Entry Automation",
+  "description": "The system automatically validates contact information, researches company details, and enhances lead profiles with addi...",
+  "category": "Business",
+  "subcategory": "Sales & Marketing",
+  "host": "ubuntu-production-da92",
+  "flow_id": "6a221834-9b7a-47fc-97c7-82654af0b55c",
+  "path": "templates/gallery/business/sales_marketing/use-langflow-to-automate-crm-data-entry-processes.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-automate-data-extraction-from-pdfs",
+  "title": "Automating Data Extraction from PDFs",
+  "description": "Automated PDF data extraction system built with Langflow that automatically extracts structured data from PDF documents ...",
+  "category": "Automation",
+  "subcategory": "AI Agents",
+  "host": "ubuntu-production-da92",
+  "flow_id": "6b6c5c8e-7e64-42e0-95c9-1096f7b7ddb9",
+  "path": "templates/gallery/automation/ai_agents/use-langflow-to-automate-data-extraction-from-pdfs.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-automate-insurance-underwriting-processes-and-pricing",
+  "title": "Debt Collection Automation",
+  "description": "Automated debt collection messaging system built with Langflow that generates personalized payment reminders and collect...",
+  "category": "Business",
+  "subcategory": "Financial Services",
+  "host": "ubuntu-production-da92",
+  "flow_id": "603e6b1b-85f5-4543-9328-78d1ecc0bc82",
+  "path": "templates/gallery/business/financial_services/use-langflow-to-automate-insurance-underwriting-processes-and-pricing.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked",
+   "LanguageModelComponent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-automate-insurance-underwriting-with-risk-assessment",
+  "title": "Insurance Underwriting Automation",
+  "description": "Automated insurance underwriting system built with Langflow that streamlines risk assessment, evaluates applicant profil...",
+  "category": "Business",
+  "subcategory": "Insurance Underwriting",
+  "host": "ubuntu-production-da92",
+  "flow_id": "bff7bc38-e781-4ca6-958e-0d5ffb053700",
+  "path": "templates/gallery/business/insurance_underwriting/use-langflow-to-automate-insurance-underwriting-with-risk-assessment.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-automate-personalized-outreach-and-follow-up-messages",
+  "title": "Document Translation System",
+  "description": "Build a visual document translation system in Langflow that automatically processes text files, breaks them into managea...",
+  "category": "Processing",
+  "subcategory": "Document Translation",
+  "host": "ubuntu-production-da92",
+  "flow_id": "cff7e19a-2b1b-4838-b9d9-73c552741b7c",
+  "path": "templates/gallery/processing/document_translation/use-langflow-to-automate-personalized-outreach-and-follow-up-messages.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-automate-seo-keyword-research-and-prioritize-content-strategy-with-serpapi",
+  "title": "SEO Keyword Research Automation",
+  "description": "SEO keyword research workflow built with Langflow that turns seed keywords into a prioritized content strategy. The flow...",
+  "category": "Business",
+  "subcategory": "SEO Automation",
+  "host": "ubuntu-production-da92",
+  "flow_id": "977a256a-2795-4f1c-b84a-ea008d3cdb3c",
+  "path": "templates/gallery/business/seo_automation/use-langflow-to-automate-seo-keyword-research-and-prioritize-content-strategy-with-serpapi.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-automate-smart-ticket-routing-based-on-content-and-expertise",
+  "title": "Smart Ticket Routing",
+  "description": "Intelligent support ticket routing system built with Langflow that automatically routes support tickets to the most appr...",
+  "category": "Business",
+  "subcategory": "Customer Support Operations",
+  "host": "ubuntu-production-da92",
+  "flow_id": "3d1a6922-58d8-4182-aa42-9e9d01bad588",
+  "path": "templates/gallery/business/customer_support_operations/use-langflow-to-automate-smart-ticket-routing-based-on-content-and-expertise.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-automatically-segment-customers-based-on-behavior",
+  "title": "Customer Segmentation",
+  "description": "Build an AI-powered customer segmentation system that combines PostgreSQL database querying with intelligent analysis. A...",
+  "category": "Business",
+  "subcategory": "Data & Analytics",
+  "host": "ubuntu-production-da92",
+  "flow_id": "243aafc4-a79a-41ed-81a1-6da01d52ff1a",
+  "path": "templates/gallery/business/data_analytics/use-langflow-to-automatically-segment-customers-based-on-behavior.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-build-ai-calendar-task-orchestrator",
+  "title": "AI Calendar Task Orchestrator",
+  "description": "Conversational AI agent built with Langflow that allows users to create, update, query, and manage calendar events using...",
+  "category": "Automation",
+  "subcategory": "AI Agents",
+  "host": "ubuntu-production-da92",
+  "flow_id": "4e8bc8f4-6970-46e3-b8e5-c2b6618773f6",
+  "path": "templates/gallery/automation/ai_agents/use-langflow-to-build-ai-calendar-task-orchestrator.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-build-conversational-calendar-operations-agent",
+  "title": "Conversational Calendar Operations Agent",
+  "description": "AI-powered conversational calendar agent built with Langflow that interprets natural language requests and automatically...",
+  "category": "Automation",
+  "subcategory": "AI Agents",
+  "host": "ubuntu-production-da92",
+  "flow_id": "8f11c0f5-07e6-4b03-9152-0373b95f9459",
+  "path": "templates/gallery/automation/ai_agents/use-langflow-to-build-conversational-calendar-operations-agent.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-build-daily-work-summary-agent",
+  "title": "Daily Work Summary Agent",
+  "description": "AI-powered daily work summary agent built with Langflow that collects daily activities, messages, and tasks to generate ...",
+  "category": "Automation",
+  "subcategory": "Work Reporting / Personal Assistant",
+  "host": "ubuntu-production-da92",
+  "flow_id": "c65bd726-49af-4470-8944-cb21b8589d84",
+  "path": "templates/gallery/automation/work_reporting_personal_assistant/use-langflow-to-build-daily-work-summary-agent.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-build-local-rag-pipeline-with-ollama-and-chromadb",
+  "title": "Local RAG with Ollama and ChromaDB",
+  "description": "Fully local Retrieval-Augmented Generation (RAG) pipeline built with Langflow using local files, ChromaDB vector databas...",
+  "category": "Data",
+  "subcategory": "RAG",
+  "host": "ubuntu-production-da92",
+  "flow_id": "053b43aa-8882-4bbf-bc0b-91fb70c82b0d",
+  "path": "templates/gallery/data/rag/use-langflow-to-build-local-rag-pipeline-with-ollama-and-chromadb.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-build-personal-ai-assistant-for-daily-tasks-and-productivity",
+  "title": "Intelligent Personal Assistant",
+  "description": "AI-powered personal assistant built with Langflow that integrates with Gmail, Google Sheets, Google Tasks, Google Calend...",
+  "category": "Automation",
+  "subcategory": "AI Agents",
+  "host": "ubuntu-production-da92",
+  "flow_id": "92d874cd-f554-40d6-ad7f-6a8aec931e61",
+  "path": "templates/gallery/automation/ai_agents/use-langflow-to-build-personal-ai-assistant-for-daily-tasks-and-productivity.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-build-sales-proposal-assistant-with-briefing-and-research",
+  "title": "Sales Proposal Assistant",
+  "description": "Intelligent sales proposal assistant built with Langflow that collects requirements through interactive briefing, resear...",
+  "category": "Business",
+  "subcategory": "Proposal & Collateral Generation",
+  "host": "ubuntu-production-da92",
+  "flow_id": "bc0f621c-1eaf-4129-a1a3-c44d32c0e6af",
+  "path": "templates/gallery/business/proposal_collateral_generation/use-langflow-to-build-sales-proposal-assistant-with-briefing-and-research.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-build-taskflow-assistant-for-automated-task-management",
+  "title": "TaskFlow Assistant",
+  "description": "Intelligent task management assistant built with Langflow that interprets natural language requests to create or update ...",
+  "category": "Automation",
+  "subcategory": "AI Agents",
+  "host": "ubuntu-production-da92",
+  "flow_id": "e8dabe33-4966-45a8-a8ef-e38395b813af",
+  "path": "templates/gallery/automation/ai_agents/use-langflow-to-build-taskflow-assistant-for-automated-task-management.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-classify-and-route-uploaded-files",
+  "title": "Ingestion Router",
+  "description": "Automate document categorization and storage with this Langflow system that intelligently routes uploaded files to separ...",
+  "category": "Data",
+  "subcategory": "Agentic RAG",
+  "host": "ubuntu-production-da92",
+  "flow_id": "cd73cc2c-291c-46c8-84c3-26b0066baad9",
+  "path": "templates/gallery/data/agentic_rag/use-langflow-to-classify-and-route-uploaded-files.json",
+  "warnings": [
+   "LanguageModelComponent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-classify-documents-into-predefined-categories",
+  "title": "Document Classification",
+  "description": "Automate document sorting and routing with AI-powered classification workflows in Langflow. Process contracts, invoices,...",
+  "category": "Processing",
+  "subcategory": "Document Classification",
+  "host": "ubuntu-production-da92",
+  "flow_id": "98ac9b1d-f57d-4b7c-a94d-e1b8eca5dd99",
+  "path": "templates/gallery/processing/document_classification/use-langflow-to-classify-documents-into-predefined-categories.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked",
+   "LanguageModelComponent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-compare-resumes-and-recommend-hires",
+  "title": "Resume Screening & Hiring Recommendations",
+  "description": "Automated resume screening system using Langflow that evaluates multiple candidate resumes against job requirements thro...",
+  "category": "Business",
+  "subcategory": "HR & Recruiting",
+  "host": "ubuntu-production-da92",
+  "flow_id": "172de852-5420-4547-a036-b7506648edbf",
+  "path": "templates/gallery/business/hr_recruiting/use-langflow-to-compare-resumes-and-recommend-hires.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-compile-weekly-news-and-generate-audience-tailored-newsletters-with-tavily",
+  "title": "Weekly News to Newsletter Generator",
+  "description": "Marketing newsletter automation workflow built with Langflow that compiles weekly news into professional, audience-tailo...",
+  "category": "Business",
+  "subcategory": "Content Repurposing",
+  "host": "ubuntu-production-da92",
+  "flow_id": "3edb5bb1-bfef-4cac-944b-a932f1be06b7",
+  "path": "templates/gallery/business/content_repurposing/use-langflow-to-compile-weekly-news-and-generate-audience-tailored-newsletters-with-tavily.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-convert-blog-posts-into-audio-with-elevenlabs-and-onedrive",
+  "title": "Blog-to-Audio Content Automator",
+  "description": "Blog-to-audio automation workflow built with Langflow that scrapes web content, converts it into a polished narration sc...",
+  "category": "Business",
+  "subcategory": "Content Repurposing",
+  "host": "ubuntu-production-da92",
+  "flow_id": "a8744621-803f-4ec6-999d-dc4b71446f26",
+  "path": "templates/gallery/business/content_repurposing/use-langflow-to-convert-blog-posts-into-audio-with-elevenlabs-and-onedrive.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-convert-gmail-newsletters-into-podcasts-with-elevenlabs",
+  "title": "Newsletter to Podcast Converter",
+  "description": "Newsletter-to-podcast automation workflow built with Langflow that converts Gmail newsletters into audio podcasts using ...",
+  "category": "Automation",
+  "subcategory": "Content Repurposing",
+  "host": "ubuntu-production-da92",
+  "flow_id": "e08a750e-dc91-48da-be5a-2ce3aa2ae179",
+  "path": "templates/gallery/automation/content_repurposing/use-langflow-to-convert-gmail-newsletters-into-podcasts-with-elevenlabs.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-convert-videos-to-articles-with-ai-editor",
+  "title": "Video-to-Article AI Editor",
+  "description": "AI-powered video-to-article conversion system built with Langflow that converts YouTube videos and webinars into high-qu...",
+  "category": "Business",
+  "subcategory": "Content Creation",
+  "host": "ubuntu-production-da92",
+  "flow_id": "2a2ac950-bf0a-47b3-8bd1-952fe3d4b601",
+  "path": "templates/gallery/business/content_creation/use-langflow-to-convert-videos-to-articles-with-ai-editor.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-convert-voice-notes-to-structured-text",
+  "title": "Voice Notes to Structured Text",
+  "description": "AI-powered voice transcription and formatting system built with Langflow that converts voice recordings into clean, stru...",
+  "category": "Automation",
+  "subcategory": "Voice Notes to Structured Text",
+  "host": "ubuntu-production-da92",
+  "flow_id": "0e28946d-976f-4c7d-af8d-a3b19d025c34",
+  "path": "templates/gallery/automation/voice_notes_to_structured_text/use-langflow-to-convert-voice-notes-to-structured-text.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-create-a-conversational-csv-interface",
+  "title": "Conversational CSV Interface",
+  "description": "Build a conversational interface for CSV data analysis using Langflow's visual components. Transform spreadsheets into i...",
+  "category": "Business",
+  "subcategory": "Data & Analytics",
+  "host": "ubuntu-production-da92",
+  "flow_id": "8e26843e-14e2-4567-be44-eb89e10fabbd",
+  "path": "templates/gallery/business/data_analytics/use-langflow-to-create-a-conversational-csv-interface.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-create-concise-document-summaries-and-overviews",
+  "title": "Generate Concise Overviews",
+  "description": "Build document summarization workflows in Langflow using visual drag-and-drop components to automatically generate conci...",
+  "category": "Documents",
+  "subcategory": "Knowledge Bases",
+  "host": "ubuntu-production-da92",
+  "flow_id": "56d7734f-0cde-4f54-9610-41809be1b8c3",
+  "path": "templates/gallery/documents/knowledge_bases/use-langflow-to-create-concise-document-summaries-and-overviews.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-create-interactive-data-dashboards",
+  "title": "Interactive Data Dashboards",
+  "description": "Transform natural language questions into SQL queries and custom charts with this intelligent database visualization sys...",
+  "category": "Analytics",
+  "subcategory": "Data & Analytics",
+  "host": "ubuntu-production-da92",
+  "flow_id": "a4944fca-5926-4280-a1c5-cff62a676dec",
+  "path": "templates/gallery/analytics/data_analytics/use-langflow-to-create-interactive-data-dashboards.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-create-tailored-sales-offers-and-proposals",
+  "title": "Sales Proposal Generator",
+  "description": "Automate personalized sales proposal generation with real-time inventory validation using Langflow's visual workflow bui...",
+  "category": "Business",
+  "subcategory": "Sales & Marketing",
+  "host": "ubuntu-production-da92",
+  "flow_id": "42b4e92a-6da4-458b-b1a6-fc68c32d488c",
+  "path": "templates/gallery/business/sales_marketing/use-langflow-to-create-tailored-sales-offers-and-proposals.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked",
+   "Agent.api_key: secret value blanked",
+   "LanguageModelComponent.api_key: secret value blanked",
+   "Agent.api_key: secret value blanked",
+   "LanguageModelComponent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-deduplicate-bug-reports-and-propose-fixes-from-backlogs",
+  "title": "Bug Report Deduplicator",
+  "description": "Bug triage automation workflow built with Langflow that analyzes new bug reports to identify duplicates based on existin...",
+  "category": "Productivity",
+  "subcategory": "Product Quality & Reliability",
+  "host": "ubuntu-production-da92",
+  "flow_id": "fa83337e-eceb-4d54-9ce8-7ec1fc04be2e",
+  "path": "templates/gallery/productivity/product_quality_reliability/use-langflow-to-deduplicate-bug-reports-and-propose-fixes-from-backlogs.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-detect-and-score-supply-chain-disruptions-from-news-and-routes",
+  "title": "Supply Chain Risk Radar",
+  "description": "Supply chain risk monitoring workflow built with Langflow that cross-references supplier locations and logistics routes ...",
+  "category": "Analytics",
+  "subcategory": "Supply Chain",
+  "host": "ubuntu-production-da92",
+  "flow_id": "23d90f9a-e849-4097-8cdf-218bad3a2c0a",
+  "path": "templates/gallery/analytics/supply_chain/use-langflow-to-detect-and-score-supply-chain-disruptions-from-news-and-routes.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-detect-customer-sentiment-and-urgency",
+  "title": "Sentiment & Urgency Detection",
+  "description": "Automatically analyze customer support messages for sentiment, urgency, and escalation risk using Langflow's visual work...",
+  "category": "Business",
+  "subcategory": "Customer Support",
+  "host": "ubuntu-production-da92",
+  "flow_id": "8cd8ac32-ee2f-4011-8838-c545d8dcd4fa",
+  "path": "templates/gallery/business/customer_support/use-langflow-to-detect-customer-sentiment-and-urgency.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked",
+   "LanguageModelComponent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-detect-fraud-with-advanced-data-analysis-and-machine-learning",
+  "title": "Fraud Detection System",
+  "description": "Advanced fraud detection system built with Langflow that identifies suspicious behavior and potential security threats b...",
+  "category": "Business",
+  "subcategory": "Fraud Detection",
+  "host": "ubuntu-production-da92",
+  "flow_id": "68b71b89-7f1d-4be7-9162-4af6277c687f",
+  "path": "templates/gallery/business/fraud_detection/use-langflow-to-detect-fraud-with-advanced-data-analysis-and-machine-learning.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-detect-inventory-anomalies-and-quantify-financial-impact",
+  "title": "Inventory Anomaly Detector",
+  "description": "Inventory anomaly detection workflow built with Langflow that compares system stock with physical counts to detect short...",
+  "category": "Analytics",
+  "subcategory": "Supply Chain",
+  "host": "ubuntu-production-da92",
+  "flow_id": "1d7285cf-87fa-47e2-977c-f1f785656f64",
+  "path": "templates/gallery/analytics/supply_chain/use-langflow-to-detect-inventory-anomalies-and-quantify-financial-impact.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-draft-product-requirements-documents-from-meeting-notes",
+  "title": "PRD Draftsman",
+  "description": "PRD drafting workflow built with Langflow that turns messy meeting notes and brainstorms into clear, structured, product...",
+  "category": "Automation",
+  "subcategory": "Product Management",
+  "host": "ubuntu-production-da92",
+  "flow_id": "73facc76-c975-4f93-b70f-c9f349755986",
+  "path": "templates/gallery/automation/product_management/use-langflow-to-draft-product-requirements-documents-from-meeting-notes.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-draft-sustainability-and-esg-reports-from-conversational-data-collection",
+  "title": "Sustainability & ESG Report Drafter",
+  "description": "ESG reporting workflow built with Langflow that conversationally collects environmental, social, and governance data and...",
+  "category": "Processing",
+  "subcategory": "Sustainability Reporting",
+  "host": "ubuntu-production-da92",
+  "flow_id": "82e4d604-39a8-491d-9627-150fb9edf8bd",
+  "path": "templates/gallery/processing/sustainability_reporting/use-langflow-to-draft-sustainability-and-esg-reports-from-conversational-data-collection.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-enrich-calendar-meetings-automatically",
+  "title": "Meeting Preparation",
+  "description": "Automate sales meeting preparation with this Langflow AI assistant that analyzes calendar events, researches attendee co...",
+  "category": "Productivity",
+  "subcategory": "Sales Intelligence",
+  "host": "ubuntu-production-da92",
+  "flow_id": "97cc66ca-2d2d-4c4f-aee7-c8319ff7e2e9",
+  "path": "templates/gallery/productivity/sales_intelligence/use-langflow-to-enrich-calendar-meetings-automatically.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-evaluate-and-score-ai-generated-responses",
+  "title": "AI Response Evaluation System",
+  "description": "Automated AI response evaluation system built with Langflow that scores assistant responses against reference documents ...",
+  "category": "Business",
+  "subcategory": "Quality Assurance",
+  "host": "ubuntu-production-da92",
+  "flow_id": "99bce93f-fb5f-4bb9-93ad-c2e563b86c30",
+  "path": "templates/gallery/business/quality_assurance/use-langflow-to-evaluate-and-score-ai-generated-responses.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-extract-competitive-intelligence-with-smart-market-research",
+  "title": "Smart Market Researcher",
+  "description": "AI-powered market research agent built with Langflow that extracts strategic competitive intelligence from company URLs ...",
+  "category": "Business",
+  "subcategory": "Smart Market Researcher",
+  "host": "ubuntu-production-da92",
+  "flow_id": "ab9a6274-6adf-4a09-8b32-88fbe51e405c",
+  "path": "templates/gallery/business/smart_market_researcher/use-langflow-to-extract-competitive-intelligence-with-smart-market-research.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-extract-structured-data-from-documents",
+  "title": "Document Data Intelligence",
+  "description": "Automated contract processing system that extracts structured information from legal documents using Langflow's visual i...",
+  "category": "Processing",
+  "subcategory": "Data Extraction",
+  "host": "ubuntu-production-da92",
+  "flow_id": "206fd3a8-274d-41b1-bec0-a6233c5f74a6",
+  "path": "templates/gallery/processing/data_extraction/use-langflow-to-extract-structured-data-from-documents.json",
+  "warnings": [
+   "LanguageModelComponent.api_key: secret value blanked",
+   "Agent.api_key: secret value blanked",
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-extract-structured-data-from-unstructured-documents",
+  "title": "Data Extraction",
+  "description": "Transform unstructured documents like PDFs, emails, and web pages into structured, machine-readable data using Langflow'...",
+  "category": "Processing",
+  "subcategory": "Data Extraction",
+  "host": "ubuntu-production-da92",
+  "flow_id": "0bfecd47-cb2f-4643-b265-1982b7020c1e",
+  "path": "templates/gallery/processing/data_extraction/use-langflow-to-extract-structured-data-from-unstructured-documents.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked",
+   "LanguageModelComponent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-fetch-stock-data-and-generate-an-ai-summary",
+  "title": "Stock Market Analysis",
+  "description": "Build a financial market analysis assistant using Langflow that researches companies and stock performance through an AI...",
+  "category": "Analytics",
+  "subcategory": "Financial",
+  "host": "ubuntu-production-da92",
+  "flow_id": "081685e2-9268-4af2-9864-f0c0bf751858",
+  "path": "templates/gallery/analytics/financial/use-langflow-to-fetch-stock-data-and-generate-an-ai-summary.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-format-and-clean-documents-with-ai",
+  "title": "Document Formatter & Cleaner",
+  "description": "AI-powered document formatting and cleaning agent built with Langflow that formats and normalizes text from scanned docu...",
+  "category": "Processing",
+  "subcategory": "Document Formatting",
+  "host": "ubuntu-production-da92",
+  "flow_id": "3125f92f-5a9f-407b-bb2d-c77395abd88d",
+  "path": "templates/gallery/processing/document_formatting/use-langflow-to-format-and-clean-documents-with-ai.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-a-30-day-adaptive-onboarding-roadmap-for-new-hires",
+  "title": "Adaptive Onboarding Roadmap Agent",
+  "description": "Talent development workflow built with Langflow that generates an adaptive 30-day onboarding roadmap tailored to a new h...",
+  "category": "Business",
+  "subcategory": "Talent Development",
+  "host": "ubuntu-production-da92",
+  "flow_id": "b252c68d-32ba-40ab-b3af-772acfc5360d",
+  "path": "templates/gallery/business/talent_development/use-langflow-to-generate-a-30-day-adaptive-onboarding-roadmap-for-new-hires.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-ad-copy-variations-for-platform-optimization",
+  "title": "Ad Copy Variation Generator",
+  "description": "AI-powered ad copy variation generator built with Langflow that collects ad campaign requirements and generates platform...",
+  "category": "Business",
+  "subcategory": "Ad Copy Variation Generator",
+  "host": "ubuntu-production-da92",
+  "flow_id": "c9272d31-04d8-4f1f-9aec-c135b60b1540",
+  "path": "templates/gallery/business/ad_copy_variation_generator/use-langflow-to-generate-ad-copy-variations-for-platform-optimization.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-ai-support-responses-from-documentation",
+  "title": "AI Support Response Generator",
+  "description": "AI-powered support response generator built with Langflow that answers user questions based on documentation available o...",
+  "category": "Business",
+  "subcategory": "AI Support Response Generator",
+  "host": "ubuntu-production-da92",
+  "flow_id": "b77d2f13-b6b6-4cfb-a469-c21d2b2eacbd",
+  "path": "templates/gallery/business/ai_support_response_generator/use-langflow-to-generate-ai-support-responses-from-documentation.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-ai-videos-from-text-with-google-veo",
+  "title": "Generate Videos with Google AI",
+  "description": "AI video generation workflow built with Langflow that creates videos from text prompts using Google Veo (Google AI Studi...",
+  "category": "Business",
+  "subcategory": "Video Generation",
+  "host": "ubuntu-production-da92",
+  "flow_id": "3de78f77-e23a-4491-a8a3-4e8dfed8e410",
+  "path": "templates/gallery/business/video_generation/use-langflow-to-generate-ai-videos-from-text-with-google-veo.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-and-update-technical-documentation-from-github-pull-requests",
+  "title": "PR Documentation Generator",
+  "description": "Developer productivity workflow built with Langflow that generates or updates technical documentation from GitHub Pull R...",
+  "category": "Productivity",
+  "subcategory": "Developer Productivity",
+  "host": "ubuntu-production-da92",
+  "flow_id": "b2fd6c7e-8970-411b-83d3-586f21f55059",
+  "path": "templates/gallery/productivity/developer_productivity/use-langflow-to-generate-and-update-technical-documentation-from-github-pull-requests.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-customer-health-scores-and-detect-churn-risk",
+  "title": "Customer Health Scorecard",
+  "description": "Customer health scoring workflow built with Langflow that consolidates financial, support, and customer interaction data...",
+  "category": "Business",
+  "subcategory": "Customer Health",
+  "host": "ubuntu-production-da92",
+  "flow_id": "28f1e5c9-d83c-41f1-9072-18b0a8d215de",
+  "path": "templates/gallery/business/customer_health/use-langflow-to-generate-customer-health-scores-and-detect-churn-risk.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-customized-prompts-for-support-agents",
+  "title": "Prompt Generator Agent for Support Agent",
+  "description": "AI-powered prompt generator agent built with Langflow that accesses your documentation and creates customized prompts fo...",
+  "category": "Business",
+  "subcategory": "Prompt Generator",
+  "host": "ubuntu-production-da92",
+  "flow_id": "ba61be11-c218-441a-998d-ef01005a64d9",
+  "path": "templates/gallery/business/prompt_generator/use-langflow-to-generate-customized-prompts-for-support-agents.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-generate-execution-ready-teaching-plans-from-a-single-consistent-data-source",
+  "title": "AI Teaching Plan Generator",
+  "description": "Education workflow built with Langflow that generates execution-ready lesson plans by transforming subject matter into s...",
+  "category": "Productivity",
+  "subcategory": "Education & Training",
+  "host": "ubuntu-production-da92",
+  "flow_id": "7ffe9b4e-9d1f-4945-a119-100ab89c3bee",
+  "path": "templates/gallery/productivity/education_training/use-langflow-to-generate-execution-ready-teaching-plans-from-a-single-consistent-data-source.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-executive-business-reviews-from-account-performance-data",
+  "title": "Strategic EBR Generator",
+  "description": "Executive Business Review (EBR) generation workflow built with Langflow that transforms account performance data into C-...",
+  "category": "Business",
+  "subcategory": "Customer Health",
+  "host": "ubuntu-production-da92",
+  "flow_id": "caa6c1ce-c819-4170-83da-42237b72ce26",
+  "path": "templates/gallery/business/customer_health/use-langflow-to-generate-executive-business-reviews-from-account-performance-data.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-kpi-reports-with-strategic-action-plans",
+  "title": "KPI Report Generator",
+  "description": "Active KPI-driven AI agent built with Langflow that consolidates marketing and sales performance data, calculates cross-...",
+  "category": "Business",
+  "subcategory": "KPI Report Generator",
+  "host": "ubuntu-production-da92",
+  "flow_id": "894ca525-9c8d-40e3-9c9f-fb5bdc42d0ac",
+  "path": "templates/gallery/business/kpi_report_generator/use-langflow-to-generate-kpi-reports-with-strategic-action-plans.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-marketing-content-from-document-insights",
+  "title": "Document-Based Marketing Content Generator",
+  "description": "Intelligent marketing content generation system built with Langflow that analyzes documents, extracts key insights, and ...",
+  "category": "Processing",
+  "subcategory": "Marketing Content Creation",
+  "host": "ubuntu-production-da92",
+  "flow_id": "74581857-2424-4739-8c0f-1b5e49ebf2ff",
+  "path": "templates/gallery/processing/marketing_content_creation/use-langflow-to-generate-marketing-content-from-document-insights.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-objection-handling-rebuttals-from-webhook-and-email-them-to-reps",
+  "title": "Objection Handling Generator",
+  "description": "Sales enablement workflow built with Langflow that converts high-friction objections into strategic rebuttals using prov...",
+  "category": "Business",
+  "subcategory": "Sales Enablement",
+  "host": "ubuntu-production-da92",
+  "flow_id": "9c20a1ba-3335-458d-b1d1-bfc951137ddc",
+  "path": "templates/gallery/business/sales_enablement/use-langflow-to-generate-objection-handling-rebuttals-from-webhook-and-email-them-to-reps.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-personalized-calendly-booking-links",
+  "title": "Personalized Calendly Booking Links",
+  "description": "Automated Sales Development Representative system built with Langflow that processes lead data via webhooks, determines ...",
+  "category": "Productivity",
+  "subcategory": "Sales Intelligence",
+  "host": "ubuntu-production-da92",
+  "flow_id": "82d24308-9f2a-4184-825d-69fbb98d0d67",
+  "path": "templates/gallery/productivity/sales_intelligence/use-langflow-to-generate-personalized-calendly-booking-links.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-personalized-outreach-messages-at-scale",
+  "title": "Personalized Outreach Generator",
+  "description": "Automated personalized outreach system built with Langflow that generates customized messages for prospects based on the...",
+  "category": "Business",
+  "subcategory": "Personalized Outreach",
+  "host": "ubuntu-production-da92",
+  "flow_id": "88cdbfbe-87fc-4286-b4d6-b669faf30f79",
+  "path": "templates/gallery/business/personalized_outreach/use-langflow-to-generate-personalized-outreach-messages-at-scale.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-press-releases-with-ai-agent",
+  "title": "Press Release Generator",
+  "description": "AI-powered press release generator built with Langflow that collects announcement information and generates consistent, ...",
+  "category": "Business",
+  "subcategory": "Press Release Generator",
+  "host": "ubuntu-production-da92",
+  "flow_id": "336e7695-8cc5-45cf-83b6-2f32dad30cc3",
+  "path": "templates/gallery/business/press_release_generator/use-langflow-to-generate-press-releases-with-ai-agent.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-real-time-customer-feedback-insights-via-webhook",
+  "title": "Customer Feedback Insight Generator",
+  "description": "Real-time customer feedback insight workflow built with Langflow that instantly transforms raw feedback into structured ...",
+  "category": "Business",
+  "subcategory": "Customer Feedback Insights",
+  "host": "ubuntu-production-da92",
+  "flow_id": "289bd9b5-b9ec-40ee-8b36-b253e6411c7b",
+  "path": "templates/gallery/business/customer_feedback_insights/use-langflow-to-generate-real-time-customer-feedback-insights-via-webhook.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-research-briefings-from-scientific-papers",
+  "title": "Research Briefing Generator",
+  "description": "Automated research briefing generator built with Langflow that fetches scientific papers from arXiv based on topic keywo...",
+  "category": "Processing",
+  "subcategory": "Summarization",
+  "host": "ubuntu-production-da92",
+  "flow_id": "9db23e73-5f12-4084-9e66-b21cdcbea731",
+  "path": "templates/gallery/processing/summarization/use-langflow-to-generate-research-briefings-from-scientific-papers.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-seo-friendly-blog-outlines",
+  "title": "Blog Outline Generator",
+  "description": "AI-powered blog outline generator built with Langflow that creates structured, SEO-friendly blog outlines based on topic...",
+  "category": "Business",
+  "subcategory": "Content Creation",
+  "host": "ubuntu-production-da92",
+  "flow_id": "9f7ff9f9-3eba-46eb-ac08-ca3fc3091ed9",
+  "path": "templates/gallery/business/content_creation/use-langflow-to-generate-seo-friendly-blog-outlines.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-seo-keyword-clusters-with-semantic-analysis",
+  "title": "SEO Keyword Cluster Generator",
+  "description": "AI-powered SEO keyword cluster generator built with Langflow that analyzes SEO keywords, groups them by search intent an...",
+  "category": "Business",
+  "subcategory": "SEO Keyword Cluster Generator",
+  "host": "ubuntu-production-da92",
+  "flow_id": "90dc8b79-0633-4c32-b102-f856078565e2",
+  "path": "templates/gallery/business/seo_keyword_cluster_generator/use-langflow-to-generate-seo-keyword-clusters-with-semantic-analysis.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-social-media-captions-with-ai",
+  "title": "Social Media Caption Generator",
+  "description": "AI-powered social media caption generator built with Langflow that creates high-impact, on-brand social media captions t...",
+  "category": "Business",
+  "subcategory": "Content Creation",
+  "host": "ubuntu-production-da92",
+  "flow_id": "65341032-0737-4a9d-98f1-fd95da792650",
+  "path": "templates/gallery/business/content_creation/use-langflow-to-generate-social-media-captions-with-ai.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-support-videos-from-support-emails-with-heygen",
+  "title": "Support Videos Generator",
+  "description": "Support video generation workflow built with Langflow that transforms support emails into short explanatory videos. The ...",
+  "category": "Business",
+  "subcategory": "Support Content Automation",
+  "host": "ubuntu-production-da92",
+  "flow_id": "2070fca6-86e3-432d-b9ad-5b791a79f8d8",
+  "path": "templates/gallery/business/support_content_automation/use-langflow-to-generate-support-videos-from-support-emails-with-heygen.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-generate-targeted-marketing-content",
+  "title": "Marketing Content Generator",
+  "description": "Build a visual content research and creation agent using Langflow that generates targeted marketing materials for differ...",
+  "category": "Business",
+  "subcategory": "Sales & Marketing",
+  "host": "ubuntu-production-da92",
+  "flow_id": "12fb4e31-fc7e-442d-93ab-4bc192a09a1a",
+  "path": "templates/gallery/business/sales_marketing/use-langflow-to-generate-targeted-marketing-content.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-generate-voice-of-customer-reports-from-youtube-and-reddit-feedback",
+  "title": "Voice of Customer Report Generator",
+  "description": "Voice of Customer (VoC) reporting workflow built with Langflow that collects and consolidates user feedback from YouTube...",
+  "category": "Business",
+  "subcategory": "Voice of Customer",
+  "host": "ubuntu-production-da92",
+  "flow_id": "325ef2f9-51b7-4fd9-a725-7c8fe03fd067",
+  "path": "templates/gallery/business/voice_of_customer/use-langflow-to-generate-voice-of-customer-reports-from-youtube-and-reddit-feedback.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-get-automated-pandas-dataframe-insights",
+  "title": "DataFrame Analysis Assistant",
+  "description": "Build a conversational data analysis assistant using Langflow that processes CSV files through natural language queries,...",
+  "category": "Business",
+  "subcategory": "Data & Analytics",
+  "host": "ubuntu-production-da92",
+  "flow_id": "53a502ef-7028-4e71-8f89-cdf9d5808ca0",
+  "path": "templates/gallery/business/data_analytics/use-langflow-to-get-automated-pandas-dataframe-insights.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-implement-web-based-rag-for-article-processing",
+  "title": "RAG Article in Web with Agent",
+  "description": "Build a RAG system in Langflow that extracts content from web articles and RSS feeds, stores it in vector databases, and...",
+  "category": "Data",
+  "subcategory": "Agentic RAG",
+  "host": "ubuntu-production-da92",
+  "flow_id": "f06f6079-843a-4a29-a42e-d04a711e6380",
+  "path": "templates/gallery/data/agentic_rag/use-langflow-to-implement-web-based-rag-for-article-processing.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-ingest-google-drive-documents-into-astradb-for-rag",
+  "title": "Document Ingestion from Google Drive",
+  "description": "Automated Google Drive ingestion workflow built with Langflow that syncs documents from Drive folders into a vector data...",
+  "category": "Processing",
+  "subcategory": "RAG Ingestion",
+  "host": "ubuntu-production-da92",
+  "flow_id": "7971a3eb-2772-485f-a9f6-6c699a2fdd1d",
+  "path": "templates/gallery/processing/rag_ingestion/use-langflow-to-ingest-google-drive-documents-into-astradb-for-rag.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-manage-communication-and-information-tasks",
+  "title": "Email Calendar Integration",
+  "description": "Build sophisticated communication and information management systems with Langflow's visual drag-and-drop interface. Cre...",
+  "category": "Automation",
+  "subcategory": "Workflow",
+  "host": "ubuntu-production-da92",
+  "flow_id": "11524033-79e4-4a56-ab7f-a25094eab56c",
+  "path": "templates/gallery/automation/workflow/use-langflow-to-manage-communication-and-information-tasks.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-monitor-regulatory-changes-by-industry-classification",
+  "title": "Industry Classification Regulatory Impact Monitor",
+  "description": "Regulatory monitoring workflow built with Langflow that tracks changes from official sources and filters updates by indu...",
+  "category": "Business",
+  "subcategory": "Compliance Risk Monitoring",
+  "host": "ubuntu-production-da92",
+  "flow_id": "d9a6d5d0-7fd8-442f-816b-6f011ec27e6e",
+  "path": "templates/gallery/business/compliance_risk_monitoring/use-langflow-to-monitor-regulatory-changes-by-industry-classification.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-normalize-universal-webhook-payloads-with-semantic-mapping",
+  "title": "Universal Webhook Payload Normalization",
+  "description": "Intelligent middleware agent built with Langflow that ingests raw JSON data from disparate sources including forms, CRMs...",
+  "category": "Analytics",
+  "subcategory": "Data Cleaning & Transformation",
+  "host": "ubuntu-production-da92",
+  "flow_id": "fd2e2384-4321-4222-ad84-d427221048df",
+  "path": "templates/gallery/analytics/data_cleaning_transformation/use-langflow-to-normalize-universal-webhook-payloads-with-semantic-mapping.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-process-and-classify-call-transcripts",
+  "title": "Call Classification Analytics",
+  "description": "Build an automated call transcription and classification system using Langflow that converts audio files into structured...",
+  "category": "Business",
+  "subcategory": "Customer Support",
+  "host": "ubuntu-production-da92",
+  "flow_id": "0195f9e1-3b97-4041-8eee-0ce3ceed4905",
+  "path": "templates/gallery/business/customer_support/use-langflow-to-process-and-classify-call-transcripts.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-process-translate-and-deliver-structured-output",
+  "title": "Financial Market Analysis Chatbot",
+  "description": "Build a financial market analysis chatbot using Langflow that analyzes individual companies and provides comprehensive s...",
+  "category": "Analytics",
+  "subcategory": "Financial",
+  "host": "ubuntu-production-da92",
+  "flow_id": "319b84b0-7929-44c2-a522-d843f3282207",
+  "path": "templates/gallery/analytics/financial/use-langflow-to-process-translate-and-deliver-structured-output.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-query-analyze-and-extract-csv-insights",
+  "title": "CSV Insights Extraction",
+  "description": "Transform CSV data into actionable insights using Langflow's visual interface to build flows that load files, answer nat...",
+  "category": "Business",
+  "subcategory": "Data & Analytics",
+  "host": "ubuntu-production-da92",
+  "flow_id": "9171f8bd-08e5-4d5a-8497-f73d16107231",
+  "path": "templates/gallery/business/data_analytics/use-langflow-to-query-analyze-and-extract-csv-insights.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-query-analyze-and-extract-insights",
+  "title": "CSV Data Analysis Agent",
+  "description": "Build a CSV data analysis agent in Langflow that answers natural language questions about uploaded files using AI-powere...",
+  "category": "Business",
+  "subcategory": "Data & Analytics",
+  "host": "ubuntu-production-da92",
+  "flow_id": "aa6ef6a9-4fc8-4947-bfd3-68444ec48898",
+  "path": "templates/gallery/business/data_analytics/use-langflow-to-query-analyze-and-extract-insights.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-query-structured-data-using-natural-language",
+  "title": "Natural Language SQL Query",
+  "description": "Build a natural language to SQL query system with Langflow that converts plain English questions into database queries a...",
+  "category": "Analytics",
+  "subcategory": "Data & Analytics",
+  "host": "ubuntu-production-da92",
+  "flow_id": "4ed78530-2443-4df4-b29c-c3a0dd55fa1a",
+  "path": "templates/gallery/analytics/data_analytics/use-langflow-to-query-structured-data-using-natural-language.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-repurpose-content-into-multimodal-assets-with-content-cascade",
+  "title": "Content Cascade Flow",
+  "description": "Multimodal content repurposing workflow built with Langflow that transforms a single piece of text into multiple formats...",
+  "category": "Business",
+  "subcategory": "Content Repurposing",
+  "host": "ubuntu-production-da92",
+  "flow_id": "c9036ce1-5b9b-479d-98fd-a0cd5019edca",
+  "path": "templates/gallery/business/content_repurposing/use-langflow-to-repurpose-content-into-multimodal-assets-with-content-cascade.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked",
+   "LanguageModelComponent.api_key: secret value blanked",
+   "ModalConverterComponent.openai_api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-scan-contracts-for-risky-clauses-and-compliance-gaps",
+  "title": "AI Contract Risk Scanner",
+  "description": "Contract risk scanning workflow built with Langflow that compares contract drafts against an organization’s approved leg...",
+  "category": "Processing",
+  "subcategory": "Contract Risk & Compliance",
+  "host": "ubuntu-production-da92",
+  "flow_id": "62950675-b412-4e39-b3c0-a0fc76665c77",
+  "path": "templates/gallery/processing/contract_risk_compliance/use-langflow-to-scan-contracts-for-risky-clauses-and-compliance-gaps.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-score-and-prioritize-features-with-rice-or-kano",
+  "title": "Feature Prioritization Scorer",
+  "description": "Feature prioritization workflow built with Langflow that turns customer feedback and product ideas into a ranked roadmap...",
+  "category": "Productivity",
+  "subcategory": "Product Strategy",
+  "host": "ubuntu-production-da92",
+  "flow_id": "f2c2d341-3af8-41b7-a915-fb6f7076cb65",
+  "path": "templates/gallery/productivity/product_strategy/use-langflow-to-score-and-prioritize-features-with-rice-or-kano.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-score-and-rank-leads",
+  "title": "Lead Scoring System",
+  "description": "Automate Facebook lead scoring and classification with this Langflow system that uses AI agents to evaluate prospects, a...",
+  "category": "Business",
+  "subcategory": "Sales & Marketing",
+  "host": "ubuntu-production-da92",
+  "flow_id": "0b4d5b67-46ba-4914-aa2b-05f2745f32d6",
+  "path": "templates/gallery/business/sales_marketing/use-langflow-to-score-and-rank-leads.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked",
+   "LanguageModelComponent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-screen-score-and-rank-resumes",
+  "title": "AI-Powered Candidate Screening",
+  "description": "Automated recruitment system built with Langflow that processes resumes through AI-powered evaluation stages, extracting...",
+  "category": "Business",
+  "subcategory": "HR & Recruiting",
+  "host": "ubuntu-production-da92",
+  "flow_id": "6564f230-8cda-4c44-90a6-dbc867c19574",
+  "path": "templates/gallery/business/hr_recruiting/use-langflow-to-screen-score-and-rank-resumes.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-split-label-and-classify-file-chunks-automatically",
+  "title": "Chunk Classification",
+  "description": "Automate document processing with this Langflow workflow that ingests files, splits them into chunks, and uses AI-powere...",
+  "category": "Documents",
+  "subcategory": "Knowledge Bases",
+  "host": "ubuntu-production-da92",
+  "flow_id": "d31bcfa6-b0a6-4283-89a0-61a3a9f6b8e9",
+  "path": "templates/gallery/documents/knowledge_bases/use-langflow-to-split-label-and-classify-file-chunks-automatically.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked",
+   "LanguageModelComponent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-summarize-github-metrics-from-bigquery",
+  "title": "Multi Source Retrieval",
+  "description": "Execute SQL queries against Google's public GitHub datasets in BigQuery and generate human-readable development reports ...",
+  "category": "Analytics",
+  "subcategory": "DevOps",
+  "host": "ubuntu-production-da92",
+  "flow_id": "ec651e06-6d88-49e9-ab6d-30e324566487",
+  "path": "templates/gallery/analytics/devops/use-langflow-to-summarize-github-metrics-from-bigquery.json",
+  "warnings": [
+   "Agent.api_key: secret value blanked"
+  ]
+ },
+ {
+  "slug": "use-langflow-to-summarize-terms-of-service-and-privacy-policies-without-legal-jargon",
+  "title": "Terms of Service Summarizer",
+  "description": "Policy summarization workflow built with Langflow that turns complex terms of service and privacy policies into a clear,...",
+  "category": "Processing",
+  "subcategory": "Privacy & Data Protection",
+  "host": "ubuntu-production-da92",
+  "flow_id": "9ca2a752-3161-455e-8f44-ef9991aad112",
+  "path": "templates/gallery/processing/privacy_data_protection/use-langflow-to-summarize-terms-of-service-and-privacy-policies-without-legal-jargon.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-sync-github-issues-to-jira-tickets-automatically",
+  "title": "GitHub Issues to Jira Tickets",
+  "description": "Engineering operations workflow built with Langflow that turns GitHub issues into Jira tickets automatically. The flow i...",
+  "category": "Productivity",
+  "subcategory": "Developer Productivity",
+  "host": "ubuntu-production-da92",
+  "flow_id": "9934fdfa-8c75-47be-8c94-c03ee61b942f",
+  "path": "templates/gallery/productivity/developer_productivity/use-langflow-to-sync-github-issues-to-jira-tickets-automatically.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-talk-to-apis-without-programming",
+  "title": "Talk to APIs",
+  "description": "Natural language API interaction system built with Langflow that lets you use APIs in a simple way without any programmi...",
+  "category": "Automation",
+  "subcategory": "API Connectors & Integration",
+  "host": "ubuntu-production-da92",
+  "flow_id": "b44b1782-0400-4058-ac8a-bfb9e39bf6d4",
+  "path": "templates/gallery/automation/api_connectors_integration/use-langflow-to-talk-to-apis-without-programming.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-translate-customer-feedback-with-tone-and-formality-control",
+  "title": "Multilingual Feedback Translator",
+  "description": "Multilingual translation workflow built with Langflow that uses dynamic context injection to produce high-quality, local...",
+  "category": "Processing",
+  "subcategory": "Translation & Localization",
+  "host": "ubuntu-production-da92",
+  "flow_id": "942f858f-0162-4c82-9ee7-69a39b824328",
+  "path": "templates/gallery/processing/translation_localization/use-langflow-to-translate-customer-feedback-with-tone-and-formality-control.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-turn-youtube-videos-into-publish-ready-written-highlights",
+  "title": "YouTube Highlight Intelligence",
+  "description": "YouTube-to-text repurposing workflow built with Langflow that transforms YouTube videos into high-quality written highli...",
+  "category": "Business",
+  "subcategory": "Content Repurposing",
+  "host": "ubuntu-production-da92",
+  "flow_id": "b3949132-bae9-4db9-ba61-b2398165330b",
+  "path": "templates/gallery/business/content_repurposing/use-langflow-to-turn-youtube-videos-into-publish-ready-written-highlights.json",
+  "warnings": []
+ },
+ {
+  "slug": "use-langflow-to-validate-datasets-and-quarantine-bad-records-with-business-rules",
+  "title": "Data Quality Validator",
+  "description": "Data quality auditing workflow built with Langflow that rigorously validates datasets against strict business rules (syn...",
+  "category": "Analytics",
+  "subcategory": "Data Quality",
+  "host": "ubuntu-production-da92",
+  "flow_id": "a00d9563-14c6-439a-8b6f-a92858f88ed2",
+  "path": "templates/gallery/analytics/data_quality/use-langflow-to-validate-datasets-and-quarantine-bad-records-with-business-rules.json",
+  "warnings": []
+ }
+]

@@ -21,7 +21,9 @@ type File struct {
 	Tags         []string
 	IsComponent  bool
 	NodeCount    int
-	Dir          string // "native" or "custom"
+	Dir          string // "native", "custom" or "gallery"
+	Category     string // gallery only: first path segment under gallery/
+	Subcategory  string // gallery only: second path segment ("" if none)
 	Path         string
 
 	Raw     json.RawMessage // whole template file, verbatim
@@ -72,7 +74,47 @@ func Parse(path, dir string) (*File, error) {
 	}, nil
 }
 
-// LoadDir scans root/native and root/custom for *.json templates.
+// dirRank orders sources: native starters, then custom, then gallery.
+func dirRank(d string) int {
+	switch d {
+	case "native":
+		return 0
+	case "custom":
+		return 1
+	default:
+		return 2
+	}
+}
+
+// galleryCategory derives Category/Subcategory from a path under gallery/
+// ("gallery/business/sales_marketing/x.json" -> business, sales_marketing).
+func galleryCategory(root, path string) (cat, sub string) {
+	rel, err := filepath.Rel(filepath.Join(root, "gallery"), path)
+	if err != nil {
+		return "", ""
+	}
+	parts := strings.Split(rel, string(filepath.Separator))
+	if len(parts) >= 2 {
+		cat = parts[0]
+	}
+	if len(parts) >= 3 {
+		sub = parts[1]
+	}
+	return cat, sub
+}
+
+// looksLikeTemplate reports whether raw JSON is a template object (must have
+// a "data" payload). Non-template files (ingest manifests, stray arrays) are
+// skipped by LoadDir instead of failing the whole directory scan.
+func looksLikeTemplate(raw []byte) bool {
+	var head struct {
+		Data *json.RawMessage `json:"data"`
+	}
+	return json.Unmarshal(raw, &head) == nil && head.Data != nil
+}
+
+// LoadDir scans root/native and root/custom (flat) plus root/gallery
+// recursively (subfolders = category/subcategory) for *.json templates.
 func LoadDir(root string) ([]*File, error) {
 	var files []*File
 	for _, sub := range []string{"native", "custom"} {
@@ -95,9 +137,38 @@ func LoadDir(root string) ([]*File, error) {
 			files = append(files, f)
 		}
 	}
+	galleryRoot := filepath.Join(root, "gallery")
+	err := filepath.WalkDir(galleryRoot, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			if os.IsNotExist(err) {
+				return nil
+			}
+			return err
+		}
+		if d.IsDir() || !strings.HasSuffix(d.Name(), ".json") {
+			return nil
+		}
+		raw, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		if !looksLikeTemplate(raw) {
+			return nil // manifests and other non-template files are skipped
+		}
+		f, err := Parse(path, "gallery")
+		if err != nil {
+			return err
+		}
+		f.Category, f.Subcategory = galleryCategory(root, path)
+		files = append(files, f)
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
 	sort.Slice(files, func(i, j int) bool {
 		if files[i].Dir != files[j].Dir {
-			return files[i].Dir == "native"
+			return dirRank(files[i].Dir) < dirRank(files[j].Dir)
 		}
 		return files[i].Name < files[j].Name
 	})
@@ -113,6 +184,23 @@ func Lookup(files []*File, query string) (*File, bool) {
 		}
 	}
 	return nil, false
+}
+
+// MatchesQuery reports whether a template matches a free-text query:
+// every whitespace-separated token must appear (case-insensitively) in the
+// name, description, or tags. An empty query matches everything.
+func MatchesQuery(f *File, query string) bool {
+	query = strings.ToLower(strings.TrimSpace(query))
+	if query == "" {
+		return true
+	}
+	hay := strings.ToLower(f.Name + " " + f.Description + " " + strings.Join(f.Tags, " "))
+	for _, tok := range strings.Fields(query) {
+		if !strings.Contains(hay, tok) {
+			return false
+		}
+	}
+	return true
 }
 
 // DataRaw returns the template's .data payload as raw JSON.

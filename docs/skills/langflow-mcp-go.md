@@ -15,7 +15,7 @@ downloaders get it directly:
 └── workflows.md        # E-agent recipes (W0–W8), live-verified
 ```
 
-Current version: **2.2.0**.
+Current version: **2.3.0**.
 
 Install it into your agent's skill folder (see the README "Using the Agent Skill"
 section for the exact `cp` commands for OpenCode / Claude Code / Codex).
@@ -82,19 +82,29 @@ No restart needed — skills are discovered on next session start.
 
 See `tools-reference.md` (in the skill dir) for exact JSON signatures.
 
-## Template Library (v2.2.0)
+## Template Library (v2.3.0)
 
 The server ships a file-based template library in **LangFlow's official native
-format**: `templates/native/` holds all 29 official starter templates extracted
-from the package; `templates/custom/` grows via the self-learning loop
-(`save_flow_as_template` after an HTTP 200 run, then re-instantiate to verify).
+format**:
+- `templates/native/` — all 29 official starter templates extracted from the package;
+- `templates/custom/` — grows via the self-learning loop (`save_flow_as_template`
+  after an HTTP 200 run, then re-instantiate to verify);
+- `templates/gallery/<category>/<subcategory>/` — **100 templates scraped from
+  langflow.org** (business 49, processing 14, automation 11, analytics 11,
+  productivity 10, data 3, documents 2), secrets blanked at scrape time.
 
-MCP tools: `list_templates`, `create_flow_from_template` (generic params — any
-template field set on every node having it; both modern `model` ModelInput and
-legacy `provider+model_name` selectors handled), `save_flow_as_template`.
+MCP tools: `list_templates` (free-text `query` — every token must appear in
+name/description/tags; plus `source` and gallery `category` filters),
+`create_flow_from_template` (generic params — any template field set on every node
+having it; both modern `model` ModelInput and legacy `provider+model_name`
+selectors handled; **`verify: true`** builds the flow inline and reports
+`build_ok`, `errors[]`, `needs_keys[]` = blank credentials (advisory when
+build_ok:true — they may resolve via instance globals), and
+`model_used`/`model_provider`), `save_flow_as_template`.
 
-Live verification on LangFlow 1.11: 29/29 instantiate + build clean (tier A);
-15/29 run end-to-end with only an LLM credential (tier B) — see
-`templates/verification.json`. The UI gallery cannot be extended via API
-(regenerated from package files); push templates into an instance as regular
-flows with `POST /api/v1/flows/batch/` or `/flows/upload/`.
+Live verification on LangFlow 1.11: 29/29 native instantiate + build clean
+(tier A); 15/29 run end-to-end with only an LLM credential (tier B) — see
+`templates/verification.json`. The UI "All templates" modal cannot be extended
+via API (it reads a hardcoded endpoint); the file library + MCP tools cover every
+practical need. Bulk-import the whole gallery into an instance's dashboard with
+`scripts/sync_gallery.py`; re-collect from langflow.org with `scripts/scrape_gallery.py`.

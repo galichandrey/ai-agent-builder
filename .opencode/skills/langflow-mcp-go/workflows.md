@@ -4,20 +4,54 @@ Recipes verified end-to-end on LangFlow 1.11 (Docker, `AUTO_LOGIN=false`).
 
 ## W0: Instantiate from the Template Library (PREFERRED)
 
-The library (`LANGFLOW_MCP_TEMPLATES_DIR`, default `./templates`) ships LangFlow's
-29 official native templates + contributed ones. One call = fully wired flow:
+The library (`LANGFLOW_MCP_TEMPLATES_DIR`, default `./templates`) ships:
+- **29 official native templates** (`templates/native/`) — tier-verified,
+- contributed ones (`templates/custom/`),
+- **100 gallery templates** scraped from langflow.org (`templates/gallery/`) by category:
+  business 49 · processing 14 · automation 11 · analytics 11 · productivity 10 · data 3 · documents 2.
+
+### The error-free recipe (always do this)
 
 ```
-list_templates()                                    # catalog: name, tags, nodes, tier_a/tier_b
+# 1. DISCOVER — search by intent (all tokens must appear in name/description/tags)
+list_templates(source="gallery", query="caption social")     # or category="business"
+
+# 2. CREATE + VERIFY in one call
 create_flow_from_template(
-    template_name="Simple Agent",                   # name or slug ("simple_agent")
+    template_name="social_media_caption_generator",
+    new_name="Caption generator for ACME",
+    params={model_name: "hy3-free"},        # model override on every node having the field
+    verify=true)                             # → build_ok, errors[], needs_keys[], model_used
+
+# 3. CHECK needs_keys if non-empty (gallery templates ship secrets BLANKED by design)
+#    build_ok=true + needs_keys → advisory: fields may resolve via instance globals;
+#    supply your own keys only if the run fails:
+update_node(flow_id, <node_id from needs_keys>, config={api_key: "<key>"})
+#   or re-create with params={"api_key": "<key>"}
+
+# 4. RE-VERIFY then RUN
+build_flow(flow_id, input_value="test")
+POST /api/v1/run/{flow_id}?stream=false      # x-api-key auth (R0)
+```
+
+`verify=true` builds the flow immediately and reports `build_ok`, `errors[]`,
+`needs_keys[]` (`{node_id, node_type, field}` = blank credential fields) and
+`model_used`/`model_provider`. `build_ok:false` → fix `errors[]` first. Built OK
+with non-empty `needs_keys` → advisory: fields may resolve via instance globals;
+supply keys only if the run fails. Build cap: 5 min per call.
+
+### Native starters and verification levels
+
+```
+list_templates()                                             # all sources
+create_flow_from_template(
+    template_name="Simple Agent",                            # name or slug ("simple_agent")
     new_name="My research agent",
     params={model_name: "nemotron-3-ultra-free",
-            api_key: "<zen-key>"})                  # generic: set on EVERY node having the field
-POST /api/v1/run/{flow_id}  or build_flow(...)      # VERIFY (R5)
+            api_key: "<zen-key>"})                           # generic: set on EVERY node having the field
 ```
 
-Verified levels (templates/verification.json): **29/29 tier_a** (build clean),
+Verified levels (templates/verification.json): **29/29 native tier_a** (build clean),
 **15/29 tier_b** (full run with only an LLM credential). Tier-a-only templates need
 per-component credentials/files — instantiate, then `update_node` those fields.
 
@@ -30,6 +64,13 @@ One-time instance setup for the "OpenAI Compatible" provider:
 ```
 POST /api/v1/variables/ {"name":"OPENAI_COMPATIBLE_BASE_URL","value":"https://opencode.ai/zen/v1","type":"Generic","default_fields":["openai_compatible_base_url"]}
 POST /api/v1/variables/ {"name":"OPENAI_COMPATIBLE_API_KEY","value":"<key>","type":"Credential","default_fields":["api_key"]}
+```
+
+### Maintaining the gallery
+
+```
+scripts/scrape_gallery.py                    # re-collect from langflow.org sitemap → templates/gallery/
+scripts/sync_gallery.py --api-key <LF key>   # bulk-import gallery → dashboard (idempotent, build-verifies each)
 ```
 
 ## W1: Agent + Model Flow (hand-built, VERIFIED with free model)
@@ -154,7 +195,8 @@ notes preserved. Never hand-write this JSON.
 | `GET /api/v1/flows/basic_examples/` | tiny example flows |
 
 The UI "New Flow" gallery regenerates from package files at startup and cannot be
-extended via API — use the file library instead.
+extended via API (the `GET /api/v1/starter-projects/` endpoint returns 5 hardcoded
+lfx dumps, not the DB folder) — use the file library instead.
 
 ## Running via REST instead of build_flow
 
