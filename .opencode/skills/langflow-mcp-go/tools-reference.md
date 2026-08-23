@@ -1,6 +1,6 @@
 # LangFlow MCP Go — Tool Reference
 
-All 40 tools. Exact names + key args. Categories: Component Discovery (4), Flow Management (6), Build & Execution (3), Node Manipulation (14), Connection Management (5), Source Exploration (5), Template Library (3).
+All 41 tools. Exact names + key args. Categories: Component Discovery (4), Flow Management (6), Build & Execution (3), Node Manipulation (14), Connection Management (5), Source Exploration (5), Template Library (3).
 
 ## Component Discovery (4)
 
@@ -75,6 +75,11 @@ All 40 tools. Exact names + key args. Categories: Component Discovery (4), Flow 
 - **Edge ID**: `reactflow__edge-{src}{src_handle}-{tgt}{tgt_handle}`
 - **Output handle**: `{node_id}|{output_name}` (Langflow convention)
 - **Input handle**: `{node_id}|{input_name}`
+
+## Run & Verify (1)
+
+**run_flow** `{flow_id, input_value?, tweaks?, session_id?, timeout_sec?=300}`
+Синхронный POST `/api/v1/run/{flow_id}` (БЕЗ трейлинг-слэша — 405 со слэшем). Ответ: `{last_message, raw}`; last_message = последний непустой `message|text` в дереве ответа (fallback — raw, обрезан до 6000 символов). Использовать вместо curl-циклов для верификации флоу и entrypoint-запусков с tweaks/session.
 
 ## Template Library (3)
 

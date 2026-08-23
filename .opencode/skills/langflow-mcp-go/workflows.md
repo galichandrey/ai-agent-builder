@@ -183,6 +183,18 @@ The saved file lands in `templates/custom/<slug>.json` in the SAME native format
 `templates/native/*` (LangFlow's official starter format) — same syntax, same fields,
 notes preserved. Never hand-write this JSON.
 
+## W9: Оркестрация «агент → под-агент» (FlowProxy, spike-verified 2026-08-23)
+
+Штатные `FlowTool`(legacy, сломан) и `RunFlow`-как-тул (не регистрируется без UI) НЕ использовать. Рабочий паттерн:
+
+1. Под-флоу обязан иметь ChatInput → ... → Agent → ChatOutput (иначе REST-run падает/пустой).
+2. В родительском флоу: `add_custom_component` с кодом FlowProxy (константы `_TARGET_FLOW_ID`, `_API_KEY` прямо в коде; opener `ProxyHandler({})`; walk последнего `message`). См. шаблон в `docs/langflow-backend/spike-result.md` репозитория content-factory.
+3. `set_tool_mode(proxy_node, true)` → выход станет `component_as_tool` → `connect_nodes(... target_input="tools")`.
+4. Системный промпт родителя: «вызови инструмент flow_proxy_v2, передай ...».
+5. Правки кода компонента = НОВОЕ имя класса (кэш модулей custom_components/<snake_name>).
+
+Быстрая проверка цепочки: `run_flow(parent_id, input_value="...")`.
+
 ## Native endpoints reference
 
 | Endpoint | Purpose |

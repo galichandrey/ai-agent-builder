@@ -2,12 +2,12 @@
 name: langflow-mcp-go
 description: Use when driving the Go-based langflow-mcp server to manage LangFlow — instantiate flows from the native template library in one call, add nodes (built-in or inline Python), wire Agent + model flows, run them via build_flow or REST /run, toggle tool_mode for agent tools, contribute verified flows back as templates, arrange layouts, or explore LangFlow source. Trigger when an E-agent needs programmatic LangFlow control, configures free-model providers (opencode zen etc.), or hits errors like "unhashable type", "component not found", "Missing credentials", "No model selected", or 403/404 Invalid API key.
 metadata:
-  version: 2.3.0
+  version: 2.4.0
 ---
 
 # LangFlow MCP Go Server
 
-You manage LangFlow through the **Go `langflow-mcp` server** (40 tools). Every rule below is backed by a live-verified failure.
+You manage LangFlow through the **Go `langflow-mcp` server** (41 tools). Every rule below is backed by a live-verified failure.
 
 ## Core Rules
 
@@ -47,6 +47,23 @@ The library format is exactly what LangFlow itself ships (`initial_setup/starter
 - After building AND running (HTTP 200) a flow not in the library, OFFER to save it: `save_flow_as_template(flow_id, template_name, description?, tags?)` → lands in `templates/custom/`, secrets sanitized automatically.
 - Then re-instantiate once from the saved template to prove it is self-sufficient.
 This self-learning loop grows the library and shrinks future error surface.
+
+## Agent Wiring Cookbook (spike-verified 2026-08-23, LangFlow 1.11)
+
+**AW1. Конфиг модели у `Agent` — только эта форма работает:**
+`model = [{"name":"hy3-free","provider":"OpenAI Compatible"}]` (список словарей!), `api_key` = литеральный ключ с `load_from_db=false`. Строки `"Provider/model"` и `{VAR}`-плейсхолдеры НЕ резолвятся (уходят буквально → OpenAI 401). base_url провайдер берёт из global vars `OPENAI_COMPATIBLE_*` по соглашению имён.
+
+**AW2. tool_mode у CustomComponent:** после `set_tool_mode(true)` именованные выходы исчезают, остаётся один хэндл **`component_as_tool`** (types Tool) — именно его в `connect_nodes(..., target_input="tools")`. Тул `connect_nodes` v2.4.0 сам подставляет единственный выход, если запрошенный не найден.
+
+**AW3. Оркестрация «агент → под-агент» = FlowProxy-паттерн.** Штатный `FlowTool` сломан в рантайме (`Graph is not defined`, legacy), `RunFlow` (beta) как тул через API не регистрируется без UI-рефреша. Рабочий путь: кастомный компонент делает POST `http://127.0.0.1:7860/api/v1/run/{sub_flow_id}` (opener `ProxyHandler({})`, timeout ≥240s) и вытаскивает последний `message`. Константы (flow_id, api_key) — ЗАХАРДКОЖЕНЫ в коде компонента: при вызове как тула инстанс создаётся заново и значения полей шаблона теряются.
+
+**AW4. Кэш модулей кастомных компонентов:** модуль = `custom_components/<snake(display_name)>`. Правка кода существующего класса может не примениться в tool-контексте — при значимых правках меняйте имя класса (FlowProxy → FlowProxyV2).
+
+**AW5. Флоу для REST `/run` обязан иметь ChatInput И ChatOutput** — иначе `'NoneType' object is not iterable` или пустые outputs. Флоу-тулы без чат-нод напрямую не ранятся (норма; проверять их через агента или build_flow).
+
+**AW6. Верификация флоу без curl-циклов:** новый тул **`run_flow(flow_id, input_value?, tweaks?, session_id?, timeout_sec?)`** — синхронный POST `/run/{id}` (без трейлинг-слэша! 405 со слэшем), возвращает `{last_message, raw}`; last_message — последний непустой `message|text` из дерева ответа.
+
+**AW7. REST-мелочи:** `/api/v1/variables/` и `/api/v1/flows/` — С трейлинг-слэшем; `/api/v1/run/{id}` — БЕЗ; списки отдаются gzip (`curl --compressed`); server-side фильтра `?name=` нет — фильтруйте клиентски; рукописные ноды в flow JSON требуют `template._type="Component"`.
 
 ## Verified Port Map (Agent flow)
 
