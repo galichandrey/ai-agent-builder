@@ -29,6 +29,9 @@ func RegisterAll(server *mcp.Server, langflowClient *client.LangflowClient, cfg 
 
 	// Source Exploration (5 tools) — will be added in Task 18
 	registerSourceTools(server, langflowClient, cfg)
+
+	// Template Library (3 tools)
+	registerTemplateTools(server, langflowClient, cfg)
 }
 
 // withLogging wraps a tool handler to emit structured logs for every call:

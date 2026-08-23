@@ -128,8 +128,9 @@ func (m *MockLangflowServer) listFlows(w http.ResponseWriter, _ *http.Request) {
 
 func (m *MockLangflowServer) createFlow(w http.ResponseWriter, r *http.Request) {
 	var body struct {
-		Name        string `json:"name"`
-		Description string `json:"description"`
+		Name        string          `json:"name"`
+		Description string          `json:"description"`
+		Data        json.RawMessage `json:"data"`
 	}
 	_ = json.NewDecoder(r.Body).Decode(&body)
 
@@ -146,6 +147,12 @@ func (m *MockLangflowServer) createFlow(w http.ResponseWriter, r *http.Request) 
 			Edges:    []schema.Edge{},
 			Viewport: schema.Viewport{X: 0, Y: 0, Zoom: 1},
 		},
+	}
+	if len(body.Data) > 0 {
+		var fd schema.FlowData
+		if err := json.Unmarshal(body.Data, &fd); err == nil {
+			flow.Data = fd
+		}
 	}
 	m.flows[id] = flow
 	writeJSON(w, flow)

@@ -53,14 +53,25 @@ func newTestSession(t *testing.T, mockURL string) (*mcp.ClientSession, *MockLang
 // the source-exploration tools operate against the seeded git repo.
 func newTestSessionWithSource(t *testing.T, mockURL, cacheDir string) (*mcp.ClientSession, *MockLangflowServer) {
 	t.Helper()
+	return newSessionWithConfig(t, func(cfg *config.Config) {
+		cfg.SourceCacheDir = cacheDir
+	})
+}
+
+// newSessionWithConfig builds an MCP session against a fresh mock server,
+// letting tests customize the config before tool registration.
+func newSessionWithConfig(t *testing.T, mutate func(*config.Config)) (*mcp.ClientSession, *MockLangflowServer) {
+	t.Helper()
 
 	mock := NewMockLangflowServer()
 	t.Cleanup(mock.Close)
 
 	cfg := &config.Config{
-		LangflowURL:    mock.URL(),
-		CustomHeaders:  map[string]string{},
-		SourceCacheDir: cacheDir,
+		LangflowURL:   mock.URL(),
+		CustomHeaders: map[string]string{},
+	}
+	if mutate != nil {
+		mutate(cfg)
 	}
 
 	langflowClient := client.NewClient(cfg)
