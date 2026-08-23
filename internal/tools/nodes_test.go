@@ -122,9 +122,9 @@ func TestNodeCRUD_RemoveNode(t *testing.T) {
 				{ID: "node-c", Type: "ChatOutput", Position: schema.Position{X: 700, Y: 200}},
 			},
 			Edges: []schema.Edge{
-				{Source: "node-a", Target: "node-b", ID: "edge-1"},
-				{Source: "node-b", Target: "node-c", ID: "edge-2"},
-				{Source: "node-a", Target: "node-c", ID: "edge-3"},
+				{Source: "node-a", Target: "node-b"},
+				{Source: "node-b", Target: "node-c"},
+				{Source: "node-a", Target: "node-c"},
 			},
 			Viewport: schema.Viewport{X: 0, Y: 0, Zoom: 1},
 		},
@@ -169,8 +169,9 @@ func TestNodeCRUD_RemoveNode(t *testing.T) {
 	if len(newEdges) != 1 {
 		t.Errorf("expected 1 edge after filtering (edge-3 survives), got %d", len(newEdges))
 	}
-	if len(newEdges) == 1 && newEdges[0].ID != "edge-3" {
-		t.Errorf("expected surviving edge to be edge-3, got %s", newEdges[0].ID)
+	if len(newEdges) == 1 && (newEdges[0].Source != "node-a" || newEdges[0].Target != "node-c") {
+		t.Errorf("expected surviving edge node-a->node-c, got %s->%s",
+			newEdges[0].Source, newEdges[0].Target)
 	}
 }
 
@@ -369,7 +370,7 @@ func TestNodeCRUD_UpdateNode(t *testing.T) {
 						Node: schema.NodeConfig{
 							DisplayName: "Agent",
 							Template: map[string]schema.TemplateField{
-								"model_name": {Value: "gpt-4o"},
+								"model_name":  {Value: "gpt-4o"},
 								"temperature": {Value: 0.7},
 							},
 						},
@@ -431,9 +432,9 @@ func TestNodeCRUD_NodeEdgesRemoved(t *testing.T) {
 				{ID: "n3", Type: "ChatOutput", Position: schema.Position{X: 200, Y: 0}},
 			},
 			Edges: []schema.Edge{
-				{Source: "n1", Target: "n2", ID: "e1"},
-				{Source: "n2", Target: "n3", ID: "e2"},
-				{Source: "n1", Target: "n3", ID: "e3"},
+				{Source: "n1", Target: "n2"},
+				{Source: "n2", Target: "n3"},
+				{Source: "n1", Target: "n3"},
 			},
 			Viewport: schema.Viewport{X: 0, Y: 0, Zoom: 1},
 		},
@@ -460,8 +461,8 @@ func TestNodeCRUD_NodeEdgesRemoved(t *testing.T) {
 	if len(newEdges) != 1 {
 		t.Errorf("expected 1 edge after removing n2 (e1 and e2 should be removed), got %d", len(newEdges))
 	}
-	if newEdges[0].ID != "e3" {
-		t.Errorf("expected remaining edge to be e3, got %s", newEdges[0].ID)
+	if newEdges[0].Source != "n1" || newEdges[0].Target != "n3" {
+		t.Errorf("expected remaining edge n1->n3, got %s->%s", newEdges[0].Source, newEdges[0].Target)
 	}
 }
 

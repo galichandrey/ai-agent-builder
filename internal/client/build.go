@@ -10,10 +10,10 @@ import (
 
 // BuildFlowInput is the request body for the build flow endpoint.
 type BuildFlowRequest struct {
-	InputValue  string         `json:"input_value,omitempty"`
-	InputType   string         `json:"input_type,omitempty"`
-	OutputType  string         `json:"output_type,omitempty"`
-	Tweaks      map[string]any `json:"tweaks,omitempty"`
+	InputValue string         `json:"input_value,omitempty"`
+	InputType  string         `json:"input_type,omitempty"`
+	OutputType string         `json:"output_type,omitempty"`
+	Tweaks     map[string]any `json:"tweaks,omitempty"`
 }
 
 // BuildVertexRequest is the request body for the build vertex endpoint.

@@ -51,9 +51,9 @@ func TestConnection_ConnectNodes(t *testing.T) {
 						Node: schema.NodeConfig{
 							Template: map[string]schema.TemplateField{
 								"input_value": {
-									Type:        "str",
-									InputTypes:  []string{"Message"},
-									Show:        true,
+									Type:       "str",
+									InputTypes: []string{"Message"},
+									Show:       true,
 								},
 							},
 						},
@@ -146,16 +146,23 @@ func TestConnection_ConnectNodes(t *testing.T) {
 	if edge.Target != "target-node" {
 		t.Errorf("Edge target = %q, want %q", edge.Target, "target-node")
 	}
-	if edge.SourceHandle != "message" {
-		t.Errorf("Edge sourceHandle = %q, want %q", edge.SourceHandle, "message")
+	if edge.SourceOutputName() != "message" {
+		t.Errorf("Edge source output = %q, want %q", edge.SourceOutputName(), "message")
 	}
-	if edge.TargetHandle != "input_value" {
-		t.Errorf("Edge targetHandle = %q, want %q", edge.TargetHandle, "input_value")
+	if edge.TargetFieldName() != "input_value" {
+		t.Errorf("Edge target field = %q, want %q", edge.TargetFieldName(), "input_value")
 	}
 
-	expectedID := schema.GenerateEdgeID("source-node", "message", "target-node", "input_value")
-	if edge.ID != expectedID {
-		t.Errorf("Edge ID = %q, want %q", edge.ID, expectedID)
+	if edge.Data.SourceHandle == nil || edge.Data.SourceHandle.DataType != "" && edge.Data.SourceHandle.Name != "message" {
+		if edge.Data.SourceHandle == nil {
+			t.Fatal("edge.Data.SourceHandle is nil")
+		}
+	}
+	if edge.Data.TargetHandle == nil || edge.Data.TargetHandle.FieldName != "input_value" {
+		if edge.Data.TargetHandle != nil {
+			t.Fatalf("Edge target handle = %+v, want fieldName input_value", *edge.Data.TargetHandle)
+		}
+		t.Fatal("edge.Data.TargetHandle is nil")
 	}
 }
 
@@ -182,9 +189,9 @@ func TestConnection_ConnectNodes_TypeMismatch(t *testing.T) {
 						Node: schema.NodeConfig{
 							Template: map[string]schema.TemplateField{
 								"input_value": {
-									Type:        "str",
-									InputTypes:  []string{"Tool"},
-									Show:        true,
+									Type:       "str",
+									InputTypes: []string{"Tool"},
+									Show:       true,
 								},
 							},
 						},
@@ -253,9 +260,9 @@ func TestConnection_DisconnectNodes(t *testing.T) {
 		Data: schema.FlowData{
 			Nodes: []schema.Node{},
 			Edges: []schema.Edge{
-				{ID: "e1", Source: "node-1", Target: "node-2", SourceHandle: "out1", TargetHandle: "in1"},
-				{ID: "e2", Source: "node-1", Target: "node-2", SourceHandle: "out2", TargetHandle: "in2"},
-				{ID: "e3", Source: "node-2", Target: "node-3", SourceHandle: "out", TargetHandle: "in"},
+				{Source: "node-1", Target: "node-2"},
+				{Source: "node-1", Target: "node-2"},
+				{Source: "node-2", Target: "node-3"},
 			},
 		},
 	}
@@ -321,8 +328,9 @@ func TestConnection_DisconnectNodes(t *testing.T) {
 	if len(updatedFlow.Data.Edges) != 1 {
 		t.Fatalf("Expected 1 edge after disconnect, got %d", len(updatedFlow.Data.Edges))
 	}
-	if updatedFlow.Data.Edges[0].ID != "e3" {
-		t.Errorf("Expected remaining edge to be e3, got %q", updatedFlow.Data.Edges[0].ID)
+	if updatedFlow.Data.Edges[0].Source != "node-2" || updatedFlow.Data.Edges[0].Target != "node-3" {
+		t.Errorf("Expected remaining edge to be node-2->node-3, got %s->%s",
+			updatedFlow.Data.Edges[0].Source, updatedFlow.Data.Edges[0].Target)
 	}
 }
 
@@ -332,8 +340,8 @@ func TestConnection_DisconnectNodes_WithTargetInput(t *testing.T) {
 		Data: schema.FlowData{
 			Nodes: []schema.Node{},
 			Edges: []schema.Edge{
-				{ID: "e1", Source: "node-1", Target: "node-2", SourceHandle: "out1", TargetHandle: "in1"},
-				{ID: "e2", Source: "node-1", Target: "node-2", SourceHandle: "out2", TargetHandle: "in2"},
+				{Source: "node-1", Target: "node-2", Data: schema.EdgeData{TargetHandle: &schema.EdgeTargetHandle{FieldName: "in1", ID: "node-2"}}},
+				{Source: "node-1", Target: "node-2", Data: schema.EdgeData{TargetHandle: &schema.EdgeTargetHandle{FieldName: "in2", ID: "node-2"}}},
 			},
 		},
 	}
@@ -400,8 +408,9 @@ func TestConnection_DisconnectNodes_WithTargetInput(t *testing.T) {
 	if len(updatedFlow.Data.Edges) != 1 {
 		t.Fatalf("Expected 1 edge after disconnect, got %d", len(updatedFlow.Data.Edges))
 	}
-	if updatedFlow.Data.Edges[0].ID != "e2" {
-		t.Errorf("Expected remaining edge to be e2, got %q", updatedFlow.Data.Edges[0].ID)
+	if updatedFlow.Data.Edges[0].TargetFieldName() != "in2" {
+		t.Errorf("Expected remaining edge to target in2, got %q",
+			updatedFlow.Data.Edges[0].TargetFieldName())
 	}
 }
 

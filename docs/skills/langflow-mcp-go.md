@@ -5,32 +5,59 @@ This directory documents the `langflow-mcp-go` skill used by E-agents to drive t
 
 ## Skill Location
 
-The skill lives in the agent's skill directory (not in this repo, as skills are
-personal agent config):
+The skill source lives **in this repo** under `.opencode/skills/langflow-mcp-go/` so
+downloaders get it directly:
 
 ```
-~/.config/opencode/skills/langflow-mcp-go/
-├── SKILL.md            # Core rules, failure modes, canonical workflow
+.opencode/skills/langflow-mcp-go/
+├── SKILL.md            # Core rules (R0–R5), failure modes, verified port map
 ├── tools-reference.md  # All 37 tools with exact signatures
-└── workflows.md        # E-agent recipes (W1–W7)
+└── workflows.md        # E-agent recipes (W1–W7), live-verified
 ```
+
+Current version: **2.0.0**.
+
+Install it into your agent's skill folder (see the README "Using the Agent Skill"
+section for the exact `cp` commands for OpenCode / Claude Code / Codex).
 
 ## Why a Skill?
 
-Driving the MCP server blind leads to token-wasting mistakes:
+Driving the MCP server blind leads to token-wasting mistakes. Every rule in the
+skill is backed by a real failure observed on a live LangFlow 1.11 instance:
 
-1. **tool_mode confusion** — assuming a built-in Calculator "already exposes a Tool
-   output" when in fact `set_tool_mode` is required for ANY component to be callable
-   by an Agent.
-2. **Wrong component names** — guessing `"OpenAIModel"` when it's `"OpenAI"`.
-3. **Forgetting to build** — adding/connecting nodes is config-only; you must
-   `build_flow` to verify.
-4. **Type validation failures** — connecting incompatible edges without
-   `validate_connection` first.
+1. **Wrong auth path** — passing a Bearer JWT via custom headers breaks GET
+   `/flows/{id}` with 404 while POST works. Only `x-api-key` (`LANGFLOW_MCP_API_KEY`)
+   is reliable; keys are created in the Web UI (Settings → Langflow API Keys).
+2. **Display names vs type names** — `add_node("Chat Input")` fails; the type is
+   `ChatInput`. Models are extension types like `ext:openai:OpenAIModelComponent@official`.
+3. **Agent port map** — model connects to `Agent.model` via output `model_output`;
+   agent answers come from `response`; tools attach to `tools`.
+4. **tool_mode is NOT always needed** — native tool components (`CalculatorTool`, …)
+   already expose a Tool output (`api_build_tool`). `set_tool_mode` matters for custom
+   components: it triggers LangFlow's server-side transform (`component_as_tool`).
+5. **load_from_db fields swallow literals** — writing an API key into a field with
+   `load_from_db=true` fails at runtime ("Missing credentials"). Since server v2,
+   `update_node` auto-clears the flag on touched fields.
+6. **Forgetting to build** — adding/connecting nodes is config-only; verify with
+   `build_flow` or `POST /api/v1/run/{flow_id}`.
 
-The skill was built using TDD-for-documentation: a baseline agent (no skill) made
-all 4 mistakes above; the skill was written to counter them; a second agent (with
-skill) avoided all of them.
+## Verified End-to-End
+
+The W1 recipe (ChatInput → Agent(model=OpenAIModel on opencode zen free tier)
+→ ChatOutput) plus the W2 tool wiring were executed against live LangFlow using
+only the documented tool calls: HTTP 200, the free model answered and the calculator
+tool was invoked ("25*4+10 = 110").
+
+Free providers confirmed working through `openai_api_base` + `api_key` +
+`model_name`:
+
+| Provider | base URL | example free models |
+|---|---|---|
+| opencode zen | `https://opencode.ai/zen/v1` | `hy3-free`, `nemotron-3-ultra-free`, `deepseek-v4-flash-free` |
+| kilo.ai | `https://api.kilo.ai/api/gateway/v1` | `nvidia/nemotron-3.5-lightning:free`, `tencent/hy3:free` |
+
+Note: individual free models flap (occasional `403 {'model': ...}`); retry with the
+next model per W3.
 
 ## Installing the Skill
 

@@ -2,6 +2,7 @@ package client
 
 import (
 	"bytes"
+	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -67,6 +68,9 @@ func (c *LangflowClient) doRequest(ctx context.Context, method, path string, bod
 		req.Header.Set("Content-Type", "application/json")
 	}
 
+	// Accept gzip; we decompress below if the server returns it.
+	req.Header.Set("Accept-Encoding", "gzip")
+
 	c.applyHeaders(req)
 
 	c.logger.Debug("langflow http request",
@@ -87,7 +91,17 @@ func (c *LangflowClient) doRequest(ctx context.Context, method, path string, bod
 	}
 	defer resp.Body.Close()
 
-	data, err := io.ReadAll(resp.Body)
+	var reader io.Reader = resp.Body
+	if strings.EqualFold(resp.Header.Get("Content-Encoding"), "gzip") {
+		gz, err := gzip.NewReader(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("gzip decode response: %w", err)
+		}
+		defer gz.Close()
+		reader = gz
+	}
+
+	data, err := io.ReadAll(reader)
 	if err != nil {
 		return nil, fmt.Errorf("read response body: %w", err)
 	}
@@ -231,4 +245,9 @@ func (e *HTTPError) Error() string {
 		return fmt.Sprintf("HTTP %d (%s): %s", e.StatusCode, e.Message, e.Body)
 	}
 	return fmt.Sprintf("HTTP %d (%s)", e.StatusCode, e.Message)
+}
+
+// DoGetDebug exposes the raw GET body for debugging.
+func (c *LangflowClient) DoGetDebug(ctx context.Context, path string) ([]byte, error) {
+	return c.doGet(ctx, path)
 }

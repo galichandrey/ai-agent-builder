@@ -120,8 +120,8 @@ func TestLayoutTools_AnalyzeFlowLayout(t *testing.T) {
 				{ID: "output", Type: "ChatOutput", Position: schema.Position{X: 1000, Y: 0}},
 			},
 			Edges: []schema.Edge{
-				{Source: "input", Target: "agent", ID: "e1"},
-				{Source: "agent", Target: "output", ID: "e2"},
+				{Source: "input", Target: "agent"},
+				{Source: "agent", Target: "output"},
 			},
 			Viewport: schema.Viewport{X: 0, Y: 0, Zoom: 1},
 		},
@@ -159,8 +159,8 @@ func TestLayoutTools_GetLayoutSuggestions(t *testing.T) {
 				{ID: "output", Type: "ChatOutput", Position: schema.Position{X: 1000, Y: 0}},
 			},
 			Edges: []schema.Edge{
-				{Source: "input", Target: "agent", ID: "e1"},
-				{Source: "agent", Target: "output", ID: "e2"},
+				{Source: "input", Target: "agent"},
+				{Source: "agent", Target: "output"},
 			},
 			Viewport: schema.Viewport{X: 0, Y: 0, Zoom: 1},
 		},
@@ -195,8 +195,8 @@ func TestLayoutTools_AutoArrangeFlow(t *testing.T) {
 				{ID: "output", Type: "ChatOutput", Position: schema.Position{X: 1000, Y: 0}},
 			},
 			Edges: []schema.Edge{
-				{Source: "input", Target: "agent", ID: "e1"},
-				{Source: "agent", Target: "output", ID: "e2"},
+				{Source: "input", Target: "agent"},
+				{Source: "agent", Target: "output"},
 			},
 			Viewport: schema.Viewport{X: 0, Y: 0, Zoom: 1},
 		},

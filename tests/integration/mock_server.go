@@ -467,7 +467,22 @@ func buildAllComponents() map[string]schema.ComponentSchema {
 			BaseClasses:   []string{"Message"},
 			OutputTypes:   []string{"Message"},
 			Documentation: "mock",
-			Template:      map[string]schema.TemplateField{},
+			Template: map[string]schema.TemplateField{
+				"sender": {
+					Type:        "str",
+					Show:        true,
+					DisplayName: "Sender Type",
+					Name:        "sender",
+					Value:       "User",
+					Options:     []string{"User", "Machine"},
+				},
+				"input_value": {
+					Type:        "str",
+					Show:        true,
+					DisplayName: "Message",
+					Name:        "input_value",
+				},
+			},
 			Outputs: []schema.ComponentOutputField{
 				{Name: "message", DisplayName: "Message", Method: "message_response", Types: []string{"Message"}},
 			},

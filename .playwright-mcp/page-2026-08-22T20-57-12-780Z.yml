@@ -1,0 +1,182 @@
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - banner:
+          - generic:
+            - button
+          - generic:
+            - generic:
+              - generic:
+                - button:
+                  - generic: Go to GitHub repo
+                  - generic: 154k
+                - button:
+                  - generic: Go to Discord server
+                  - generic: 25k
+            - button
+            - generic:
+              - button
+        - generic:
+          - generic:
+            - generic:
+              - region:
+                - generic:
+                  - generic:
+                    - generic:
+                      - button
+                      - heading [level=2]: Settings
+                    - paragraph: Manage the general settings for Langflow.
+              - generic:
+                - generic:
+                  - navigation:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - list:
+                              - listitem:
+                                - link:
+                                  - /url: /settings/general
+                                  - generic: General
+                              - listitem:
+                                - link:
+                                  - /url: /settings/mcp-servers
+                                  - generic: MCP Servers
+                              - listitem:
+                                - link:
+                                  - /url: /settings/api-keys
+                                  - generic: Langflow API Keys
+                              - listitem:
+                                - link:
+                                  - /url: /settings/mcp-client
+                                  - generic: Langflow MCP Client
+                              - listitem:
+                                - link:
+                                  - /url: /settings/global-variables
+                                  - generic: Global Variables
+                              - listitem:
+                                - link:
+                                  - /url: /settings/model-providers
+                                  - generic: Model Providers
+                              - listitem:
+                                - link:
+                                  - /url: /settings/db-providers
+                                  - generic: DB Providers
+                              - listitem:
+                                - link:
+                                  - /url: /settings/shortcuts
+                                  - generic: Shortcuts
+                              - listitem:
+                                - link:
+                                  - /url: /settings/messages
+                                  - generic: Messages
+                  - main:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - heading [level=2]: Langflow API Keys
+                            - paragraph: Your secret Langflow API keys are listed below. Do not share your API key with others, or expose it in the browser or other client-side code.
+                          - generic:
+                            - button [expanded]: Add New
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic: 1 to 2 of 2. Page 1 of 1
+                              - generic:
+                                - treegrid:
+                                  - rowgroup:
+                                    - row:
+                                      - columnheader:
+                                        - checkbox
+                                        - text: 
+                                        - generic: Name
+                                        - text:     
+                                      - columnheader:
+                                        - text: 
+                                        - generic: Key
+                                        - text:     
+                                      - columnheader:
+                                        - text: 
+                                        - generic: Created
+                                        - text:     
+                                      - columnheader:
+                                        - text: 
+                                        - generic: Last Used
+                                        - text:     
+                                      - columnheader:
+                                        - text: 
+                                        - generic: Expires
+                                        - text:     
+                                      - columnheader:
+                                        - text: 
+                                        - generic: Total Uses
+                                        - text:     
+                                  - rowgroup:
+                                    - row:
+                                      - gridcell:
+                                        - checkbox
+                                        - text: 
+                                        - generic:
+                                          - button: mcp-server
+                                      - gridcell:
+                                        - generic:
+                                          - button: sk-HLAEx**************************************
+                                      - gridcell:
+                                        - generic: 2026-08-22 21:04:38
+                                      - gridcell:
+                                        - generic: 2026-08-22 23:22:02
+                                      - gridcell:
+                                        - generic: ∞
+                                      - gridcell:
+                                        - generic: "293"
+                                    - row:
+                                      - gridcell:
+                                        - checkbox
+                                        - text: 
+                                        - generic:
+                                          - button: MCP Project Starter Project - default
+                                      - gridcell:
+                                        - generic:
+                                          - button: sk-nFMfq**************************************
+                                      - gridcell:
+                                        - generic: 2026-08-22 21:04:38
+                                      - gridcell:
+                                        - generic: Never
+                                      - gridcell:
+                                        - generic: ∞
+                                      - gridcell:
+                                        - generic: "0"
+                                - generic:
+                                  - text: 
+                                  - generic: 1 to 2 of 2
+                                  - button [disabled]: 
+                                  - button [disabled]: 
+                                  - generic: Page 1 of 1
+                                  - button [disabled]: 
+                                  - button [disabled]: 
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - button [disabled]
+                                - generic:
+                                  - button
+      - generic:
+        - generic:
+          - status
+  - dialog [ref=f1e229]:
+    - generic [ref=f1e230]:
+      - generic [ref=f1e231]:
+        - heading "Create API Key" [level=2] [ref=f1e232]
+        - paragraph [ref=f1e238]:
+          - text: Please save this secret key somewhere safe and accessible. For security reasons,
+          - strong [ref=f1e263]: you won't be able to view it again
+          - text: through your account. If you lose this secret key, you'll need to generate a new one.
+      - generic [ref=f1e264]:
+        - textbox "Generated API key" [ref=f1e267]: sk-WNVALCGpf2OBD-3uekp2TPVmIk7-KxWpr7PL-x7EdbM
+        - button "Copy API key" [ref=f1e268] [cursor=pointer]
+      - generic [ref=f1e256]:
+        - button "Cancel" [ref=f1e257] [cursor=pointer]
+        - button "Done" [active] [ref=f1e272] [cursor=pointer]
+    - button "Close" [ref=f1e259] [cursor=pointer]

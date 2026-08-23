@@ -71,15 +71,12 @@ func registerConnectionTools(server *mcp.Server, c *client.LangflowClient) {
 			return errorResult(fmt.Errorf("type validation failed: %s (source: %v, target: %v)", validation.Message, sourceTypes, targetTypes)), nil, nil
 		}
 
-		edgeID := schema.GenerateEdgeID(input.SourceNodeID, input.SourceOutput, input.TargetNodeID, input.TargetInput)
-		edge := schema.Edge{
-			ID:           edgeID,
-			Source:       input.SourceNodeID,
-			Target:       input.TargetNodeID,
-			SourceHandle: input.SourceOutput,
-			TargetHandle: input.TargetInput,
-			Type:         "generic",
-		}
+		edge := schema.BuildNativeEdge(
+			input.SourceNodeID, sourceNode.Data.Type,
+			schema.OutputField{Types: sourceTypes, Name: input.SourceOutput},
+			input.TargetNodeID,
+			schema.EdgeTargetInput{FieldName: input.TargetInput, Field: targetField},
+		)
 
 		flow.Data.Edges = append(flow.Data.Edges, edge)
 
@@ -111,7 +108,7 @@ func registerConnectionTools(server *mcp.Server, c *client.LangflowClient) {
 		for _, e := range flow.Data.Edges {
 			matchesSource := e.Source == input.SourceNodeID
 			matchesTarget := e.Target == input.TargetNodeID
-			matchesTargetInput := input.TargetInput == "" || e.TargetHandle == input.TargetInput
+			matchesTargetInput := input.TargetInput == "" || e.TargetFieldName() == input.TargetInput
 
 			if matchesSource && matchesTarget && matchesTargetInput {
 				removedEdges = append(removedEdges, e)
@@ -227,13 +224,13 @@ func registerConnectionTools(server *mcp.Server, c *client.LangflowClient) {
 			if flow.Data.Nodes[i].ID == input.NodeID {
 				targetNode = &flow.Data.Nodes[i]
 				break
-}
-	}
-	if targetNode == nil {
-		return errorResult(fmt.Errorf("node %q not found in flow", input.NodeID)), nil, nil
-	}
+			}
+		}
+		if targetNode == nil {
+			return errorResult(fmt.Errorf("node %q not found in flow", input.NodeID)), nil, nil
+		}
 
-	type CompatibleConnection struct {
+		type CompatibleConnection struct {
 			NodeID    string `json:"node_id"`
 			NodeType  string `json:"node_type"`
 			Field     string `json:"field"`

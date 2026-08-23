@@ -44,11 +44,11 @@ func TestWithCORSPreflight(t *testing.T) {
 
 func TestResolveHTTPAddr(t *testing.T) {
 	cases := []struct {
-		name    string
-		addr    string
-		host    string
-		port    string
-		want    string
+		name string
+		addr string
+		host string
+		port string
+		want string
 	}{
 		{"explicit flag", ":9090", "1.2.3.4", "8080", ":9090"},
 		{"config fallback", "", "127.0.0.1", "9999", "127.0.0.1:9999"},

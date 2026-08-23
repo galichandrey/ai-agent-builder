@@ -13,8 +13,8 @@ func TestAnalyzeLayout_Simple(t *testing.T) {
 		{ID: "output", Type: "ChatOutput", Position: schema.Position{X: 1000, Y: 0}},
 	}
 	edges := []schema.Edge{
-		{Source: "input", Target: "agent", ID: "e1"},
-		{Source: "agent", Target: "output", ID: "e2"},
+		{Source: "input", Target: "agent"},
+		{Source: "agent", Target: "output"},
 	}
 
 	a := AnalyzeLayout(nodes, edges)
@@ -66,10 +66,10 @@ func TestAnalyzeLayout_Branching(t *testing.T) {
 		{ID: "out", Type: "ChatOutput", Position: schema.Position{X: 1000, Y: 250}},
 	}
 	edges := []schema.Edge{
-		{Source: "in", Target: "agent1", ID: "e1"},
-		{Source: "in", Target: "agent2", ID: "e2"},
-		{Source: "agent1", Target: "out", ID: "e3"},
-		{Source: "agent2", Target: "out", ID: "e4"},
+		{Source: "in", Target: "agent1"},
+		{Source: "in", Target: "agent2"},
+		{Source: "agent1", Target: "out"},
+		{Source: "agent2", Target: "out"},
 	}
 
 	a := AnalyzeLayout(nodes, edges)
@@ -128,8 +128,8 @@ func TestScoreLayout_Perfect(t *testing.T) {
 		{ID: "out", Type: "ChatOutput", Position: schema.Position{X: 1000, Y: 0}},
 	}
 	edges := []schema.Edge{
-		{Source: "in", Target: "agent", ID: "e1"},
-		{Source: "agent", Target: "out", ID: "e2"},
+		{Source: "in", Target: "agent"},
+		{Source: "agent", Target: "out"},
 	}
 
 	a := AnalyzeLayout(nodes, edges)
@@ -158,7 +158,7 @@ func TestDetectCollisions_None(t *testing.T) {
 		{ID: "b", Type: "Agent", Position: schema.Position{X: 2000, Y: 0}},
 	}
 	edges := []schema.Edge{
-		{Source: "a", Target: "b", ID: "e1"},
+		{Source: "a", Target: "b"},
 	}
 
 	c := DetectCollisions(nodes, edges)
@@ -182,8 +182,8 @@ func TestDetectCollisions_Many(t *testing.T) {
 		{ID: "blocker", Type: "Agent", Position: schema.Position{X: 800, Y: 100}},
 	}
 	edges := []schema.Edge{
-		{Source: "in", Target: "agent", ID: "e1"},
-		{Source: "agent", Target: "out", ID: "e2"},
+		{Source: "in", Target: "agent"},
+		{Source: "agent", Target: "out"},
 	}
 
 	c := DetectCollisions(nodes, edges)

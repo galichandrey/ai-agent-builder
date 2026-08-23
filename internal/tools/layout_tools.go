@@ -164,7 +164,7 @@ func registerAutoArrangeTool(server *mcp.Server, c *client.LangflowClient) {
 
 		type arrangeResult struct {
 			Positions map[string]schema.Position `json:"positions"`
-			MaxDepth  int                         `json:"max_depth"`
+			MaxDepth  int                        `json:"max_depth"`
 		}
 
 		result, _ := json.Marshal(arrangeResult{

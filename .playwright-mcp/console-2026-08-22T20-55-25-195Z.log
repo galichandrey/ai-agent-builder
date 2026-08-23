@@ -1,0 +1,43 @@
+[    1803ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:7860/api/v1/auto_login:0
+[    2291ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://127.0.0.1:7860/login:0
+[   27976ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://127.0.0.1:7860/api/v1/auto_login:0
+[   28925ms] [ERROR] TypeError: Cannot read properties of undefined (reading 'type')
+    at http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:9796
+    at Array.forEach (<anonymous>)
+    at tZr (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:9605)
+    at wZr (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:17373)
+    at bwt (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:6618)
+    at http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:6440
+    at Array.forEach (<anonymous>)
+    at b$ (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:6222)
+    at a (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:7232:96584) @ http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1070
+[   28926ms] [ERROR] TypeError: Cannot read properties of undefined (reading 'type')
+    at http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:9796
+    at Array.forEach (<anonymous>)
+    at tZr (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:9605)
+    at wZr (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:17373)
+    at bwt (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:6618)
+    at http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:6440
+    at Array.forEach (<anonymous>)
+    at b$ (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:6222)
+    at a (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:7232:96584) @ http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1070
+[   28926ms] [ERROR] TypeError: Cannot read properties of undefined (reading 'type')
+    at http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:9796
+    at Array.forEach (<anonymous>)
+    at tZr (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:9605)
+    at wZr (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:17373)
+    at bwt (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:6618)
+    at http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:6440
+    at Array.forEach (<anonymous>)
+    at b$ (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:6222)
+    at a (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:7232:96584) @ http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1070
+[   28926ms] [ERROR] TypeError: Cannot read properties of undefined (reading 'type')
+    at http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:9796
+    at Array.forEach (<anonymous>)
+    at tZr (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:9605)
+    at wZr (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:17373)
+    at bwt (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:6618)
+    at http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:6440
+    at Array.forEach (<anonymous>)
+    at b$ (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1071:6222)
+    at a (http://127.0.0.1:7860/assets/index-1vIvqDuf.js:7232:96584) @ http://127.0.0.1:7860/assets/index-1vIvqDuf.js:1070

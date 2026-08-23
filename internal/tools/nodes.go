@@ -39,49 +39,94 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 
 		nodeID := schema.GenerateNodeID()
 
-		template := make(map[string]schema.TemplateField, len(compSchema.Template))
-		for k, v := range compSchema.Template {
-			template[k] = v
-		}
-
-		for fieldName, fieldVal := range input.Config {
-			if tf, exists := template[fieldName]; exists {
-				tf.Value = fieldVal
-				template[fieldName] = tf
+		// Build the node's inner payload from the full component definition
+		// returned by GET /api/v1/all. This preserves fields LangFlow requires
+		// (beta, field_order, metadata, frozen, tool_mode, outputs with
+		// selected/tool_mode/value, etc.) that the typed schema omits.
+		var nodePayload map[string]any
+		if len(compSchema.Raw) > 0 {
+			if err := json.Unmarshal(compSchema.Raw, &nodePayload); err != nil {
+				nodePayload = nil
 			}
 		}
 
-		outputs := make([]schema.OutputField, len(compSchema.Outputs))
-		for i, o := range compSchema.Outputs {
-			outputs[i] = schema.OutputField{
-				Types:       o.Types,
-				Name:        o.Name,
-				DisplayName: o.DisplayName,
-				Method:      o.Method,
+		// Ensure required identity fields are present.
+		if nodePayload == nil {
+			nodePayload = map[string]any{}
+		}
+		nodePayload["type"] = compSchema.Name
+		if _, ok := nodePayload["display_name"]; !ok {
+			nodePayload["display_name"] = compSchema.DisplayName
+		}
+
+		// When the component definition arrived without a raw payload,
+		// synthesize the structural fields LangFlow needs on every node.
+		if _, ok := nodePayload["outputs"]; !ok && len(compSchema.Outputs) > 0 {
+			nodePayload["outputs"] = compSchema.Outputs
+		}
+		if _, ok := nodePayload["base_classes"]; !ok && len(compSchema.BaseClasses) > 0 {
+			nodePayload["base_classes"] = compSchema.BaseClasses
+		}
+		if _, ok := nodePayload["output_types"]; !ok && len(compSchema.OutputTypes) > 0 {
+			nodePayload["output_types"] = compSchema.OutputTypes
+		}
+		if tpl, ok := nodePayload["template"].(map[string]any); !ok || tpl == nil {
+			tpl = map[string]any{}
+			for name, f := range compSchema.Template {
+				raw, err := json.Marshal(f)
+				if err != nil {
+					continue
+				}
+				var fm map[string]any
+				if json.Unmarshal(raw, &fm) == nil {
+					tpl[name] = fm
+				}
 			}
+			nodePayload["template"] = tpl
+		}
+
+		// Ensure _type is a string "Component" (LangFlow requirement).
+		if tpl, ok := nodePayload["template"].(map[string]any); ok {
+			if tField, ok := tpl["_type"].(map[string]any); ok {
+				if v, ok := tField["value"].(string); ok {
+					tpl["_type"] = v
+				}
+			}
+		}
+
+		// Apply user-provided config values into the template field "value"s.
+		if tpl, ok := nodePayload["template"].(map[string]any); ok {
+			for fieldName, fieldVal := range input.Config {
+				if f, ok := tpl[fieldName].(map[string]any); ok {
+					f["value"] = fieldVal
+					tpl[fieldName] = f
+				}
+			}
+			nodePayload["template"] = tpl
+		}
+
+		dataNode, err := json.Marshal(nodePayload)
+		if err != nil {
+			return errorResult(fmt.Errorf("marshal node: %w", err)), nil, nil
 		}
 
 		node := schema.Node{
 			ID:   nodeID,
-			Type: input.ComponentType,
+			Type: compSchema.Name,
 			Position: schema.Position{
 				X: input.PositionX,
 				Y: input.PositionY,
 			},
 			Data: schema.NodeData{
-				ID: nodeID,
+				ID:   nodeID,
+				Type: compSchema.Name,
 				Node: schema.NodeConfig{
-					Template:      template,
-					Outputs:       outputs,
-					BaseClasses:   compSchema.BaseClasses,
-					Description:   compSchema.Description,
-					DisplayName:   compSchema.DisplayName,
-					Documentation: compSchema.Documentation,
-					OutputTypes:   compSchema.OutputTypes,
-					Icon:          compSchema.Icon,
+					Type: compSchema.Name,
 				},
 			},
 		}
+		// Attach the full payload as the raw node data that LangFlow expects.
+		node.Data.RawNode = dataNode
 
 		flow.Data.Nodes = append(flow.Data.Nodes, node)
 
@@ -115,19 +160,37 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 
 		nodeID := schema.GenerateNodeID()
 
-		template := make(map[string]schema.TemplateField, len(compSchema.Template))
-		for k, v := range compSchema.Template {
-			template[k] = v
+		displayName := compSchema.DisplayName
+		if displayName == "" {
+			displayName = compSchema.Name
 		}
 
-		outputs := make([]schema.OutputField, len(compSchema.Outputs))
-		for i, o := range compSchema.Outputs {
-			outputs[i] = schema.OutputField{
-				Types:       o.Types,
-				Name:        o.Name,
-				DisplayName: o.DisplayName,
-				Method:      o.Method,
+		var nodePayload map[string]any
+		if len(compSchema.Raw) > 0 {
+			if err := json.Unmarshal(compSchema.Raw, &nodePayload); err != nil {
+				nodePayload = nil
 			}
+		}
+		if nodePayload == nil {
+			nodePayload = map[string]any{}
+		}
+		// NOTE: do not inject nodePayload["type"] — LangFlow's graph builder
+		// rejects custom nodes that carry a stray type inside data.node.
+		if _, ok := nodePayload["display_name"]; !ok {
+			nodePayload["display_name"] = displayName
+		}
+		if tpl, ok := nodePayload["template"].(map[string]any); ok {
+			// Ensure _type is the bare string LangFlow expects on nodes.
+			if tField, ok := tpl["_type"].(map[string]any); ok {
+				if v, ok := tField["value"].(string); ok {
+					tpl["_type"] = v
+				}
+				nodePayload["template"] = tpl
+			}
+		}
+		payloadBytes, err := json.Marshal(nodePayload)
+		if err != nil {
+			return errorResult(fmt.Errorf("marshal custom node payload: %w", err)), nil, nil
 		}
 
 		node := schema.Node{
@@ -139,15 +202,16 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 			},
 			Data: schema.NodeData{
 				ID: nodeID,
+				// LangFlow resolves custom components by the fixed type
+				// "CustomComponent"; the concrete class lives in template.code.
+				Type:    "CustomComponent",
+				RawNode: payloadBytes,
 				Node: schema.NodeConfig{
-					Template:      template,
-					Outputs:       outputs,
 					BaseClasses:   compSchema.BaseClasses,
 					Description:   compSchema.Description,
-					DisplayName:   compSchema.DisplayName,
+					DisplayName:   displayName,
 					Documentation: compSchema.Documentation,
 					OutputTypes:   compSchema.OutputTypes,
-					Icon:          compSchema.Icon,
 				},
 			},
 		}
@@ -189,11 +253,8 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 		}
 
 		node := &flow.Data.Nodes[nodeIdx]
-		for fieldName, fieldVal := range input.Config {
-			if tf, exists := node.Data.Node.Template[fieldName]; exists {
-				tf.Value = fieldVal
-				node.Data.Node.Template[fieldName] = tf
-			}
+		if err := schema.ApplyTemplateValues(node, input.Config); err != nil {
+			return errorResult(fmt.Errorf("apply config: %w", err)), nil, nil
 		}
 
 		updatedFlow, err := c.UpdateFlow(ctx, input.FlowID, map[string]any{
@@ -230,22 +291,41 @@ func registerNodeCRUDTools(server *mcp.Server, c *client.LangflowClient) {
 			return errorResult(fmt.Errorf("node %q not found in flow", input.NodeID)), nil, nil
 		}
 
-		if input.Enabled {
-			node := &flow.Data.Nodes[nodeIdx]
-			node.Data.Node.Outputs = []schema.OutputField{
-				{
-					Types:       []string{"Tool"},
-					Name:        "component_as_tool",
-					DisplayName: "Component as Tool",
-					Method:      "as_tool",
-				},
+		node := &flow.Data.Nodes[nodeIdx]
+
+		// Custom components carry their code in the template: the server-side
+		// /custom_component/update endpoint performs the real tool_mode
+		// transformation (component_as_tool output with to_toolkit method).
+		code := ""
+		if f, ok := node.Data.Node.Template["code"]; ok {
+			if s, isStr := f.Value.(string); isStr {
+				code = s
 			}
-			node.Data.Node.BaseClasses = []string{"Tool"}
-			node.Data.Node.OutputTypes = []string{"Tool"}
+		}
+
+		if code != "" {
+			// Send the template exactly as stored in the node's raw payload:
+			// marshaling typed TemplateFields would synthesize null entries
+			// (file_types: null, ...) that break LangFlow's graph builder.
+			template := schema.RawTemplate(node)
+			payload, err := c.UpdateCustomComponent(ctx, client.UpdateCustomComponentRequest{
+				Code:       code,
+				Field:      "tool_mode",
+				FieldValue: input.Enabled,
+				Template:   template,
+				ToolMode:   input.Enabled,
+			})
+			if err != nil {
+				return errorResult(err), nil, nil
+			}
+			if err := schema.ReplaceNodePayload(node, payload); err != nil {
+				return errorResult(fmt.Errorf("apply tool_mode payload: %w", err)), nil, nil
+			}
 		} else {
-			node := &flow.Data.Nodes[nodeIdx]
-			node.Data.Node.Outputs = nil
-			node.Data.Node.OutputTypes = nil
+			// Built-in component: toggle the tool_mode flag in its payload.
+			if err := schema.SetNodeToolModeFlag(node, input.Enabled); err != nil {
+				return errorResult(fmt.Errorf("set tool_mode flag: %w", err)), nil, nil
+			}
 		}
 
 		_, err = c.UpdateFlow(ctx, input.FlowID, map[string]any{
@@ -437,7 +517,9 @@ func registerNoteTools(server *mcp.Server, c *client.LangflowClient) {
 		node := &flow.Data.Nodes[nodeIdx]
 
 		if input.Content != nil {
-			node.Data.Value = *input.Content
+			if err := schema.SetNodeValue(node, *input.Content); err != nil {
+				return errorResult(fmt.Errorf("update note content: %w", err)), nil, nil
+			}
 		}
 		if input.BackgroundColor != nil {
 			_ = *input.BackgroundColor // color stored externally by Langflow

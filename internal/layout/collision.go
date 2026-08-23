@@ -7,10 +7,10 @@ import (
 )
 
 type Collision struct {
-	NodeID  string  `json:"node_id"`
-	EdgeID  string  `json:"edge_id"`
-	X       float64 `json:"x"`
-	Y       float64 `json:"y"`
+	NodeID string  `json:"node_id"`
+	EdgeID string  `json:"edge_id"`
+	X      float64 `json:"x"`
+	Y      float64 `json:"y"`
 }
 
 // DetectCollisions checks whether any node's bounding box intersects with any edge line.
@@ -23,7 +23,7 @@ func DetectCollisions(nodes []schema.Node, edges []schema.Edge) []Collision {
 
 	// Build node position lookup.
 	type nodeRect struct {
-		id       string
+		id         string
 		x, y, w, h float64
 	}
 	rects := make([]nodeRect, len(nodes))
@@ -39,7 +39,7 @@ func DetectCollisions(nodes []schema.Node, edges []schema.Edge) []Collision {
 
 	// Edge position lookup.
 	type edgeDef struct {
-		id    string
+		id                     string
 		srcX, srcY, tgtX, tgtY float64
 	}
 	posMap := make(map[string]schema.Position, len(nodes))
@@ -47,20 +47,20 @@ func DetectCollisions(nodes []schema.Node, edges []schema.Edge) []Collision {
 		posMap[n.ID] = n.Position
 	}
 
-	edgesDef := make([]edgeDef, len(edges))
-	for i, e := range edges {
+	edgesDef := make([]edgeDef, 0, len(edges))
+	for _, e := range edges {
 		sp, sok := posMap[e.Source]
 		tp, tok := posMap[e.Target]
 		if !sok || !tok {
 			continue
 		}
-		edgesDef[i] = edgeDef{
-			id:    e.ID,
-			srcX:  sp.X + DefaultNodeWidth, // right edge of source
-			srcY:  sp.Y + DefaultNodeHeight/2,
-			tgtX:  tp.X, // left edge of target
-			tgtY:  tp.Y + DefaultNodeHeight/2,
-		}
+		edgesDef = append(edgesDef, edgeDef{
+			id:   e.Source + "->" + e.Target,
+			srcX: sp.X + DefaultNodeWidth, // right edge of source
+			srcY: sp.Y + DefaultNodeHeight/2,
+			tgtX: tp.X, // left edge of target
+			tgtY: tp.Y + DefaultNodeHeight/2,
+		})
 	}
 
 	var collisions []Collision
@@ -69,7 +69,7 @@ func DetectCollisions(nodes []schema.Node, edges []schema.Edge) []Collision {
 	for _, ed := range edgesDef {
 		for s := 0; s <= samples; s++ {
 			t := float64(s) / float64(samples)
-		 px := ed.srcX + t*(ed.tgtX-ed.srcX)
+			px := ed.srcX + t*(ed.tgtX-ed.srcX)
 			py := ed.srcY + t*(ed.tgtY-ed.srcY)
 
 			for _, r := range rects {

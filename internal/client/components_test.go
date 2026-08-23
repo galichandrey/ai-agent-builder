@@ -55,6 +55,104 @@ func TestComponentGetComponentTypes(t *testing.T) {
 	}
 }
 
+// TestComponentGetComponentTypes_CategoryNested reproduces the real LangFlow
+// 1.11+ GET /api/v1/all response shape: top-level categories map to
+// {ComponentTypeName: definition}. Components must be keyed by the actual
+// type name (the map key), not by display_name ("Chat Input" vs "ChatInput").
+// The special "component_display_names" category is a lookup table of plain
+// strings and must not leak into results.
+func TestComponentGetComponentTypes_CategoryNested(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		w.Write([]byte(`{
+  "input_output": {
+    "ChatInput": {
+      "display_name": "Chat Input",
+      "description": "Get chat messages from the user.",
+      "template": {"_type": "Component"},
+      "output_types": ["Message"]
+    },
+    "ChatOutput": {
+      "display_name": "Chat Output",
+      "description": "Display a chat message.",
+      "template": {"_type": "Component"}
+    }
+  },
+  "models_and_agents": {
+    "Agent": {
+      "display_name": "Agent",
+      "description": "Run an autonomous agent.",
+      "template": {"_type": "Component"}
+    }
+  },
+  "openai": {
+    "ext:openai:OpenAIModelComponent@official": {
+      "display_name": "OpenAI",
+      "description": "OpenAI models.",
+      "template": {"_type": "Component"}
+    }
+  },
+  "component_display_names": {
+    "chat input": "ChatInput",
+    "chat output": "ChatOutput",
+    "agent": "Agent"
+  }
+}`))
+	}))
+	defer srv.Close()
+
+	c := NewClient(testConfig(srv.URL))
+	components, err := c.GetComponentTypes(context.Background())
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	ci, ok := components["ChatInput"]
+	if !ok {
+		t.Fatalf("expected ChatInput keyed by type name; got keys sample: %v", sampleKeys(components, 10))
+	}
+	if ci.Name != "ChatInput" {
+		t.Errorf("expected Name=ChatInput, got %q", ci.Name)
+	}
+	if ci.DisplayName != "Chat Input" {
+		t.Errorf("expected DisplayName='Chat Input', got %q", ci.DisplayName)
+	}
+	if ci.Category != "input_output" {
+		t.Errorf("expected Category=input_output, got %q", ci.Category)
+	}
+	if _, ok := ci.Template["_type"]; !ok {
+		t.Error("expected Raw template with _type to be preserved")
+	}
+
+	if _, ok := components["ext:openai:OpenAIModelComponent@official"]; !ok {
+		t.Error("expected extension-namespaced component key to be preserved")
+	}
+
+	for _, banned := range []string{"chat input", "agent"} {
+		if _, ok := components[banned]; ok {
+			t.Errorf("component_display_names lookup key %q leaked into result", banned)
+		}
+	}
+
+	if _, ok := components["ChatOutput"]; !ok {
+		t.Error("expected ChatOutput in result")
+	}
+	if _, ok := components["Agent"]; !ok {
+		t.Error("expected Agent in result")
+	}
+}
+
+func sampleKeys(m map[string]schema.ComponentSchema, n int) []string {
+	keys := make([]string, 0, n)
+	for k := range m {
+		if len(keys) >= n {
+			break
+		}
+		keys = append(keys, k)
+	}
+	return keys
+}
+
 func TestComponentGetComponentTypes_EmptyResult(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
@@ -181,33 +279,48 @@ func TestComponentUpdateCustomComponent(t *testing.T) {
 			t.Errorf("expected /api/v1/custom_component/update, got %s", r.URL.Path)
 		}
 		body, _ := io.ReadAll(r.Body)
-		var payload map[string]string
+		var payload map[string]any
 		if err := json.Unmarshal(body, &payload); err != nil {
 			t.Fatalf("failed to unmarshal body: %v", err)
 		}
 		if payload["code"] != "class ToolComponent(Component): pass" {
 			t.Errorf("unexpected code: %s", payload["code"])
 		}
+		if payload["field"] != "tool_mode" || payload["tool_mode"] != true {
+			t.Errorf("unexpected tool_mode request fields: %v", payload)
+		}
 		w.WriteHeader(200)
-		json.NewEncoder(w).Encode(schema.ComponentSchema{
-			Display:     "Tool Component",
-			Description: "A tool-enabled component.",
-			Name:        "ToolComponent",
-			BaseClasses: []string{"Tool"},
+		json.NewEncoder(w).Encode(map[string]any{
+			"display_name": "Tool Component",
+			"description":  "A tool-enabled component.",
+			"base_classes": []string{"Tool"},
+			"outputs": []map[string]any{
+				{"name": "component_as_tool", "method": "to_toolkit", "types": []string{"Tool"}},
+			},
+			"template": map[string]any{},
 		})
 	}))
 	defer srv.Close()
 
 	c := NewClient(testConfig(srv.URL))
-	cs, err := c.UpdateCustomComponent(context.Background(), "class ToolComponent(Component): pass")
+	payload, err := c.UpdateCustomComponent(context.Background(), UpdateCustomComponentRequest{
+		Code:     "class ToolComponent(Component): pass",
+		Field:    "tool_mode",
+		Template: map[string]any{},
+		ToolMode: true,
+	})
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	if cs.Name != "ToolComponent" {
-		t.Errorf("expected Name=ToolComponent, got %s", cs.Name)
+	var cs schema.ComponentSchema
+	if err := json.Unmarshal(payload, &cs); err != nil {
+		t.Fatalf("decode payload: %v", err)
 	}
-	if cs.BaseClasses[0] != "Tool" {
-		t.Errorf("expected base class Tool, got %s", cs.BaseClasses[0])
+	if cs.DisplayName != "Tool Component" && cs.Description != "A tool-enabled component." {
+		t.Errorf("expected Tool Component payload, got display=%q desc=%q", cs.DisplayName, cs.Description)
+	}
+	if len(cs.Outputs) != 1 || cs.Outputs[0].Name != "component_as_tool" {
+		t.Errorf("expected component_as_tool output, got %+v", cs.Outputs)
 	}
 }
 
@@ -219,7 +332,12 @@ func TestComponentUpdateCustomComponent_Error(t *testing.T) {
 	defer srv.Close()
 
 	c := NewClient(testConfig(srv.URL))
-	_, err := c.UpdateCustomComponent(context.Background(), "bad code")
+	_, err := c.UpdateCustomComponent(context.Background(), UpdateCustomComponentRequest{
+		Code:     "bad code",
+		Field:    "tool_mode",
+		Template: map[string]any{},
+		ToolMode: true,
+	})
 	if err == nil {
 		t.Fatal("expected error, got nil")
 	}

@@ -39,9 +39,13 @@ func main() {
 
 	_, httpAddr := config.TransportFlags()
 
-	httpAddr = resolveHTTPAddr(httpAddr, cfg)
-
-	if httpAddr != "" {
+	// stdio is the default transport. HTTP is used only when --http was
+	// explicitly passed (with or without an address).
+	if config.HTTPRequested() {
+		if httpAddr == "" {
+			httpAddr = resolveHTTPAddr(httpAddr, cfg)
+		}
+		slog.Info("langflow mcp server listening", "addr", httpAddr)
 		mcpHandler := mcp.NewStreamableHTTPHandler(func(req *http.Request) *mcp.Server {
 			return server
 		}, nil)
@@ -53,7 +57,6 @@ func main() {
 
 		handler := withCORS(mux)
 
-		slog.Info("langflow mcp server listening", "addr", httpAddr)
 		log.Fatal(http.ListenAndServe(httpAddr, handler))
 	} else {
 		if err := server.Run(context.Background(), &mcp.StdioTransport{}); err != nil {

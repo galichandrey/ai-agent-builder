@@ -206,3 +206,10 @@ func applyEnvOverrideBool(flagName, envName string, setter func(bool)) {
 func TransportFlags() (stdio bool, httpAddr string) {
 	return flagStdio, flagHTTPAddr
 }
+
+// HTTPRequested reports whether the --http flag was explicitly passed on the
+// command line. stdio is the default transport; HTTP is only enabled when the
+// user opts in via --http.
+func HTTPRequested() bool {
+	return flagWasSet("http")
+}

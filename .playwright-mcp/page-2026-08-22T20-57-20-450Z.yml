@@ -1,0 +1,146 @@
+- generic [ref=f1e10]:
+  - generic [ref=f1e11]:
+    - banner [ref=f1e12]:
+      - button "Go to home" [ref=f1e14] [cursor=pointer]
+      - generic [ref=f1e19]:
+        - generic [ref=f1e21]:
+          - button "Go to GitHub repo" [ref=f1e22] [cursor=pointer]:
+            - generic [ref=f1e24]: 154k
+          - button "Go to Discord server" [ref=f1e28] [cursor=pointer]:
+            - generic [ref=f1e30]: 25k
+        - button "Notifications and errors" [ref=f1e34] [cursor=pointer]
+        - button [ref=f1e40] [cursor=pointer]:
+          - img "User" [ref=f1e45]
+    - generic [ref=f1e51]:
+      - region [ref=f1e52]:
+        - generic [ref=f1e54]:
+          - generic [ref=f1e55]:
+            - button "Go back" [ref=f1e56] [cursor=pointer]
+            - heading "Settings" [level=2] [ref=f1e59]
+          - paragraph [ref=f1e60]: Manage the general settings for Langflow.
+      - generic [ref=f1e63]:
+        - navigation "Settings navigation" [ref=f1e64]:
+          - list [ref=f1e69]:
+            - listitem [ref=f1e70]:
+              - link "General" [ref=f1e71] [cursor=pointer]:
+                - /url: /settings/general
+            - listitem [ref=f1e74]:
+              - link "MCP Servers" [ref=f1e75] [cursor=pointer]:
+                - /url: /settings/mcp-servers
+            - listitem [ref=f1e80]:
+              - link "Langflow API Keys" [ref=f1e81] [cursor=pointer]:
+                - /url: /settings/api-keys
+            - listitem [ref=f1e87]:
+              - link "Langflow MCP Client" [ref=f1e88] [cursor=pointer]:
+                - /url: /settings/mcp-client
+            - listitem [ref=f1e92]:
+              - link "Global Variables" [ref=f1e93] [cursor=pointer]:
+                - /url: /settings/global-variables
+            - listitem [ref=f1e98]:
+              - link "Model Providers" [ref=f1e99] [cursor=pointer]:
+                - /url: /settings/model-providers
+            - listitem [ref=f1e113]:
+              - link "DB Providers" [ref=f1e114] [cursor=pointer]:
+                - /url: /settings/db-providers
+            - listitem [ref=f1e120]:
+              - link "Shortcuts" [ref=f1e121] [cursor=pointer]:
+                - /url: /settings/shortcuts
+            - listitem [ref=f1e125]:
+              - link "Messages" [ref=f1e126] [cursor=pointer]:
+                - /url: /settings/messages
+        - main [ref=f1e131]:
+          - generic [ref=f1e133]:
+            - generic [ref=f1e134]:
+              - generic [ref=f1e135]:
+                - heading "Langflow API Keys" [level=2] [ref=f1e136]
+                - paragraph [ref=f1e141]: Your secret Langflow API keys are listed below. Do not share your API key with others, or expose it in the browser or other client-side code.
+              - button "Add New" [active] [ref=f1e143] [cursor=pointer]
+            - generic [ref=f1e145]:
+              - generic [ref=f1e146]:
+                - generic [ref=f1e147]: 1 to 3 of 3
+                - button "Langflow API Keys start focus boundary"
+                - treegrid "Langflow API Keys" [ref=f1e148]:
+                  - rowgroup [ref=f1e149]:
+                    - row [ref=f1e150]:
+                      - columnheader "Name, Column with Header Selection" [ref=f1e151]:
+                        - checkbox "Column with Header Selection" [ref=f1e153] [cursor=pointer]
+                        - text: 
+                        - generic [ref=f1e273] [cursor=pointer]: Name
+                        - text: 
+                        - generic:    
+                      - columnheader "Key, Column with Header Selection" [ref=f1e155]:
+                        - text: 
+                        - generic [ref=f1e274] [cursor=pointer]: Key
+                        - text: 
+                        - generic:    
+                      - columnheader "Created, Column with Header Selection" [ref=f1e158]:
+                        - text: 
+                        - generic [ref=f1e275] [cursor=pointer]: Created
+                        - text: 
+                        - generic:    
+                      - columnheader "Last Used, Column with Header Selection" [ref=f1e161]:
+                        - text: 
+                        - generic [ref=f1e276] [cursor=pointer]: Last Used
+                        - text: 
+                        - generic:    
+                      - columnheader "Expires, Column with Header Selection" [ref=f1e164]:
+                        - text: 
+                        - generic [ref=f1e277] [cursor=pointer]: Expires
+                        - text: 
+                        - generic:    
+                      - columnheader "Total Uses, Column with Header Selection" [ref=f1e167]:
+                        - text: 
+                        - generic [ref=f1e278] [cursor=pointer]: Total Uses
+                        - text: 
+                        - generic:    
+                  - rowgroup [ref=f1e169]:
+                    - row [ref=f1e279] [cursor=pointer]:
+                      - gridcell "mcp-server, Press Space to toggle row selection (unchecked)" [ref=f1e280]:
+                        - checkbox "Press Space to toggle row selection (unchecked)" [ref=f1e281]
+                        - text: 
+                        - button "mcp-server" [ref=f1e283]
+                      - gridcell [ref=f1e284]:
+                        - button "sk-HLAEx**************************************" [ref=f1e286]
+                      - gridcell "2026-08-22 21:04:38" [ref=f1e287]
+                      - gridcell "2026-08-22 23:22:02" [ref=f1e290]
+                      - gridcell "∞" [ref=f1e293]
+                      - gridcell "293" [ref=f1e296]
+                    - row [ref=f1e299] [cursor=pointer]:
+                      - gridcell "MCP Project Starter Project - default, Press Space to toggle row selection (unchecked)" [ref=f1e300]:
+                        - checkbox "Press Space to toggle row selection (unchecked)" [ref=f1e301]
+                        - text: 
+                        - button "MCP Project Starter Project - default" [ref=f1e303]
+                      - gridcell [ref=f1e304]:
+                        - button "sk-nFMfq**************************************" [ref=f1e306]
+                      - gridcell "2026-08-22 21:04:38" [ref=f1e307]
+                      - gridcell "Never" [ref=f1e310]
+                      - gridcell "∞" [ref=f1e312]
+                      - gridcell "0" [ref=f1e315]
+                    - row [ref=f1e318] [cursor=pointer]:
+                      - gridcell "go-mcp-server, Press Space to toggle row selection (unchecked)" [ref=f1e319]:
+                        - checkbox "Press Space to toggle row selection (unchecked)" [ref=f1e320]
+                        - text: 
+                        - button "go-mcp-server" [ref=f1e322]
+                      - gridcell [ref=f1e323]:
+                        - button "sk-WNVAL**************************************" [ref=f1e325]
+                      - gridcell "2026-08-22 23:57:11" [ref=f1e326]
+                      - gridcell "Never" [ref=f1e329]
+                      - gridcell "∞" [ref=f1e331]
+                      - gridcell "0" [ref=f1e334]
+                - button "Langflow API Keys end focus boundary"
+                - generic [ref=f1e209]:
+                  - button "Langflow API Keys end focus boundary"
+                  - text: 
+                  - generic [ref=f1e210]: 1 to 3 of 3
+                  - button "First Page" [disabled] [ref=f1e211]: 
+                  - button "Previous Page" [disabled] [ref=f1e212]: 
+                  - generic [ref=f1e213]: Page 1 of 1
+                  - button "Next Page" [disabled] [ref=f1e214]: 
+                  - button "Last Page" [disabled] [ref=f1e215]: 
+                  - button "Langflow API Keys end focus boundary"
+              - generic [ref=f1e217]:
+                - button "Delete selected items" [disabled] [ref=f1e219]
+                - button "Reset Columns" [ref=f1e224] [cursor=pointer]
+  - generic:
+    - generic:
+      - status

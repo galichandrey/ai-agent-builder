@@ -58,8 +58,8 @@ func newTestSessionWithSource(t *testing.T, mockURL, cacheDir string) (*mcp.Clie
 	t.Cleanup(mock.Close)
 
 	cfg := &config.Config{
-		LangflowURL: mock.URL(),
-		CustomHeaders: map[string]string{},
+		LangflowURL:    mock.URL(),
+		CustomHeaders:  map[string]string{},
 		SourceCacheDir: cacheDir,
 	}
 
@@ -271,8 +271,8 @@ func TestIntegrationAllTools(t *testing.T) {
 
 	t.Run("add_custom_component", func(t *testing.T) {
 		res := callTool(t, session, "add_custom_component", map[string]any{
-			"flow_id": flowID,
-			"code":    "class MyComponent(Component):\n    display_name = 'My Component'\n",
+			"flow_id":    flowID,
+			"code":       "class MyComponent(Component):\n    display_name = 'My Component'\n",
 			"position_x": 200,
 			"position_y": 200,
 		})
@@ -440,9 +440,9 @@ func TestIntegrationAllTools(t *testing.T) {
 
 	t.Run("disconnect_nodes", func(t *testing.T) {
 		res := callTool(t, session, "disconnect_nodes", map[string]any{
-			"flow_id":         flowID,
-			"source_node_id":  inputNodeID,
-			"target_node_id":  outputNodeID,
+			"flow_id":        flowID,
+			"source_node_id": inputNodeID,
+			"target_node_id": outputNodeID,
 		})
 		if res.IsError {
 			t.Fatalf("disconnect_nodes error: %s", resultText(t, res))
@@ -471,8 +471,8 @@ func TestIntegrationAllTools(t *testing.T) {
 			"target_input":   "message",
 		})
 		res := callTool(t, session, "find_compatible_connections", map[string]any{
-			"flow_id":  flowID,
-			"node_id":  outputNodeID,
+			"flow_id":   flowID,
+			"node_id":   outputNodeID,
 			"direction": "inputs",
 		})
 		if res.IsError {
@@ -490,7 +490,7 @@ func TestIntegrationAllTools(t *testing.T) {
 
 	t.Run("explore_langflow", func(t *testing.T) {
 		res := callTool(t, session, "explore_langflow", map[string]any{
-			"query":     "build_model",
+			"query":       "build_model",
 			"max_results": 10,
 		})
 		if res.IsError {
