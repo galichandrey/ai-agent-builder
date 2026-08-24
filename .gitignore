@@ -29,3 +29,7 @@ Thumbs.db
 
 # SDD scratch (task briefs, reports, progress ledger)
 .superpowers/
+cf-a9-publishing-ui.png
+orchestrator-ui-fixed.png
+.playwright-mcp/
+*.png

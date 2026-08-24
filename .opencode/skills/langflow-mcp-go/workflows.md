@@ -218,3 +218,21 @@ headers: x-api-key: <LF key>
 body: {"output_type":"chat","input_type":"chat","input_value":"..."}
 ```
 Useful for E-agents driving the flow without the MCP build stream. Same auth rules (R0).
+
+---
+
+## W10: Flows-as-MCP-Tools (родной project-MCP, verified 2026-08-24)
+
+1. **Включить флоу как тул** (без UI):
+   `PATCH /api/v1/flows/{id}` → `{"mcp_enabled": true, "action_name": "screening", "action_description": "..."}`
+   (имя тула = action_name, snake_case; описание видит LLM-агент — пиши контракт входа/выхода).
+2. **Проверить поверхность**: `GET /api/v1/mcp/project/{folder_id}?mcp_enabled=true` → список тулов.
+3. **Дать агенту все тула проекта**: добавить ноду `MCPTools`, поле
+   `mcp_server = {"name":"lf-project","config":{"url":"http://127.0.0.1:7860/api/v1/mcp/project/{folder_id}/streamable","headers":{"x-api-key":"sk-..."}}}`,
+   выход `component_as_tool` → `Agent.tools`. Новый флоу-тул появляется у агента сам (TTL 30с).
+4. **Внешний клиент** (opencode/Cursor):
+   `{"mcpServers":{"lf":{"command":"uvx","args":["mcp-proxy","--transport","streamablehttp","--headers","x-api-key","KEY","URL.../streamable"]}}}`
+5. Вызовы тулов = отдельные раны: аргументы `{input_value, session_id?}`; HITL-флоу не поддерживаются.
+6. Гейты/детерминизм — на state-сервисе (шим), НЕ в промпте: тул может быть вызван кем угодно.
+
+Питфоллы сборки графа скриптом (œ-хэндлы, PromptTemplate vars, CustomComponent-source) — см. SKILL.md AW-graph/AW-prompt/AW-custom-src.

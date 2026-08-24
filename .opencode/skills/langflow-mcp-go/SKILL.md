@@ -1,8 +1,8 @@
 ---
 name: langflow-mcp-go
-description: Use when driving the Go-based langflow-mcp server to manage LangFlow — instantiate flows from the native template library in one call, add nodes (built-in or inline Python), wire Agent + model flows, run them via build_flow or REST /run, toggle tool_mode for agent tools, contribute verified flows back as templates, arrange layouts, or explore LangFlow source. Trigger when an E-agent needs programmatic LangFlow control, configures free-model providers (opencode zen etc.), or hits errors like "unhashable type", "component not found", "Missing credentials", "No model selected", or 403/404 Invalid API key.
+description: Use when driving the Go-based langflow-mcp server to manage LangFlow — instantiate flows from the native template library in one call, add nodes (built-in or inline Python), wire Agent + model flows, run them via build_flow or REST /run, toggle tool_mode for agent tools, contribute verified flows back as templates, arrange layouts, or explore LangFlow source. Trigger when an E-agent needs programmatic LangFlow control, configures free-model providers (opencode zen etc.), or hits errors like "unhashable type", "component not found", "Missing credentials", "No model selected", 403/404 Invalid API key, an EMPTY flow canvas ("Untitled Flow") in UI, Prompt build KeyError on template variables, "Edge ... has no matched type", or when exposing flows as MCP tools / connecting LangFlow's project MCP server.
 metadata:
-  version: 2.4.0
+  version: 2.5.0
 ---
 
 # LangFlow MCP Go Server
@@ -56,6 +56,14 @@ This self-learning loop grows the library and shrinks future error surface.
 
 **AW0b. Сеть контейнера может быть pasta, а не docker0.** Проверяйте `docker inspect langflow --format '{{.HostConfig.NetworkMode}}'`: при `pasta` хост из контейнера = `http://host.containers.internal:<port>`; 172.17.0.1 не работает.
 
+**AW-graph. Хэндлы эджей: строка `œ`-формата сверху + словарь в `edge.data`.** При сборке флоу через REST каждый эдж несёт `sourceHandle`/`targetHandle` ДВАЖДЫ: словарём в `edge.data.*` (его читает бэкенд) и СТРОКОЙ в `edge.sourceHandle/targetHandle` (её читает UI). Строка — это reactflow-сериализация, где символ `œ` (U+0153) играет роль кавычки: `{œdataTypeœ:œChatInputœ,œidœ:Xœ,...}`, список `[œMessageœ]`, запятые/двоеточия голые. Фронт делает `string.replaceAll(œ,'"')` → `JSON.parse`; неверный формат = SyntaxError в консоли и **ПУСТОЙ канвас** («Untitled Flow», нод нет вовсе) при полностью рабочем REST `/run`. Энкодер: см. `scripts/build_real_stages.py::oe_handle` в content-factory. Лечение существующих флоу без пересоздания: перегенерировать строки из `edge.data.*` (scripts/fix_handle_strings.py). Диагностика UI: Playwright → логин суперпользователя (`AUTO_LOGIN=false`) → консоль страницы; позиция ошибки в JSON.parse точно указывает на битый токен.
+
+**AW-prompt. Переменные PromptTemplate НЕ биндятся через эджи у API-собранных флоу.** Даже точный клон рабочего паттерна (ChatInput→Prompt c `{var}` и targetHandle fieldName=var) падает при билде `Error building Component Prompt Template: '<var>'` — динамические входы промпта материализуются только из UI-редактирования. Решение: инструкции класть в **`Agent.system_prompt`** (обычная строка, не шаблон), данные — напрямую в `input_value` агента; цепочка ChatInput→Agent→ChatOutput.
+
+**AW-custom-src. CustomComponent как ИСТОЧНИК эджа валиден только в сторону ChatOutput.** Ребро CustomComponent→Agent/Prompt даёт валидацию «Edge between X and Y has no matched type» даже при корректных output_types ["Message"] (CustomComponent к ChatOutput проходит). Нативные ноды (ChatInput→Prompt→Agent) — свободно. Если нужен кодовый узел в середине цепочки — выносить логику на сторону сервиса (шим/REST) либо завершать им цепочку в ChatOutput.
+
+**AW-donor. Донор — только РАБОЧИЙ флоу инстанса.** Формы нод для клонирования брать из флоу, который реально исполняется на этой версии (например, Deep Research Agent из starter_project), а не из библиотечных шаблонов «как есть» — они могут быть устаревших версий (подсказка инстанса: «The flow contains N outdated components»). Проверяй состав донора GET /flows/{id} перед клоном.
+
 **AW1. Конфиг модели у `Agent` — только эта форма работает:**
 `model = [{"name":"hy3-free","provider":"OpenAI Compatible"}]` (список словарей!), `api_key` = литеральный ключ с `load_from_db=false`. Строки `"Provider/model"` и `{VAR}`-плейсхолдеры НЕ резолвятся (уходят буквально → OpenAI 401). base_url провайдер берёт из global vars `OPENAI_COMPATIBLE_*` по соглашению имён.
 
@@ -95,7 +103,27 @@ Full recipes: [workflows.md](workflows.md) · All 40 tools: [tools-reference.md]
 
 The package gallery ("New Flow" modal) regenerates from package files at startup — it CANNOT be extended via API. Our file library + these endpoints cover every practical need.
 
+## Flows-as-MCP-Tools (родной механизм «флоу-как-тул», 1.11.4)
+
+**Сервер (project MCP):**
+- Тул = флоу с полями `mcp_enabled=true`, `action_name` (snake_case имя тула), `action_description` — всё управляется `PATCH /api/v1/flows/{id}` БЕЗ UI.
+- Список тулов проекта: `GET /api/v1/mcp/project/{folder_id}?mcp_enabled=true`.
+- Транспорты: SSE `/api/v1/mcp/project/{id}/sse` и Streamable HTTP `.../streamable` (auth `x-api-key`).
+- Контекст вызова тула = отдельный run флоу: аргументы `input_value` (+опц. `session_id` для сквозной трассировки), остальное уходит в tweaks. HITL-флоу тулами НЕ поддерживаются (RuntimeError).
+- UI: страница `/mcp/folder/{id}` → таб MCP Server → Edit Tools (галочки = те же поля).
+
+**Клиент внутри флоу (компонент `MCPTools`):**
+- Выход `component_as_tool` (Toolset, types Tool, cache=False) → `Agent.tools`: агент получает ВСЕ включённые флоу проекта разом; новый стадийный флоу появляется у агента без пересборки.
+- Поле `mcp_server`: значение `{"name": "<имя>", "config": {"url": ".../streamable", "headers": {"x-api-key": "..."}}}` — конфиг с ключом `url` = Streamable HTTP (без subprocess!). DB-конфиг из Settings → MCP Client приоритетнее value.
+- `use_cache=false` по умолчанию; TTL списка тулов 30с; `tool_execution_timeout` задавать ≥ времени стадийного рана.
+- Settings → MCP Client (`lfx-mcp` через uvx/stdio) — для внешних редакторов кода; внутри контейнера НЕ нужен (uvx отсутствует).
+
+**Стратегия (проверено боем):** родной project-MCP — основной способ агент↔агент вызовов; кастомные FlowProxy-компоненты с REST self-call — fallback. Детерминизм гейтов держать на стороне state-сервиса (шим отклоняет запись стадии без апрува), а не в промпте/нодах.
+
 ## Failure Modes (live-verified)
+- **Пустой канвас в UI при рабочем REST** → битая top-level handle-строка эджа (см. AW-graph); лечится fix_handle_strings.py.
+- **`Error building Component Prompt Template: '<var>'`** → переменная промпта не забиндилась (см. AW-prompt); переносить инструкцию в system_prompt.
+- **`Edge between X and Y has no matched type`** → источник CustomComponent в строгий вход (см. AW-custom-src).
 
 | Symptom | Cause | Fix |
 |---|---|---|
