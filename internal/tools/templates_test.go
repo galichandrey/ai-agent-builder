@@ -115,7 +115,7 @@ func TestCreateFlowFromTemplateVerify(t *testing.T) {
 				"type": "Agent",
 				"node": map[string]any{"template": map[string]any{
 					"api_key": map[string]any{"value": "", "password": true},
-					"model":   map[string]any{"value": []any{
+					"model": map[string]any{"value": []any{
 						map[string]any{"name": "hy3-free", "provider": "OpenAI Compatible"},
 					}},
 				}},
@@ -181,12 +181,12 @@ func TestCreateFlowFromTemplateVerify(t *testing.T) {
 	}
 
 	var out struct {
-		FlowID        string               `json:"flow_id"`
-		BuildOK       bool                 `json:"build_ok"`
-		Errors        []string             `json:"errors"`
+		FlowID        string                 `json:"flow_id"`
+		BuildOK       bool                   `json:"build_ok"`
+		Errors        []string               `json:"errors"`
 		NeedsKeys     []templates.SecretNeed `json:"needs_keys"`
-		ModelUsed     string               `json:"model_used"`
-		ModelProvider string               `json:"model_provider"`
+		ModelUsed     string                 `json:"model_used"`
+		ModelProvider string                 `json:"model_provider"`
 	}
 	if err := json.Unmarshal([]byte(tc.Text), &out); err != nil {
 		t.Fatalf("decode result %q: %v", tc.Text, err)

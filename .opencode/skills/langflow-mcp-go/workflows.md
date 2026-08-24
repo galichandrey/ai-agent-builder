@@ -236,3 +236,20 @@ Useful for E-agents driving the flow without the MCP build stream. Same auth rul
 6. Гейты/детерминизм — на state-сервисе (шим), НЕ в промпте: тул может быть вызван кем угодно.
 
 Питфоллы сборки графа скриптом (œ-хэндлы, PromptTemplate vars, CustomComponent-source) — см. SKILL.md AW-graph/AW-prompt/AW-custom-src.
+
+---
+
+## W11: Управление Langflow Assistant (`assistant_chat`, v2.6.0)
+
+```
+assistant_chat {
+  flow_id: "<флоу-контекст>",
+  input_value: "Собери Chat Input -> Calculator -> Agent -> Chat Output",
+  provider: "OpenAI Compatible", model_name: "hy3-free",
+  iterations_limit: 20, timeout_sec: 420,
+  apply_to_flow_id: "<куда записать итог>"
+}
+```
+- Ответ: text (токены), progress[], updates count, preview{name,nodes,edges}, applied_to.
+- Продолжение диалога — тот же session_id; сброс: POST /agentic/sessions/reset?session_id=...
+- ⛔ SQLite-инстансы: блокер 'database is locked' (см. SKILL.md) → нужен Postgres.

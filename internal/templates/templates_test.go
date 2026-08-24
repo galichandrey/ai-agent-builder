@@ -330,16 +330,16 @@ func TestMatchesQuery(t *testing.T) {
 		query string
 		want  bool
 	}{
-		{"", true},                          // empty query matches all
-		{"marketing", true},                 // name token
-		{"MARKETING", true},                 // case-insensitive
-		{"marketing content", true},         // multi-token, all in name
-		{"content marketing", true},         // order independent
-		{"targeted", true},                  // description token
-		{"sales_marketing", true},           // tag token
-		{"keyword business", true},          // tokens across fields
-		{"nonexistent", false},              // no match anywhere
-		{"rag business", false},             // one missing token fails all
+		{"", true},                  // empty query matches all
+		{"marketing", true},         // name token
+		{"MARKETING", true},         // case-insensitive
+		{"marketing content", true}, // multi-token, all in name
+		{"content marketing", true}, // order independent
+		{"targeted", true},          // description token
+		{"sales_marketing", true},   // tag token
+		{"keyword business", true},  // tokens across fields
+		{"nonexistent", false},      // no match anywhere
+		{"rag business", false},     // one missing token fails all
 	}
 	for _, tc := range cases {
 		if got := MatchesQuery(f, tc.query); got != tc.want {
@@ -352,7 +352,7 @@ func TestDetectBlankSecrets(t *testing.T) {
 	data := map[string]any{
 		"nodes": []any{
 			map[string]any{ // blank api_key -> reported; blank benign field -> not
-				"id":   "agent-1",
+				"id": "agent-1",
 				"data": map[string]any{
 					"type": "Agent",
 					"node": map[string]any{"template": map[string]any{
@@ -362,7 +362,7 @@ func TestDetectBlankSecrets(t *testing.T) {
 				},
 			},
 			map[string]any{ // set secret -> not reported; benign blank name -> not
-				"id":   "llm-1",
+				"id": "llm-1",
 				"data": map[string]any{
 					"type": "LanguageModel",
 					"node": map[string]any{"template": map[string]any{
@@ -372,7 +372,7 @@ func TestDetectBlankSecrets(t *testing.T) {
 				},
 			},
 			map[string]any{ // password:true with whitespace value -> reported despite benign name
-				"id":   "tool-1",
+				"id": "tool-1",
 				"data": map[string]any{
 					"type": "Tool",
 					"node": map[string]any{"template": map[string]any{

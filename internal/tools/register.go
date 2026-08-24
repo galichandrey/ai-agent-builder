@@ -27,6 +27,9 @@ func RegisterAll(server *mcp.Server, langflowClient *client.LangflowClient, cfg 
 	// Connection Management (5 tools) — will be added in Task 17
 	registerConnectionTools(server, langflowClient)
 
+	// Langflow Assistant (1 tool)
+	registerAssistantTools(server, langflowClient)
+
 	// Source Exploration (5 tools) — will be added in Task 18
 	registerSourceTools(server, langflowClient, cfg)
 

@@ -2,12 +2,12 @@
 name: langflow-mcp-go
 description: Use when driving the Go-based langflow-mcp server to manage LangFlow — instantiate flows from the native template library in one call, add nodes (built-in or inline Python), wire Agent + model flows, run them via build_flow or REST /run, toggle tool_mode for agent tools, contribute verified flows back as templates, arrange layouts, or explore LangFlow source. Trigger when an E-agent needs programmatic LangFlow control, configures free-model providers (opencode zen etc.), or hits errors like "unhashable type", "component not found", "Missing credentials", "No model selected", 403/404 Invalid API key, an EMPTY flow canvas ("Untitled Flow") in UI, Prompt build KeyError on template variables, "Edge ... has no matched type", or when exposing flows as MCP tools / connecting LangFlow's project MCP server.
 metadata:
-  version: 2.5.0
+  version: 2.6.0
 ---
 
 # LangFlow MCP Go Server
 
-You manage LangFlow through the **Go `langflow-mcp` server** (41 tools). Every rule below is backed by a live-verified failure.
+You manage LangFlow through the **Go `langflow-mcp` server** (42 tools, incl. `assistant_chat`). Every rule below is backed by a live-verified failure.
 
 ## Core Rules
 
@@ -119,6 +119,20 @@ The package gallery ("New Flow" modal) regenerates from package files at startup
 - Settings → MCP Client (`lfx-mcp` через uvx/stdio) — для внешних редакторов кода; внутри контейнера НЕ нужен (uvx отсутствует).
 
 **Стратегия (проверено боем):** родной project-MCP — основной способ агент↔агент вызовов; кастомные FlowProxy-компоненты с REST self-call — fallback. Детерминизм гейтов держать на стороне state-сервиса (шим отклоняет запись стадии без апрува), а не в промпте/нодах.
+
+## Langflow Assistant (agentic, tool `assistant_chat`)
+
+**Что это:** встроенный агент-строитель канваса. Бэкенд — `/api/v1/agentic/*`; UI-кнопка «Langflow Assistant» = тот же API.
+
+**Контракт:** `POST /agentic/assist/stream` (SSE), тело `{flow_id (канвас-контекст), input_value, session_id?, provider?, model_name?, iterations_limit?}`.
+События: `progress` → `token` → `flow_update` (add_component/connect/configure/set_flow) → `flow_preview` (полный JSON флоу + node_count/edge_count) → `complete`/`error`. Тул `assistant_chat` собирает всё это и умеет применить `flow_preview.data` к флоу через PATCH (`apply_to_flow_id`).
+
+**Требования окружения:**
+1. Канонические переменные: `OPENAI_API_KEY` (Credential) и опц. `OPENAI_BASE_URL` (Generic) — именно эти имена читает ассистент; наши `OPENAI_COMPATIBLE_*` он игнорирует. `POST /variables/` требует поле `default_fields: []`.
+2. `GET /agentic/check-config` → `{"configured": true, ...}` перед использованием.
+3. Отключается env `LANGFLOW_AGENTIC_EXPERIENCE=false` (эндпоинты 404).
+
+**⛔ Ограничение 1.11.4 + SQLite:** в фазе `generating_flow` стабильно падает `(sqlite3.OperationalError) database is locked` — request-scoped сессия стрим-эндпоинта держит write-лок SQLite на время генерации (busy_timeout 30с не спасает; wal_checkpoint не помогает). **Лечение — PostgreSQL backend** (`LANGFLOW_DB_URL=postgresql+psycopg://...`). На SQLite ассистент нерабоч; тул оставлен, заработает после переезда БД.
 
 ## Failure Modes (live-verified)
 - **Пустой канвас в UI при рабочем REST** → битая top-level handle-строка эджа (см. AW-graph); лечится fix_handle_strings.py.
