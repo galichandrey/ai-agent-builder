@@ -137,7 +137,7 @@ The package gallery ("New Flow" modal) regenerates from package files at startup
 4. `LANGFLOW_SECRET_KEY` фиксировать ДО создания Credential-переменных: иначе пересоздание контейнера = новые ключи шифрования = старые Credential не расшифруются.
 5. `GET /agentic/check-config`; отключение — `LANGFLOW_AGENTIC_EXPERIENCE=false`.
 
-**Надёжность модели:** бесплатные модели (hy3-free) иногда не выдают canvas-actions («Smaller models often can't drive the canvas») — тул вернёт текст ассистента как error; помогает повтор запроса/другая формулировка/более сильная модель.
+**Модель (verified):** ✅ `x-preview-f-free` — надёжно собирает канвас; hy3-free флапает («no canvas actions»); nemotron-3-ultra-free ловил 502 upstream. Передавайте `model_name` явно в каждом вызове.
 
 ## Failure Modes (live-verified)## Failure Modes (live-verified)
 - **Пустой канвас в UI при рабочем REST** → битая top-level handle-строка эджа (см. AW-graph); лечится fix_handle_strings.py.
