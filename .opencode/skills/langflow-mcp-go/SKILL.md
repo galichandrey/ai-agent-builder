@@ -2,7 +2,7 @@
 name: langflow-mcp-go
 description: Use when driving the Go-based langflow-mcp server to manage LangFlow — instantiate flows from the native template library in one call, add nodes (built-in or inline Python), wire Agent + model flows, run them via build_flow or REST /run, toggle tool_mode for agent tools, contribute verified flows back as templates, arrange layouts, or explore LangFlow source. Trigger when an E-agent needs programmatic LangFlow control, configures free-model providers (opencode zen etc.), or hits errors like "unhashable type", "component not found", "Missing credentials", "No model selected", 403/404 Invalid API key, an EMPTY flow canvas ("Untitled Flow") in UI, Prompt build KeyError on template variables, "Edge ... has no matched type", or when exposing flows as MCP tools / connecting LangFlow's project MCP server.
 metadata:
-  version: 2.7.0
+  version: 2.8.0
 ---
 
 # LangFlow MCP Go Server
@@ -139,7 +139,29 @@ The package gallery ("New Flow" modal) regenerates from package files at startup
 
 **Модель (verified):** ✅ `x-preview-f-free` — надёжно собирает канвас; hy3-free флапает («no canvas actions»); nemotron-3-ultra-free ловил 502 upstream. Передавайте `model_name` явно в каждом вызове.
 
-## Failure Modes (live-verified)## Failure Modes (live-verified)
+## MCPTools node — рецепт сборки через API (verified)
+
+1. `data.type="MCPTools"`; в template **обязателен** `code` = полный исходник lfx `mcp_component.py` (пустой → «No Component subclass», отсутствие ключа → KeyError 'code').
+2. `mcp_server.value = {"name":"x","config":{"url":"…/streamable","headers":{"x-api-key":KEY}}}`; outputs=[{name:"component_as_tool",method:"to_toolkit",types:["Tool"],cache:false}].
+3. Folder id проекта определяй динамически (folder_id донор-флоу), не хардкодь между БД.
+4. Edge на Agent.tools: sourceHandle {dataType:"MCPTools",name:"component_as_tool",output_types:["Tool"]}; target {fieldName:"tools",inputTypes:["Tool"],type:"other"}; œ-строки сверху + дубли в data.
+
+## CustomComponent как MCP tool — паттерн «один вход»
+
+project-MCP прокидывает аргументы тула во flow через tweaks, и маппинг «голых имён полей» CustomComponent НЕ срабатывает (поле остаётся пустым → тихие 404 внутри). Рабочий паттерн: у компонента ОДИН input (например request_payload), весь запрос — JSON-строка/объект в `input_value`; разбор внутри run() с isinstance-толерантностью (dict|str).
+
+## Failure Modes (live-verified)## MCPTools node — рецепт сборки через API (verified)
+
+1. `data.type="MCPTools"`; в template **обязателен** `code` = полный исходник lfx `mcp_component.py` (пустой → «No Component subclass», отсутствие ключа → KeyError 'code').
+2. `mcp_server.value = {"name":"x","config":{"url":"…/streamable","headers":{"x-api-key":KEY}}}`; outputs=[{name:"component_as_tool",method:"to_toolkit",types:["Tool"],cache:false}].
+3. Folder id проекта определяй динамически (folder_id донор-флоу), не хардкодь между БД.
+4. Edge на Agent.tools: sourceHandle {dataType:"MCPTools",name:"component_as_tool",output_types:["Tool"]}; target {fieldName:"tools",inputTypes:["Tool"],type:"other"}; œ-строки сверху + дубли в data.
+
+## CustomComponent как MCP tool — паттерн «один вход»
+
+project-MCP прокидывает аргументы тула во flow через tweaks, и маппинг «голых имён полей» CustomComponent НЕ срабатывает (поле остаётся пустым → тихие 404 внутри). Рабочий паттерн: у компонента ОДИН input (например request_payload), весь запрос — JSON-строка/объект в `input_value`; разбор внутри run() с isinstance-толерантностью (dict|str).
+
+## Failure Modes (live-verified)
 - **Пустой канвас в UI при рабочем REST** → битая top-level handle-строка эджа (см. AW-graph); лечится fix_handle_strings.py.
 - **`Error building Component Prompt Template: '<var>'`** → переменная промпта не забиндилась (см. AW-prompt); переносить инструкцию в system_prompt.
 - **`Edge between X and Y has no matched type`** → источник CustomComponent в строгий вход (см. AW-custom-src).
