@@ -120,3 +120,22 @@ func (ev *AgenticEvents) ExtractFlowData() map[string]any {
 	}
 	return nil
 }
+
+// ExtractFullFlow возвращает весь flow из set_flow/flow_preview как есть
+// (UI-формат Langflow — принимается сервером без конверсии).
+func (ev *AgenticEvents) ExtractFullFlow() map[string]any {
+	if ev == nil {
+		return nil
+	}
+	if ev.FlowPreview != nil {
+		return ev.FlowPreview
+	}
+	for _, u := range ev.FlowUpdates {
+		if act, _ := u["action"].(string); act == "set_flow" {
+			if f, ok := u["flow"].(map[string]any); ok {
+				return f
+			}
+		}
+	}
+	return nil
+}

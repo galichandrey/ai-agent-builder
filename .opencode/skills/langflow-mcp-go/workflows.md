@@ -252,4 +252,6 @@ assistant_chat {
 ```
 - Ответ: text (токены), progress[], updates count, preview{name,nodes,edges}, applied_to.
 - Продолжение диалога — тот же session_id; сброс: POST /agentic/sessions/reset?session_id=...
-- ⛔ SQLite-инстансы: блокер 'database is locked' (см. SKILL.md) → нужен Postgres.
+- ⛔ SQLite-инстансы: блокер 'database is locked' → LANGFLOW_DATABASE_URL→PostgreSQL (документированный env).
+- ✅ Verified on PG: build «ChatInput→Calculator→Agent→ChatOutput» по одному запросу, apply=new:, run 237*19=4503.
+- Бесплатные модели могут не выдавать canvas-actions → retry / сильнее модель.

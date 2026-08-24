@@ -50,7 +50,16 @@ func registerAssistantTools(server *mcp.Server, c *client.LangflowClient) {
 			"text":        truncate(ev.Text, 3000),
 			"progress":    ev.Progress,
 			"event_count": ev.EventCount,
-			"updates":     len(ev.FlowUpdates),
+			 "updates":     len(ev.FlowUpdates),
+			"update_actions": func() []string {
+				acts := make([]string, 0, len(ev.FlowUpdates))
+				for _, u := range ev.FlowUpdates {
+					if a, ok := u["action"].(string); ok {
+						acts = append(acts, a)
+					}
+				}
+				return acts
+			}(),
 			"preview":     nil,
 			"applied_to":  "",
 			"error":       ev.Error,
@@ -63,13 +72,45 @@ func registerAssistantTools(server *mcp.Server, c *client.LangflowClient) {
 		}
 
 		if strings.TrimSpace(input.ApplyToFlowID) != "" {
+			full := ev.ExtractFullFlow()
 			data := ev.ExtractFlowData()
-			if data == nil {
+			switch {
+			case strings.HasPrefix(input.ApplyToFlowID, "new:"):
+				name := strings.TrimPrefix(input.ApplyToFlowID, "new:")
+				payload := map[string]any{"name": name, "data": map[string]any{"nodes": []any{}, "edges": []any{}}}
+				if full != nil {
+					payload["description"] = full["description"]
+					payload["data"] = full["data"]
+				} else if data != nil {
+					payload["data"] = data
+				} else {
+					out["applied_to"] = "SKIPPED: нет flow в ответе"
+					break
+				}
+				created, err := c.CreateFlowFull(ctx, payload)
+				if err != nil {
+					out["applied_to"] = fmt.Sprintf("FAILED create: %v", err)
+				} else {
+					if idv, ok := created["id"].(string); ok {
+						out["applied_to"] = idv
+					} else {
+						out["applied_to"] = "created"
+					}
+				}
+			case full != nil || data != nil:
+				bodyData := map[string]any{}
+				if full != nil {
+					bodyData = full["data"].(map[string]any)
+				} else if data != nil {
+					bodyData = data
+				}
+				if _, err := c.UpdateFlow(ctx, input.ApplyToFlowID, map[string]any{"data": bodyData}); err != nil {
+					out["applied_to"] = fmt.Sprintf("FAILED: %v", err)
+				} else {
+					out["applied_to"] = input.ApplyToFlowID
+				}
+			default:
 				out["applied_to"] = "SKIPPED: нет flow_preview/set_flow в ответе"
-			} else if _, err := c.UpdateFlow(ctx, input.ApplyToFlowID, map[string]any{"data": data}); err != nil {
-				out["applied_to"] = fmt.Sprintf("FAILED: %v", err)
-			} else {
-				out["applied_to"] = input.ApplyToFlowID
 			}
 		}
 

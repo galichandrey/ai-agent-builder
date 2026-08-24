@@ -2,7 +2,7 @@
 name: langflow-mcp-go
 description: Use when driving the Go-based langflow-mcp server to manage LangFlow — instantiate flows from the native template library in one call, add nodes (built-in or inline Python), wire Agent + model flows, run them via build_flow or REST /run, toggle tool_mode for agent tools, contribute verified flows back as templates, arrange layouts, or explore LangFlow source. Trigger when an E-agent needs programmatic LangFlow control, configures free-model providers (opencode zen etc.), or hits errors like "unhashable type", "component not found", "Missing credentials", "No model selected", 403/404 Invalid API key, an EMPTY flow canvas ("Untitled Flow") in UI, Prompt build KeyError on template variables, "Edge ... has no matched type", or when exposing flows as MCP tools / connecting LangFlow's project MCP server.
 metadata:
-  version: 2.6.0
+  version: 2.7.0
 ---
 
 # LangFlow MCP Go Server
@@ -122,19 +122,24 @@ The package gallery ("New Flow" modal) regenerates from package files at startup
 
 ## Langflow Assistant (agentic, tool `assistant_chat`)
 
-**Что это:** встроенный агент-строитель канваса. Бэкенд — `/api/v1/agentic/*`; UI-кнопка «Langflow Assistant» = тот же API.
+**Статус на PG — ПОЛНОСТЬЮ РАБОЧИЙ (verified 2026-08-24):** чат-токены, `set_flow` с готовым канвасом, применение через `apply_to_flow_id`.
+**На SQLite — блокер апстрима:** `database is locked` в фазе generating_flow (request-scoped сессия держит write-лок; busy_timeout/wal_checkpoint не помогают). Лечение — документированный env `LANGFLOW_DATABASE_URL` → PostgreSQL.
 
-**Контракт:** `POST /agentic/assist/stream` (SSE), тело `{flow_id (канвас-контекст), input_value, session_id?, provider?, model_name?, iterations_limit?}`.
-События: `progress` → `token` → `flow_update` (add_component/connect/configure/set_flow) → `flow_preview` (полный JSON флоу + node_count/edge_count) → `complete`/`error`. Тул `assistant_chat` собирает всё это и умеет применить `flow_preview.data` к флоу через PATCH (`apply_to_flow_id`).
+**Контракт:** `POST /agentic/assist/stream` (SSE): `{flow_id, input_value, session_id?, provider?, model_name?, iterations_limit?}`.
+События: progress → token → **flow_update(action=set_flow, flow=<полный UI-формат канваса>)** → complete. Применение as-is: POST/PATCH /flows с этим data — сервер принимает genericNode-формат без конверсии.
 
-**Требования окружения:**
-1. Канонические переменные: `OPENAI_API_KEY` (Credential) и опц. `OPENAI_BASE_URL` (Generic) — именно эти имена читает ассистент; наши `OPENAI_COMPATIBLE_*` он игнорирует. `POST /variables/` требует поле `default_fields: []`.
-2. `GET /agentic/check-config` → `{"configured": true, ...}` перед использованием.
-3. Отключается env `LANGFLOW_AGENTIC_EXPERIENCE=false` (эндпоинты 404).
+**Тул `assistant_chat`:** `apply_to_flow_id` = существующий id (PATCH) или `"new:<имя>"` (создать). Возвращает text/progress/update_actions/preview/applied_to.
 
-**⛔ Ограничение 1.11.4 + SQLite:** в фазе `generating_flow` стабильно падает `(sqlite3.OperationalError) database is locked` — request-scoped сессия стрим-эндпоинта держит write-лок SQLite на время генерации (busy_timeout 30с не спасает; wal_checkpoint не помогает). **Лечение — PostgreSQL backend** (`LANGFLOW_DB_URL=postgresql+psycopg://...`). На SQLite ассистент нерабоч; тул оставлен, заработает после переезда БД.
+**Требования окружения (все — официальные настройки):**
+1. `LANGFLOW_DATABASE_URL` → PostgreSQL (SQLite=блокер ассистента).
+2. Канонические переменные: `OPENAI_API_KEY` (Credential) + опц. `OPENAI_BASE_URL`. Валидация по имени неизбежна: invoke каталоговой gpt-* модели. Если ваш шлюз не обслуживает gpt-* — прокси-маппер (пример services/zen_proxy.py в content-factory) + `OPENAI_BASE_URL` на него.
+3. `LANGFLOW_SSRF_ALLOWED_HOSTS` — если base_url указывает на link-local/hostname хоста.
+4. `LANGFLOW_SECRET_KEY` фиксировать ДО создания Credential-переменных: иначе пересоздание контейнера = новые ключи шифрования = старые Credential не расшифруются.
+5. `GET /agentic/check-config`; отключение — `LANGFLOW_AGENTIC_EXPERIENCE=false`.
 
-## Failure Modes (live-verified)
+**Надёжность модели:** бесплатные модели (hy3-free) иногда не выдают canvas-actions («Smaller models often can't drive the canvas») — тул вернёт текст ассистента как error; помогает повтор запроса/другая формулировка/более сильная модель.
+
+## Failure Modes (live-verified)## Failure Modes (live-verified)
 - **Пустой канвас в UI при рабочем REST** → битая top-level handle-строка эджа (см. AW-graph); лечится fix_handle_strings.py.
 - **`Error building Component Prompt Template: '<var>'`** → переменная промпта не забиндилась (см. AW-prompt); переносить инструкцию в system_prompt.
 - **`Edge between X and Y has no matched type`** → источник CustomComponent в строгий вход (см. AW-custom-src).

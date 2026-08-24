@@ -206,3 +206,17 @@ func (c *LangflowClient) DuplicateFlow(ctx context.Context, flowID, newName stri
 
 	return created, nil
 }
+
+// CreateFlowFull создаёт флоу с произвольным payload (name/data/description).
+// Используется ассистент-интеграцией для применения set_flow as-is.
+func (c *LangflowClient) CreateFlowFull(ctx context.Context, payload map[string]any) (map[string]any, error) {
+	data, err := c.doPost(ctx, "/flows/", payload)
+	if err != nil {
+		return nil, fmt.Errorf("create flow full: %w", err)
+	}
+	var out map[string]any
+	if err := json.Unmarshal(data, &out); err != nil {
+		return nil, fmt.Errorf("decode created flow: %w", err)
+	}
+	return out, nil
+}
